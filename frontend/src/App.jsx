@@ -12,6 +12,9 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/addproduct" element={<h1>Not Found</h1>} />
+                <Route path="/admin/updateproduct" element={<h1>Not Found</h1>} />
+                <Route path="/admin/order" element={<h1>Not Found</h1>} />
             </Routes>
         </BrowserRouter>
     );
