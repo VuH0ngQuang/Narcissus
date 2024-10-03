@@ -1,4 +1,4 @@
-import LoginBanner from '../../assets/Untitled.png';
+import LoginBanner from '../../assets/loginbanner.jpg';
 import {Link} from "react-router-dom";
 
 const LoginForm = () => {
