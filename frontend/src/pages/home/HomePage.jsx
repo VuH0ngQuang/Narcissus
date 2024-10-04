@@ -5,7 +5,7 @@ import Product from "./Product.jsx";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className='overflow-scroll h-screen scrollbar-hide flex flex-col'>
         <NavBar />
         <BannerAds />
         <Intro />

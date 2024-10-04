@@ -3,6 +3,7 @@ import HomePage from './pages/home/HomePage.jsx';
 import Login from './pages/account/Login.jsx';
 import Register from "./pages/account/Register.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import Order from "./pages/admin/Order.jsx"
 
 const App = () => {
     return (
@@ -14,7 +15,7 @@ const App = () => {
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/addproduct" element={<h1>Not Found</h1>} />
                 <Route path="/admin/updateproduct" element={<h1>Not Found</h1>} />
-                <Route path="/admin/order" element={<h1>Not Found</h1>} />
+                <Route path="/admin/order" element={<Order />} />
             </Routes>
         </BrowserRouter>
     );

@@ -2,7 +2,7 @@ import { FaInstagram } from "react-icons/fa6";
 
 const Intro = () => {
     return (
-        <div className='flex flex-row h-96 w-full'>
+        <div className='flex flex-row h-96 w-full scrollbar-hide'>
             <div className='flex flex-col w-1/2 h-full items-center justify-center'>
                 <div>
                     <h1 className='font-abeezee text-6xl mb-2'>Narcissus</h1>

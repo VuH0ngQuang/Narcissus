@@ -37,7 +37,7 @@ const ManageTab = () => {
                                 <h1 className='font-abeezee text-center'>Stock Quantity</h1>
                             </div>
                         </div>
-                        <div className=" h-[calc(100%-2rem)] overflow-scroll flex flex-col no-scrollbar">
+                        <div className=" h-[calc(100%-2rem)] overflow-scroll flex flex-col scrollbar-hide">
                             <ProductList id="1" name="ABC" quantity="10" className="w-full"/>
                             <ProductList id="1" name="ABC" quantity="10" className="w-full"/>
                             <ProductList id="1" name="ABC" quantity="10" className="w-full"/>
@@ -57,14 +57,14 @@ const ManageTab = () => {
                 </div>
                 <div className='w-1/6 flex items-center justify-center flex-col '>
                     <div
-                        className={'bg-[#00FF0A] border border-2 border-black font-abeezee bg-opacity-50 h-10 w-40 rounded-xl flex items-center justify-center mb-10'}>
-                        <Link to='admin/addproduct'>Add Product</Link>
+                        className={'bg-[#00FF0A] border-2 border-black font-abeezee bg-opacity-50 h-10 w-40 rounded-xl flex items-center justify-center mb-10'}>
+                        <Link to='/admin/addproduct'>Add Product</Link>
                     </div>
-                    <div className={'bg-[#FC0000] border border-2 border-black font-abeezee bg-opacity-50 h-10 w-40 rounded-xl flex items-center justify-center mb-10'}>
-                        <Link to='admin/updateproduct'>Update Product</Link>
+                    <div className={'bg-[#FC0000] border-2 border-black font-abeezee bg-opacity-50 h-10 w-40 rounded-xl flex items-center justify-center mb-10'}>
+                        <Link to='/admin/updateproduct'>Update Product</Link>
                     </div>
-                    <div className={'bg-[#00FCFC] border border-2 border-black font-abeezee bg-opacity-50 h-10 w-40 rounded-xl flex items-center justify-center mb-10'}>
-                        <Link to='admin/order'>Order</Link>
+                    <div className={'bg-[#00FCFC] border-2 border-black font-abeezee bg-opacity-50 h-10 w-40 rounded-xl flex items-center justify-center mb-10'}>
+                        <Link to='/admin/order'>Order</Link>
                     </div>
                 </div>
             </div>
