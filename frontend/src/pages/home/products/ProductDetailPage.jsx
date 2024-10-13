@@ -26,7 +26,7 @@ const products = [
 const ProductDetailPage = () => {
     const { id } = useParams();
     const productId = parseInt(id); // Convert the id param to a number
-
+//hehe
     // Find the product by id
     const product = products.find(p => p.id === productId);
 
