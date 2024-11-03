@@ -1,7 +1,7 @@
-package com.narcissus.backend.controllers;
+package com.narcissus.backend.controllers.product;
 
-import com.narcissus.backend.dto.ProductDto;
-import com.narcissus.backend.service.ProductService;
+import com.narcissus.backend.dto.product.ProductDto;
+import com.narcissus.backend.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

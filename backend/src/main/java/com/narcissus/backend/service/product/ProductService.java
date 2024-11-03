@@ -1,6 +1,6 @@
-package com.narcissus.backend.service;
+package com.narcissus.backend.service.product;
 
-import com.narcissus.backend.dto.ProductDto;
+import com.narcissus.backend.dto.product.ProductDto;
 
 import java.util.List;
 

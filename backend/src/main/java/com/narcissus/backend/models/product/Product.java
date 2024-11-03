@@ -1,4 +1,4 @@
-package com.narcissus.backend.models;
+package com.narcissus.backend.models.product;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

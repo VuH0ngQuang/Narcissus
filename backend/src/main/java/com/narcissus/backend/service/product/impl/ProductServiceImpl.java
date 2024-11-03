@@ -1,11 +1,11 @@
 
-package com.narcissus.backend.service.impl;
+package com.narcissus.backend.service.product.impl;
 
-import com.narcissus.backend.dto.ProductDto;
+import com.narcissus.backend.dto.product.ProductDto;
 import com.narcissus.backend.exceptions.NotFoundException;
-import com.narcissus.backend.models.Product;
-import com.narcissus.backend.repository.ProductRepository;
-import com.narcissus.backend.service.ProductService;
+import com.narcissus.backend.models.product.Product;
+import com.narcissus.backend.repository.product.ProductRepository;
+import com.narcissus.backend.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

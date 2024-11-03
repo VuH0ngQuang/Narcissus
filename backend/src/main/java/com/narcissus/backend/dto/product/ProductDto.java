@@ -1,4 +1,4 @@
-package com.narcissus.backend.dto;
+package com.narcissus.backend.dto.product;
 
 import lombok.Data;
 
