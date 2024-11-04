@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import NavBar from '../NavBar.jsx';
 import product1 from '../../../assets/product1.jpg';
-import product2 from '../../../assets/product1.jpg'; // Add more product images as needed
+import product2 from '../../../assets/product1.jpg';
 import product3 from '../../../assets/product1.jpg';
 import product4 from '../../../assets/product1.jpg';
 import product5 from '../../../assets/product1.jpg';
@@ -19,15 +19,12 @@ const products = [
     { id: 6, name: "Sunshine Bundle", price: "$80", description: "Bright sunflowers to make your day.", img: product6 },
     { id: 7, name: "Sunshine Bundle", price: "$80", description: "Bright sunflowers to make your day.", img: product7 },
     { id: 8, name: "Sunshine Bundle", price: "$80", description: "Bright sunflowers to make your day.", img: product8 },
-
-    // Add more products as needed
 ];
 
 const ProductDetailPage = () => {
     const { id } = useParams();
-    const productId = parseInt(id); // Convert the id param to a number
-//hehe
-    // Find the product by id
+    const productId = parseInt(id);
+
     const product = products.find(p => p.id === productId);
 
     if (!product) {
@@ -39,7 +36,12 @@ const ProductDetailPage = () => {
             <NavBar />
             <div className="pt-12 flex flex-col md:flex-row justify-center items-center md:items-start m-10">
                 <div className="w-full md:w-1/2 flex justify-center">
-                    <img src={product.img} alt={product.name} className="rounded-lg w-4/5 md:w-3/4" />
+                    <img
+                        src={product.img}
+                        alt={product.name}
+                        className="rounded-lg w-full h-auto max-h-[80vh] object-cover"
+                        style={{ maxWidth: '90vw' }}
+                    />
                 </div>
 
                 <div className="w-full md:w-1/2 mt-10 md:mt-0 md:ml-10">
