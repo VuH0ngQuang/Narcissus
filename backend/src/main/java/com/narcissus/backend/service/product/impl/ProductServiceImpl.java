@@ -8,7 +8,10 @@ import com.narcissus.backend.repository.product.ProductRepository;
 import com.narcissus.backend.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +32,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto addProduct(ProductDto productDto) {
+    public ProductDto addProduct(ProductDto productDto, MultipartFile image) throws IOException {
+        productDto.setProductImage(image);
         Product product = toEntity(productDto, new Product());
         productRepository.save(product);
         return toDto(product, new ProductDto());
@@ -42,10 +46,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProduct(long id, ProductDto productDto) {
-        Product product = toEntity(productDto, new Product());
-        product.setProductID(id);
+    public ProductDto updateProduct(long id, ProductDto productDto, MultipartFile image) throws IOException {
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product with ID "+id+" not found"));
+
+        if (productDto.getProductName() != null) product.setProductName(productDto.getProductName());
+        if (productDto.getProductInfo() != null) product.setProductInfo(productDto.getProductInfo());
+        if (productDto.getProductStockQuantity() != null) product.setProductStockQuantity(productDto.getProductStockQuantity());
+        if (productDto.getProductPrice() != null) product.setProductPrice(productDto.getProductPrice());
+        if (productDto.getProductDate() != null) product.setProductDate(productDto.getProductDate());
+        if (image != null && !image.isEmpty()) product.setProductImage(image.getBytes());
+
         productRepository.save(product);
+
         return toDto(product, new ProductDto());
     }
 
@@ -62,16 +74,18 @@ public class ProductServiceImpl implements ProductService {
         productDto.setProductInfo(product.getProductInfo());
         productDto.setProductStockQuantity(product.getProductStockQuantity());
         productDto.setProductPrice(product.getProductPrice());
+        productDto.setProductImageBase64(Base64.getEncoder().encodeToString(product.getProductImage()));
 
         return productDto;
     }
 
-    public Product toEntity(ProductDto productDto, Product product) {
+    public Product toEntity(ProductDto productDto, Product product) throws IOException {
         product.setProductName(productDto.getProductName());
         product.setProductInfo(productDto.getProductInfo());
         product.setProductStockQuantity(productDto.getProductStockQuantity());
         product.setProductPrice(productDto.getProductPrice());
         product.setProductDate(new Date());
+        product.setProductImage(productDto.getProductImage().getBytes());
 
         return product;
     }

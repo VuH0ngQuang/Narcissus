@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -30,13 +32,16 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto productDto) {
-        return new ResponseEntity<>(productService.addProduct(productDto), HttpStatus.CREATED);
+    public ResponseEntity<ProductDto> addProduct(@RequestPart("product") ProductDto productDto,
+                                                 @RequestPart("image") MultipartFile image) throws IOException {
+        return new ResponseEntity<>(productService.addProduct(productDto, image), HttpStatus.CREATED);
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable long id, @RequestBody ProductDto productDto) {
-        return new ResponseEntity<>(productService.updateProduct(id, productDto), HttpStatus.OK);
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable long id,
+                                                    @RequestPart("product") ProductDto productDto,
+                                                    @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+        return new ResponseEntity<>(productService.updateProduct(id, productDto, image), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
