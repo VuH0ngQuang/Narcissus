@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(product -> toDto(product, new ProductDto())).collect(Collectors.toList());
+        return products.stream().map(product -> toDto(product, new ProductDto(), false)).collect(Collectors.toList());
     }
 
     @Override
@@ -36,13 +36,13 @@ public class ProductServiceImpl implements ProductService {
         productDto.setProductImage(image);
         Product product = toEntity(productDto, new Product());
         productRepository.save(product);
-        return toDto(product, new ProductDto());
+        return toDto(product, new ProductDto(), true);
     }
 
     @Override
     public ProductDto getDetailsProduct(long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product with ID "+id+" cannot be found"));
-        return toDto(product, new ProductDto());
+        return toDto(product, new ProductDto(), true);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.save(product);
 
-        return toDto(product, new ProductDto());
+        return toDto(product, new ProductDto(), true);
     }
 
     @Override
@@ -68,13 +68,17 @@ public class ProductServiceImpl implements ProductService {
         return "The product with id: "+id+" has been deleted";
     }
 
-    public ProductDto toDto(Product product, ProductDto productDto) {
+    public ProductDto toDto(Product product, ProductDto productDto, boolean includeImage) {
         productDto.setProductID(product.getProductID());
         productDto.setProductName(product.getProductName());
         productDto.setProductInfo(product.getProductInfo());
         productDto.setProductStockQuantity(product.getProductStockQuantity());
         productDto.setProductPrice(product.getProductPrice());
-        productDto.setProductImageBase64(Base64.getEncoder().encodeToString(product.getProductImage()));
+        if (includeImage) {
+            productDto.setProductImageBase64(Base64.getEncoder().encodeToString(product.getProductImage()));
+        } else {
+            productDto.setProductImageBase64(null);
+        }
 
         return productDto;
     }

@@ -1,11 +1,13 @@
 package com.narcissus.backend.models.product;
 
+import com.narcissus.backend.models.orders.ConsistOf;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +22,9 @@ public class Product {
     private int ProductStockQuantity;
     private long ProductPrice;
     private Date ProductDate;
+
+    @OneToMany(mappedBy = "product")
+    Set<ConsistOf> consistOfs;
 
     @Lob
     private byte[] ProductImage;

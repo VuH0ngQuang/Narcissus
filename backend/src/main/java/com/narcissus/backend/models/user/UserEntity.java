@@ -1,10 +1,13 @@
 package com.narcissus.backend.models.user;
 
+import com.narcissus.backend.models.orders.Orders;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -35,11 +38,8 @@ public class UserEntity {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = {
-                    @JoinColumn(name = "users_UserID", referencedColumnName = "UserID"),
-            }
-    )
     private Role role = new Role();
+
+    @OneToMany(mappedBy = "userEntity", fetch = FetchType.EAGER)
+    private List<Orders> orders = new ArrayList<>();
 }
