@@ -57,6 +57,12 @@ public class PaymentService {
         return "Successfully";
     }
 
+    public String confirmWebHook(String url) throws Exception {
+        String result = payOS.confirmWebhook(url);
+        System.out.println(result);
+        return result;
+    }
+
     public void verifyPayment (Webhook webhook) throws Exception{
         WebhookData result = payOS.verifyPaymentWebhookData(webhook);
         System.out.println(result.toString());

@@ -2,6 +2,7 @@ package com.narcissus.backend.controllers.payment;
 
 import com.narcissus.backend.service.payment.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -48,5 +49,10 @@ public class PaymentController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(response);
         }
+    }
+
+    @PostMapping("/confirm-webhook/")
+    public ResponseEntity<String> confirmWebHook(@RequestBody String url) throws Exception {
+        return new ResponseEntity<>(paymentService.confirmWebHook(url), HttpStatus.OK);
     }
 }
