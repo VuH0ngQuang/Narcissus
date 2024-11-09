@@ -76,6 +76,7 @@ public class PaymentService {
 
     public void verifyPayment (Webhook webhook) throws Exception{
         WebhookData result = payOS.verifyPaymentWebhookData(webhook);
+        logger.info("Webhook verify: {}", result);
         System.out.println(result.toString());
         return;
     }

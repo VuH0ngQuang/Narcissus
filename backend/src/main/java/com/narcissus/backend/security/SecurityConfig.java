@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/orders/**").permitAll()
+                        .requestMatchers("api/payment/webhook").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
