@@ -12,6 +12,7 @@ import com.narcissus.backend.repository.product.ProductRepository;
 import com.narcissus.backend.repository.user.UserRepository;
 import com.narcissus.backend.security.TokenGenerator;
 import com.narcissus.backend.service.orders.OrdersService;
+import com.narcissus.backend.service.payment.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,18 +26,20 @@ public class OrdersServiceImpl implements OrdersService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
-    OrdersRepository ordersRepository;
+    private final OrdersRepository ordersRepository;
+    private PaymentService paymentService;
 
     @Autowired
-    public OrdersServiceImpl(OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator) {
+    public OrdersServiceImpl(OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService) {
         this.ordersRepository = ordersRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.tokenGenerator = tokenGenerator;
+        this.paymentService = paymentService;
     }
 
     @Override
-    public OrdersDto createOrders(Set<ConsistOfDto> consistOfDtos, String token) {
+    public OrdersDto createOrders(Set<ConsistOfDto> consistOfDtos, String token) throws Exception {
         Orders orders = new Orders();
 
         //get all price from product list and calculate total
@@ -54,7 +57,10 @@ public class OrdersServiceImpl implements OrdersService {
         orders.setStatus("PENDING");
         orders.setDate(new Date());
         String jwtToken = token.substring(7);
-        orders.setUserEntity(userRepository.findByEmail(tokenGenerator.getEmailFromJWT(jwtToken)).orElseThrow(() -> new NotFoundException("Invalid Token")));
+        orders.setUserEntity(
+                userRepository.findByEmail(
+                        tokenGenerator.getEmailFromJWT(jwtToken)
+                ).orElseThrow(() -> new NotFoundException("Invalid Token")));
 
         Set<ConsistOf> consistOfs = new HashSet<>();
 
@@ -75,6 +81,8 @@ public class OrdersServiceImpl implements OrdersService {
         orders.setConsistOfs(consistOfs);
 
         ordersRepository.save(orders);
+
+        paymentService.createPayment(orders);
 
         return toDto(orders, new OrdersDto());
     }

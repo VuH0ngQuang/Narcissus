@@ -7,7 +7,7 @@ import com.narcissus.backend.models.product.Product;
 import java.util.Set;
 
 public interface OrdersService {
-    OrdersDto createOrders (Set<ConsistOfDto> consistOfDtos,String token);
+    OrdersDto createOrders (Set<ConsistOfDto> consistOfDtos,String token) throws Exception;
     OrdersDto getDetailsOrders (long id);
     OrdersDto updateOrders (long id, OrdersDto ordersDto);
     String deleteOrders (long id);

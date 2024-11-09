@@ -26,7 +26,7 @@ public class OrdersController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<OrdersDto> create (@RequestBody Set<ConsistOfDto> consistOfDtos, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<OrdersDto> create (@RequestBody Set<ConsistOfDto> consistOfDtos, @RequestHeader("Authorization") String token) throws Exception {
         return new ResponseEntity<>(ordersService.createOrders(consistOfDtos, token), HttpStatus.CREATED);
     }
 }
