@@ -62,6 +62,7 @@ public class PaymentService {
     }
 
     public String confirmWebHook(String url) throws Exception {
+        logger.info("confirmWebHook service ran");
         try {
             // Call to PayOS.confirmWebhook()
             String result = payOS.confirmWebhook(url);

@@ -1,9 +1,10 @@
 package com.narcissus.backend.controllers.payment;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.narcissus.backend.service.payment.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +14,6 @@ import vn.payos.type.Webhook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 
 @RequestMapping("/api/payment")
 @Controller
@@ -28,35 +28,29 @@ public class PaymentController {
     }
 
     @PostMapping("/webhook")
-    public ResponseEntity<Map<String, Object>> webhook(@RequestBody Webhook webhook) {
+    public ResponseEntity<ObjectNode> webhook(@RequestBody Webhook webhook) {
+        logger.info("WebHook ran");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode response = objectMapper.createObjectNode();
         try {
             paymentService.verifyPayment(webhook);
-            logger.info("Webhook received: {}", webhook);
-            Map<String, Object> response = Map.of(
-                    "error", 0,
-                    "message", "Webhook delivered",
-                    "data", null
-            );
-            return ResponseEntity
-                    .ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(response);
+            response.put("error", 0);
+            response.put("message", "Webhook delivered");
+            response.set("data", null);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("Error processing webhook: {}", e.getMessage(), e);
-            Map<String, Object> response = Map.of(
-                    "error", -1,
-                    "message", e.getMessage(),
-                    "data", null
-            );
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(response);
+            e.printStackTrace();
+            response.put("error", -1);
+            response.put("message", e.getMessage());
+            response.set("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/confirm-webhook/")
     public ResponseEntity<String> confirmWebHook(@RequestBody String url) throws Exception {
+        logger.info("confirmWebHook ran");
         return new ResponseEntity<>(paymentService.confirmWebHook(url), HttpStatus.OK);
     }
 }
