@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -28,5 +25,10 @@ public class OrdersController {
     @PostMapping("/create")
     public ResponseEntity<OrdersDto> create (@RequestBody Set<ConsistOfDto> consistOfDtos, @RequestHeader("Authorization") String token) throws Exception {
         return new ResponseEntity<>(ordersService.createOrders(consistOfDtos, token), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrdersDto> getDetails(@PathVariable long id) {
+        return new ResponseEntity<>(ordersService.getDetailsOrders(id), HttpStatus.OK);
     }
 }

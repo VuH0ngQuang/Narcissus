@@ -11,6 +11,9 @@ public class OrdersDto {
     private boolean shipped;
     private String status;
     private Date date;
+    private String cancellationReason;
+    private String canceledAt;
+
 
     Set<ConsistOfDto> consistOfDtos;
 }

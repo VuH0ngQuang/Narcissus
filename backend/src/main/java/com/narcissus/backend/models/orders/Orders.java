@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import vn.payos.type.WebhookData;
 
 import java.util.Date;
 import java.util.Set;
@@ -23,6 +24,9 @@ public class Orders {
     private boolean shipped;
     private String status;
     private Date date;
+    private String cancellationReason;
+    private String canceledAt;
+    private String transactionDateTime;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     Set<ConsistOf> consistOfs;

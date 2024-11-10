@@ -12,6 +12,7 @@ import com.narcissus.backend.repository.product.ProductRepository;
 import com.narcissus.backend.repository.user.UserRepository;
 import com.narcissus.backend.security.TokenGenerator;
 import com.narcissus.backend.service.orders.OrdersService;
+
 import com.narcissus.backend.service.payment.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class OrdersServiceImpl implements OrdersService {
     private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
     private final OrdersRepository ordersRepository;
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
 
     @Autowired
     public OrdersServiceImpl(OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService) {
@@ -42,14 +43,12 @@ public class OrdersServiceImpl implements OrdersService {
     public OrdersDto createOrders(Set<ConsistOfDto> consistOfDtos, String token) throws Exception {
         Orders orders = new Orders();
 
-        //get all price from product list and calculate total
-        Set<Long> productIds = consistOfDtos.stream()
-                .map(ConsistOfDto::getProductId)
-                .collect(Collectors.toSet());
-
-        long totalPrice = productRepository.findAllById(productIds)
-                .stream()
-                .mapToLong(Product::getProductPrice)
+        long totalPrice = consistOfDtos.stream()
+                .mapToLong(dto -> {
+                    Product product = productRepository.findById(dto.getProductId())
+                            .orElseThrow(() -> new NotFoundException("Product not found"));
+                    return product.getProductPrice() * dto.getQuantity();
+                })
                 .sum();
 
         orders.setMoney(totalPrice);
@@ -89,24 +88,32 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     public OrdersDto getDetailsOrders(long id) {
-        return null;
+        return toDto(
+                ordersRepository
+                        .findById(id)
+                        .orElseThrow(
+                                () -> new NotFoundException("Cannot found order with id: "+id)
+                        ), new OrdersDto()
+        );
     }
 
-    @Override
-    public OrdersDto updateOrders(long id, OrdersDto ordersDto) {
-        return null;
-    }
-
-    @Override
-    public String deleteOrders(long id) {
-        return "";
-    }
+//    @Override
+//    public OrdersDto updateOrders(long id, OrdersDto ordersDto) {
+//        return null;
+//    }
+//
+//    @Override
+//    public String deleteOrders(long id) {
+//        return "";
+//    }
 
     public OrdersDto toDto (Orders orders, OrdersDto ordersDto) {
         ordersDto.setMoney(orders.getMoney());
         ordersDto.setShipped(orders.isShipped());
         ordersDto.setStatus(orders.getStatus());
         ordersDto.setDate(orders.getDate());
+        ordersDto.setCanceledAt(orders.getCanceledAt());
+        ordersDto.setCancellationReason(orders.getCancellationReason());
         ordersDto.setConsistOfDtos(orders.getConsistOfs()
                 .stream()
                 .map(
