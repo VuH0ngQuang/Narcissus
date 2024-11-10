@@ -19,17 +19,17 @@ const ProductLink = ({ to, children, img }) => {
 const Product = () => {
     return (
         <div className='w-full h-[600px] flex flex-col justify-center'>
-            <div className=' flex flex-row justify-center items-center mb-10'>
-                <ProductLink to={'/product/1'} img={product1}>Test 1</ProductLink>
-                <ProductLink to={'/product/1'} img={product1}>Test 2</ProductLink>
-                <ProductLink to={'/product/1'} img={product1}>Test 3</ProductLink>
-                <ProductLink to={'/product/1'} img={product1}>Test 4</ProductLink>
+            <div className='flex flex-row justify-center items-center mb-10'>
+                <ProductLink to={'/product/1'} img={product1}>Product 1</ProductLink>
+                <ProductLink to={'/product/2'} img={product1}>Product 2</ProductLink>
+                <ProductLink to={'/product/3'} img={product1}>Product 3</ProductLink>
+                <ProductLink to={'/product/4'} img={product1}>Product 4</ProductLink>
             </div>
-            <div className=' flex flex-row justify-center items-center mb-10'>
-                <ProductLink to={'/product/1'} img={product1}>Test 1</ProductLink>
-                <ProductLink to={'/product/1'} img={product1}>Test 2</ProductLink>
-                <ProductLink to={'/product/1'} img={product1}>Test 3</ProductLink>
-                <ProductLink to={'/product/1'} img={product1}>Test 4</ProductLink>
+            <div className='flex flex-row justify-center items-center mb-10'>
+                <ProductLink to={'/product/5'} img={product1}>Product 5</ProductLink>
+                <ProductLink to={'/product/6'} img={product1}>Product 6</ProductLink>
+                <ProductLink to={'/product/7'} img={product1}>Product 7</ProductLink>
+                <ProductLink to={'/product/8'} img={product1}>Product 8</ProductLink>
             </div>
         </div>
     );
