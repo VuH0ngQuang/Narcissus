@@ -23,9 +23,15 @@ public class Orders {
     private boolean shipped;
     private String status;
     private Date date;
+    private String cancellationReason;
+    private String canceledAt;
+    private String transactionDateTime;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     Set<ConsistOf> consistOfs;
+
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    Set<Disburse> disburses;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

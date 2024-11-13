@@ -1,13 +1,12 @@
 package com.narcissus.backend.models.user;
 
+import com.narcissus.backend.models.orders.Disburse;
 import com.narcissus.backend.models.orders.Orders;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -27,6 +26,9 @@ public class UserEntity {
     private Date date;
 
     @Override
+    public int hashCode() {return Objects.hash(userId, userName);}
+
+    @Override
     public String toString() {
         return "UserEntity{" +
                 "userId=" + userId +
@@ -40,6 +42,14 @@ public class UserEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private Role role = new Role();
 
+    @OneToMany(mappedBy = "user", fetch =FetchType.EAGER)
+    Set<UserCart> userCarts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    Set<Disburse> disburses;
+
     @OneToMany(mappedBy = "userEntity", fetch = FetchType.EAGER)
     private List<Orders> orders = new ArrayList<>();
+
+
 }

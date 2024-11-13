@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductDto toDto(Product product, ProductDto productDto, boolean includeImage) {
-        productDto.setProductID(product.getProductID());
+        productDto.setProductID(product.getProductId());
         productDto.setProductName(product.getProductName());
         productDto.setProductInfo(product.getProductInfo());
         productDto.setProductStockQuantity(product.getProductStockQuantity());

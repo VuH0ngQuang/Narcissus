@@ -1,6 +1,7 @@
 package com.narcissus.backend.models.product;
 
 import com.narcissus.backend.models.orders.ConsistOf;
+import com.narcissus.backend.models.user.UserCart;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,15 +17,18 @@ import java.util.Set;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long ProductID;
+    private long ProductId;
     private String ProductName;
     private String ProductInfo;
     private int ProductStockQuantity;
     private long ProductPrice;
     private Date ProductDate;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch =FetchType.EAGER)
     Set<ConsistOf> consistOfs;
+
+    @OneToMany(mappedBy = "product", fetch =FetchType.EAGER)
+    Set<UserCart> userCarts;
 
     @Lob
     private byte[] ProductImage;
