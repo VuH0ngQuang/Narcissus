@@ -7,10 +7,8 @@ const HomePage = () => {
   return (
     <div className='overflow-scroll h-screen scrollbar-hide flex flex-col'>
         <NavBar />
-        <div className="flex flex-col min-h-screen">  
-            <BannerAds />
-            <Intro />
-        </div>
+        <BannerAds />
+        <Intro />
         <Product />
     </div>
   );
