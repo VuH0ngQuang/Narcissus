@@ -3,14 +3,17 @@ package com.narcissus.backend.service.orders.impl;
 import com.narcissus.backend.dto.orders.ConsistOfDto;
 import com.narcissus.backend.dto.orders.OrdersDto;
 import com.narcissus.backend.exceptions.NotFoundException;
+import com.narcissus.backend.models.email.EmailDetails;
 import com.narcissus.backend.models.orders.ConsistOf;
 import com.narcissus.backend.models.orders.ConsistOfKey;
 import com.narcissus.backend.models.orders.Orders;
 import com.narcissus.backend.models.product.Product;
+import com.narcissus.backend.models.user.UserEntity;
 import com.narcissus.backend.repository.orders.OrdersRepository;
 import com.narcissus.backend.repository.product.ProductRepository;
 import com.narcissus.backend.repository.user.UserRepository;
 import com.narcissus.backend.security.TokenGenerator;
+import com.narcissus.backend.service.email.EmailService;
 import com.narcissus.backend.service.orders.OrdersService;
 
 import com.narcissus.backend.service.payment.PaymentService;
@@ -29,14 +32,16 @@ public class OrdersServiceImpl implements OrdersService {
     private final TokenGenerator tokenGenerator;
     private final OrdersRepository ordersRepository;
     private final PaymentService paymentService;
+    private final EmailService emailService;
 
     @Autowired
-    public OrdersServiceImpl(OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService) {
+    public OrdersServiceImpl(EmailService emailService, OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService) {
         this.ordersRepository = ordersRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.tokenGenerator = tokenGenerator;
         this.paymentService = paymentService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -56,10 +61,9 @@ public class OrdersServiceImpl implements OrdersService {
         orders.setStatus("PENDING");
         orders.setDate(new Date());
         String jwtToken = token.substring(7);
-        orders.setUserEntity(
-                userRepository.findByEmail(
-                        tokenGenerator.getEmailFromJWT(jwtToken)
-                ).orElseThrow(() -> new NotFoundException("Invalid Token")));
+        UserEntity user = userRepository.findByEmail(tokenGenerator.getEmailFromJWT(jwtToken))
+                .orElseThrow(() -> new NotFoundException("Invalid Token"));
+        orders.setUserEntity(user);
 
         Set<ConsistOf> consistOfs = new HashSet<>();
 
@@ -81,7 +85,14 @@ public class OrdersServiceImpl implements OrdersService {
 
         ordersRepository.save(orders);
 
-        paymentService.createPayment(orders);
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(user.getEmail());
+        emailDetails.setSubject("Thank you for your order! Your flowers are on their way");
+        emailDetails.setMsgBody(emailService.mailOrder(user.getUserName(),totalPrice, consistOfs));
+
+        emailService.sendEmail(emailDetails);
+
+//        paymentService.createPayment(orders);
 
         return toDto(orders, new OrdersDto());
     }

@@ -33,4 +33,9 @@ public class AuthController {
         AuthResponseDto responseDto = authService.login(loginDto);
         return responseDto.getAccessToken() != null ? new ResponseEntity<>(responseDto, HttpStatus.OK) : new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/forgetPassword")
+    public ResponseEntity<String>  forgetPassword(@RequestBody LoginDto loginDto) {
+        return new ResponseEntity<>(authService.forgetPassword(loginDto.getEmail()), HttpStatus.OK);
+    }
 }
