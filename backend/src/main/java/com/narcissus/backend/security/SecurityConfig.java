@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/payment/**").authenticated()
                         .requestMatchers("api/payment/webhook").permitAll()
                         .requestMatchers("/api/user/**").authenticated()
+                        .requestMatchers("api/sse/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

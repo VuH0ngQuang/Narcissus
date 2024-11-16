@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,9 +91,18 @@ public class OrdersServiceImpl implements OrdersService {
         emailDetails.setSubject("Thank you for your order! Your flowers are on their way");
         emailDetails.setMsgBody(emailService.mailOrder(user.getUserName(),totalPrice, consistOfs));
 
-        emailService.sendEmail(emailDetails);
+        //make asynchronously
+        CompletableFuture<Void> emailFuture = CompletableFuture.runAsync(() -> emailService.sendEmail(emailDetails));
+        CompletableFuture<Void> paymentFuture = CompletableFuture.runAsync(() -> {
+            try {
+                paymentService.createPayment(orders);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
 
-//        paymentService.createPayment(orders);
+        //waits for both tasks to complete
+        CompletableFuture.allOf(emailFuture, paymentFuture).join();
 
         return toDto(orders, new OrdersDto());
     }
@@ -117,7 +127,6 @@ public class OrdersServiceImpl implements OrdersService {
 //    public String deleteOrders(long id) {
 //        return "";
 //    }
-
     public OrdersDto toDto (Orders orders, OrdersDto ordersDto) {
         ordersDto.setMoney(orders.getMoney());
         ordersDto.setShipped(orders.isShipped());
