@@ -93,6 +93,7 @@ public class PaymentServiceImpl implements PaymentService {
 //    }
 
     public void verifyPayment (Webhook webhook) throws Exception{
+        logger.info("verifyPayment() run");
         WebhookData result = payOS.verifyPaymentWebhookData(webhook);
         System.out.println(result.toString());
         Orders orders = ordersRepository.findById(result.getOrderCode()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+result.getOrderCode()));

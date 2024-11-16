@@ -27,6 +27,7 @@ public class PaymentController {
 
     @PostMapping("/webhook")
     public ResponseEntity<ObjectNode> webhook(@RequestBody Webhook webhook) {
+        logger.info("received Webhook")
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         try {
