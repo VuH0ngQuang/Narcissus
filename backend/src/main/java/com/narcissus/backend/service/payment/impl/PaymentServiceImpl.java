@@ -5,7 +5,9 @@ import com.narcissus.backend.exceptions.NotFoundException;
 import com.narcissus.backend.models.orders.Orders;
 import com.narcissus.backend.models.product.Product;
 import com.narcissus.backend.repository.orders.OrdersRepository;
+import com.narcissus.backend.service.SSE.SSEService;
 import com.narcissus.backend.service.payment.PaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.payos.PayOS;
 import vn.payos.type.*;
@@ -21,9 +23,12 @@ public class PaymentServiceImpl implements PaymentService {
     private final String PAYOSAPI = "e0a0ec2b-2981-44e0-a94d-a7b5edad57eb";
     private final String PAYOSCHECKSUM = "0f81aaf3911f6f3724f7def8d6927422a511fbbe2be15d2fdf1939d11a1c836d";
     private final String HOSTIP = "20.89.177.142";
-    OrdersRepository ordersRepository;
+    private final OrdersRepository ordersRepository;
+    private final SSEService sseService;
 
-    public PaymentServiceImpl(OrdersRepository ordersRepository) {
+    @Autowired
+    public PaymentServiceImpl(SSEService sseService, OrdersRepository ordersRepository) {
+        this.sseService = sseService;
         this.ordersRepository = ordersRepository;
     }
 
@@ -54,7 +59,6 @@ public class PaymentServiceImpl implements PaymentService {
         CheckoutResponseData responseData = payOS.createPaymentLink(paymentData);
         System.out.println(responseData.toString());
         System.out.println(responseData.getCheckoutUrl());
-        return ;
     }
 
     public PaymentLinkData getPaymentData(long orderId) throws Exception {
@@ -97,6 +101,7 @@ public class PaymentServiceImpl implements PaymentService {
             orders.setTransactionDateTime(result.getTransactionDateTime());
             ordersRepository.save(orders);
         }
-        return ;
+
+        sseService.publishEvent(orders.getOrdersId(), result);
     }
 }
