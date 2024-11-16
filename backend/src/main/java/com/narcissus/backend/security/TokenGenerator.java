@@ -19,7 +19,7 @@ import java.util.Date;
 @Component
 public class TokenGenerator {
 
-    private final long JWT_EXPERATION = 70000;
+    private final long JWT_EXPERATION = 900000;
     private final String JWT_SECRET = "                           " +
             "                        _ooOoo_\n" +
             "                       o8888888o\n" +
