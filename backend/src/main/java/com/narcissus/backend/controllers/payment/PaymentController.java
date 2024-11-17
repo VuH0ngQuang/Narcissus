@@ -29,25 +29,24 @@ public class PaymentController {
     }
 
     @PostMapping("/webhook")
-    public ResponseEntity<String> webhook(@RequestBody String string) {
+    public ResponseEntity<ObjectNode> webhook(@RequestBody Webhook webhook) {
         logger.info("received Webhook");
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        ObjectNode response = objectMapper.createObjectNode();
-//        try {
-//            paymentService.verifyPayment(webhook);
-//            response.put("error", 0);
-//            response.put("message", "Webhook delivered");
-//            response.set("data", null);
-//
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            response.put("error", -1);
-//            response.put("message", e.getMessage());
-//            response.set("data", null);
-//            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-        return new ResponseEntity<>(string, HttpStatus.OK);
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode response = objectMapper.createObjectNode();
+        try {
+            paymentService.verifyPayment(webhook);
+            response.put("error", 0);
+            response.put("message", "Webhook delivered");
+            response.set("data", null);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("error", -1);
+            response.put("message", e.getMessage());
+            response.set("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 //    @PostMapping("/confirm-webhook/")
