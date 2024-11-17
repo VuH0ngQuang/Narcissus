@@ -1,10 +1,9 @@
 package com.narcissus.backend.service.SSE;
 
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Sinks;
 import vn.payos.type.WebhookData;
 
-public interface  SSEService {
-    public Flux<WebhookData> streamEvents(Long id);
-    public void publishEvent(Long id, WebhookData event);
+public interface SSEService {
+    Flux<WebhookData> streamEvents(Long id);
+    void publishEvent(Long id, WebhookData event);
 }

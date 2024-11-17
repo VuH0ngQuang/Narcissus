@@ -21,7 +21,7 @@ import vn.payos.type.Webhook;
 public class PaymentController {
 
     PaymentService paymentService;
-     Logger logger = LoggerFactory.getLogger(PaymentController.class);
+    Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
     @Autowired
     public PaymentController(PaymentService paymentService) {
