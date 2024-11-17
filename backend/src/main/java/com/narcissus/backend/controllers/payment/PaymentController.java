@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.narcissus.backend.dto.orders.CancelPaymentDto;
 import com.narcissus.backend.service.payment.PaymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import vn.payos.type.Webhook;
 public class PaymentController {
 
     PaymentService paymentService;
+     Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
     @Autowired
     public PaymentController(PaymentService paymentService) {
@@ -27,7 +30,7 @@ public class PaymentController {
 
     @PostMapping("/webhook")
     public ResponseEntity<ObjectNode> webhook(@RequestBody Webhook webhook) {
-        logger.info("received Webhook")
+        logger.info("received Webhook");
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         try {
