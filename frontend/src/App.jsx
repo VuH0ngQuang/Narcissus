@@ -7,6 +7,8 @@ import ProductDetailPage from './pages/home/products/ProductDetailPage.jsx';
 import Order from "./pages/admin/Order.jsx"
 import PurchasedProduct1 from "./pages/test/PurchasedProduct1.jsx";
 import PurchasedProduct2 from "./pages/test/PurchasedProduct2.jsx";
+import SellerDashboard from "./pages/test/SellerDashboard.jsx";
+import EditProduct from "./pages/test/EditProduct.jsx";
 
 
 const App = () => {
@@ -21,8 +23,10 @@ const App = () => {
                 <Route path="/admin/addproduct" element={<h1>Not Found</h1>} />
                 <Route path="/admin/updateproduct" element={<h1>Not Found</h1>} />
                 <Route path="/admin/order" element={<Order />} />
-                <Route path="/purchased-product-1" element={<PurchasedProduct1 />} />
-                <Route path="/purchased-product-2" element={<PurchasedProduct2 />} />
+                <Route path="/purchasedproduct1" element={<PurchasedProduct1 />} />
+                <Route path="/purchasedproduct2" element={<PurchasedProduct2 />} />
+                <Route path="/editproduct" element={<EditProduct />} />
+                <Route path="/sellerdashboard" element={<SellerDashboard />} />
             </Routes>
         </BrowserRouter>
     );

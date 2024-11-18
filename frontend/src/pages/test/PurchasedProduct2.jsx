@@ -27,11 +27,11 @@ const PurchasedProduct2 = () => {
                         </div>
                     ))}
                 </div>
-                <div className="flex justify-between items-center mt-8 border-t pt-4">
+                <div className="flex justify-between items-center">
                     <div />
                     <div>
                         <p className="text-2xl font-bold">Total: $300.00</p>
-                        <button className="bg-black text-white px-4 py-2 rounded-md">
+                        <button className="bg-black text-white px-4 py-2 rounded-md mt-4">
                             BUY ME AGAIN
                         </button>
                     </div>
