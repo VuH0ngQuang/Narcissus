@@ -1,9 +1,8 @@
 import NavBar from "../home/NavBar.jsx";
 import Cart from "./Cart.jsx";
-// import Comment from "./Comment.jsx";
 import Pay from "./Pay.jsx";
-// import PayFailed from "./PayInfo.jsx";
-// import PaySuccessful from "./PayInfo.jsx";
+import Comment from "./Comment.jsx";
+import { PayFailed, PaySuccessful } from './PayInfo.jsx';
 import OrderSummary from "./OrderSummary.jsx";
 
 
@@ -15,13 +14,29 @@ const CheckoutPage = () => {
 
             <NavBar />
             <div className="h-screen w-full flex flex-row">
-                <div className="flex-[1.1] bg-gray-200">
+                <div className="flex-[1.1] border-r-[1px] border-black">
                     <Pay />
                 </div>
-                <div className="flex-[1] bg-gray-100">
+                <div className="flex-[1] bg-gray-100 ">
                     <OrderSummary />
                 </div>
             </div> 
+
+            <NavBar />
+            <div className="h-screen w-full flex flex-row">
+                <div className="flex-[1.1] border-r-[1px] border-black">
+                   <Comment/>
+                </div>
+                <div className="flex-[1] bg-gray-100 ">
+                    <OrderSummary />
+                </div>
+            </div> 
+
+            <NavBar/>
+            <PayFailed/>
+
+            <NavBar/>
+            <PaySuccessful/>
 
         </div>
      );
