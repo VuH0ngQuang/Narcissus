@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const NavBar = () => {
     return (
-        <div className='pt-[4px] pb-[4px] h-[48px] w-full bg-white flex flex-row fixed top-0 z-50 border-b-2 border-black'>
+        <div className='pt-[4px] pb-[4px] h-[48px] w-full bg-[#D4F6FF] flex flex-row fixed top-0 z-50 border-b-[1px] border-black'>
             <div className='h-full w-1/4'>
                 <Link to={'/'} className='flex flex-row h-full w- ml-3'>
                     <img src={logo} alt='logo' className='h-full ml-1' />
