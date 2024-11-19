@@ -2,13 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './pages/home/HomePage.jsx';
 import Login from './pages/account/Login.jsx';
 import Register from "./pages/account/Register.jsx";
-import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
-import ProductDetailPage from './pages/home/products/ProductDetailPage.jsx';
-import Order from "./pages/admin/Order.jsx"
-import PurchasedProduct1 from "./pages/PurchasedProduct/PurchasedProduct1.jsx";
-import PurchasedProduct2 from "./pages/PurchasedProduct/PurchasedProduct2.jsx";
-import SellerDashboard from "./pages/EditProduct/SellerDashboard.jsx";
-import EditProduct from "./pages/EditProduct/EditProduct.jsx";
+import AdminDashboard from "./pages/account/admin/AdminDashboard.jsx";
+import ProductDetailPage from './pages/products/ProductDetailPage.jsx';
+import Order from "./pages/account/admin/Order.jsx"
+import PurchasedProduct1 from "./pages/purchasedProduct/PurchasedProduct1.jsx";
+import PurchasedProduct2 from "./pages/purchasedProduct/PurchasedProduct2.jsx";
+import SellerDashboard from "./pages/editProduct/SellerDashboard.jsx";
+import EditProduct from "./pages/editProduct/EditProduct.jsx";
 
 
 const App = () => {

@@ -1,14 +1,14 @@
 import { useParams } from "react-router-dom";
-import NavBar from '../NavBar.jsx';
-import product1 from '../../../assets/product1.jpg';
-import product2 from '../../../assets/product1.jpg';
-import product3 from '../../../assets/product1.jpg';
-import product4 from '../../../assets/product1.jpg';
-import product5 from '../../../assets/product1.jpg';
-import product6 from '../../../assets/product1.jpg';
-import product7 from '../../../assets/product1.jpg';
-import product8 from '../../../assets/product1.jpg';
-import combine from '../../../assets/combine.png';
+import NavBar from '../home/NavBar.jsx';
+import product1 from '../../assets/product1.jpg';
+import product2 from '../../assets/product1.jpg';
+import product3 from '../../assets/product1.jpg';
+import product4 from '../../assets/product1.jpg';
+import product5 from '../../assets/product1.jpg';
+import product6 from '../../assets/product1.jpg';
+import product7 from '../../assets/product1.jpg';
+import product8 from '../../assets/product1.jpg';
+import combine from '../../assets/combine.png';
 
 const products = [
     { id: 1, name: "Rosy Delight", price: "$100", description: "A beautiful bouquet of roses.", img: product1, sold: 150 },
