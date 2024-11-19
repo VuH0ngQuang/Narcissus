@@ -5,10 +5,10 @@ import Register from "./pages/account/Register.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import ProductDetailPage from './pages/home/products/ProductDetailPage.jsx';
 import Order from "./pages/admin/Order.jsx"
-import PurchasedProduct1 from "./pages/test/PurchasedProduct1.jsx";
-import PurchasedProduct2 from "./pages/test/PurchasedProduct2.jsx";
-import SellerDashboard from "./pages/test/SellerDashboard.jsx";
-import EditProduct from "./pages/test/EditProduct.jsx";
+import PurchasedProduct1 from "./pages/PurchasedProduct/PurchasedProduct1.jsx";
+import PurchasedProduct2 from "./pages/PurchasedProduct/PurchasedProduct2.jsx";
+import SellerDashboard from "./pages/EditProduct/SellerDashboard.jsx";
+import EditProduct from "./pages/EditProduct/EditProduct.jsx";
 
 
 const App = () => {
