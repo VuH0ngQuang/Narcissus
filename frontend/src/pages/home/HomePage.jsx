@@ -1,4 +1,4 @@
-import NavBar from './NavBar.jsx'
+import NavBar from "./NavBar.jsx";
 import BannerAds from "./BannerAds.jsx";
 import Intro from "./Intro.jsx";
 import Product from "./Product.jsx";
