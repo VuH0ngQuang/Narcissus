@@ -1,4 +1,4 @@
-import NavBar from "../home/NavBar.jsx";
+import NavBar from "../../home/NavBar.jsx";
 import ManageTab from "./ManageTab.jsx";
 
 const AdminDashboard = () => {

@@ -1,14 +1,14 @@
 import { useParams } from "react-router-dom";
-import NavBar from '../NavBar.jsx';
-import product1 from '../../../assets/product1.jpg';
-import product2 from '../../../assets/product1.jpg';
-import product3 from '../../../assets/product1.jpg';
-import product4 from '../../../assets/product1.jpg';
-import product5 from '../../../assets/product1.jpg';
-import product6 from '../../../assets/product1.jpg';
-import product7 from '../../../assets/product1.jpg';
-import product8 from '../../../assets/product1.jpg';
-import combine from '../../../assets/combine.png';
+import NavBar from '../home/NavBar.jsx';
+import product1 from '../../assets/product1.jpg';
+import product2 from '../../assets/product1.jpg';
+import product3 from '../../assets/product1.jpg';
+import product4 from '../../assets/product1.jpg';
+import product5 from '../../assets/product1.jpg';
+import product6 from '../../assets/product1.jpg';
+import product7 from '../../assets/product1.jpg';
+import product8 from '../../assets/product1.jpg';
+import combine from '../../assets/combine.png';
 
 const products = [
     { id: 1, name: "Rosy Delight", price: "$100", description: "A beautiful bouquet of roses.", img: product1, sold: 150 },
@@ -35,7 +35,6 @@ const ProductDetailPage = () => {
         <>
             <NavBar />
             <div className="pt-12 flex flex-col md:flex-row justify-center items-center md:items-start m-10">
-                {/* Left column for product image */}
                 <div className="w-full md:w-1/2 flex justify-center">
                     <img
                         src={product.img}
@@ -45,14 +44,16 @@ const ProductDetailPage = () => {
                     />
                 </div>
 
+
                 <div className="w-full md:w-1/2 mt-10 md:mt-0 md:ml-10">
                     <h1 className="text-3xl font-bold mb-4">{product.name} - {product.price}</h1>
                     <p className="text-gray-600 mb-6">
                         {product.description}
                     </p>
                     <p className="text-gray-500 mb-6">
-                        <strong>Product Sold:</strong> {product.sold}
+                        <strong>Units Sold:</strong> {product.sold}
                     </p>
+
 
                     <div className="flex items-center mb-6">
                         <span className="mr-4">Quantity</span>
@@ -62,24 +63,30 @@ const ProductDetailPage = () => {
                             <button className="px-2">+</button>
                         </div>
                     </div>
-                    <div>
+
+
+                    <div className="mt-8 text-left">
                         <h2 className="text-xl font-semibold mb-4">Excellent Combination with:</h2>
                         <img
                             src={combine}
                             alt="Excellent Combination"
-                            className="w-full h-auto rounded-lg"
-                            style={{maxWidth: '100%', maxHeight: '500px', objectFit: 'cover'}}
+                            className="w-80 h-auto rounded-md"
+                            style={{maxWidth: '100%'}}
                         />
-
                     </div>
-                    <button className="bg-black text-white px-8 py-3 rounded-lg">
-                        ADD TO CART
-                    </button>
+
+                    <div className="flex justify-start mt-6">
+                        <button className="bg-black text-white px-8 py-3 rounded-lg mr-4">
+                            ADD TO CART
+                        </button>
+                        <button className="bg-[#FF0099] text-white px-8 py-3 rounded-lg">
+                            BUY NOW
+                        </button>
+                    </div>
                 </div>
             </div>
         </>
     );
 };
-// đcm
 
 export default ProductDetailPage;
