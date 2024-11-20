@@ -30,8 +30,7 @@ const LoginForm = () => {
 
                 // Save the token in localStorage for future requests
                 localStorage.setItem('authToken', fullToken);
-
-                alert("Login successful!");
+                window.location.href = 'http://localhost:5173';
 
                 // Redirect or update the UI based on successful login
             } else {
