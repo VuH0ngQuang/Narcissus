@@ -1,7 +1,11 @@
+import NavBar from "../home/NavBar.jsx";
+import RegisterForm from "./RegisterForm.jsx";
+
 const Register = () => {
     return (
         <div>
-            <h1>Register</h1>
+            <NavBar />
+            <RegisterForm />
         </div>
     );
 }

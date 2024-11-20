@@ -23,7 +23,7 @@ const BannerAds = () => {
     }, [ads.length]);
 
     return (
-        <div>
+        <div className=''>
             <div className='h-12'></div>
             <div className="w-full aspect-[32/4.5] flex items-center justify-center overflow-hidden">
                 <img
