@@ -31,6 +31,11 @@ public class ProductController {
         return new ResponseEntity<> (productService.getDetailsProduct(id), HttpStatus.OK);
     }
 
+    @GetMapping("/getImage/{id}")
+    public ResponseEntity<String> getImage(@PathVariable long id){
+        return new ResponseEntity<>(productService.getImage(id), HttpStatus.OK);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<ProductDto> addProduct(@RequestPart("product") ProductDto productDto,
                                                  @RequestPart("image") MultipartFile image) throws IOException {

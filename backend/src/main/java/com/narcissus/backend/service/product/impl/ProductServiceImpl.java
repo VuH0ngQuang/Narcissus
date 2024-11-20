@@ -68,6 +68,12 @@ public class ProductServiceImpl implements ProductService {
         return "The product with id: "+id+" has been deleted";
     }
 
+    @Override
+    public String getImage(long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product with ID "+id+" cannot be found"));
+        return Base64.getEncoder().encodeToString(product.getProductImage());
+    }
+
     public ProductDto toDto(Product product, ProductDto productDto, boolean includeImage) {
         productDto.setProductID(product.getProductId());
         productDto.setProductName(product.getProductName());
