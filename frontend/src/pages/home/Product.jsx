@@ -1,15 +1,17 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import product1 from '../../assets/product1.jpg';
+import { ScrollMenu } from "react-horizontal-scrolling-menu";
+import "react-horizontal-scrolling-menu/dist/styles.css";
 
 const ProductLink = ({ to, children, img }) => {
     return (
         <Link to={to}>
-            <div className='h-60 w-44 ml-10 mr-10 rounded-3xl'>
-                <div className='bg-[#D9D9D9] rounded-t-3xl h-4/5'>
-                    <img src={img} alt='product' className='w-full h-full object-cover rounded-t-3xl'/>
+            <div className="h-60 w-44 ml-5 mr-5 rounded-3xl">
+                <div className="bg-[#D9D9D9] rounded-t-3xl h-4/5">
+                    <img src={img} alt="product" className="w-full h-full object-cover rounded-t-3xl" />
                 </div>
-                <div className='bg-[#ADADAD] h-1/5 rounded-b-3xl flex justify-center items-center'>
-                    <h1 className='font-abeezee text-white'>{children}</h1>
+                <div className="bg-[#ADADAD] h-1/5 rounded-b-3xl flex justify-center items-center">
+                    <h1 className="font-abeezee text-white">{children}</h1>
                 </div>
             </div>
         </Link>
@@ -17,20 +19,66 @@ const ProductLink = ({ to, children, img }) => {
 };
 
 const Product = () => {
+    const [products, setProducts] = useState([]);
+    const host = "127.0.0.1:8080"; // Replace with your actual host
+
+    useEffect(() => {
+        // Fetch product list
+        fetch(`http://${host}/api/products/all`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                // Fetch images for each product
+                const productsWithImages = data.map((product) =>
+                    fetch(`http://${host}/api/products/getImage/${product.productID}`)
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.text();
+                        })
+                        .then((imageBase64) => ({
+                            ...product,
+                            productImageBase64: `data:image/jpeg;base64,${imageBase64}`,
+                        }))
+                        .catch((error) => {
+                            console.error(`Error fetching image for product ${product.productID}:`, error);
+                            return { ...product, productImageBase64: "" }; // Fallback to empty image
+                        })
+                );
+
+                return Promise.all(productsWithImages);
+            })
+            .then((productsWithImages) => setProducts(productsWithImages))
+            .catch((error) => console.error("Error fetching products:", error));
+    }, [host]);
+
+    const handleWheel = (apiObj, ev) => {
+        if (ev.deltaY < 0) {
+            apiObj.scrollPrev(); // Scroll left
+        } else if (ev.deltaY > 0) {
+            apiObj.scrollNext(); // Scroll right
+        }
+    };
+
     return (
-        <div className='w-full h-[600px] flex flex-col justify-center'>
-            <div className='flex flex-row justify-center items-center mb-10'>
-                <ProductLink to={'/product/1'} img={product1}>Product 1</ProductLink>
-                <ProductLink to={'/product/2'} img={product1}>Product 2</ProductLink>
-                <ProductLink to={'/product/3'} img={product1}>Product 3</ProductLink>
-                <ProductLink to={'/product/4'} img={product1}>Product 4</ProductLink>
-            </div>
-            <div className='flex flex-row justify-center items-center mb-10'>
-                <ProductLink to={'/product/5'} img={product1}>Product 5</ProductLink>
-                <ProductLink to={'/product/6'} img={product1}>Product 6</ProductLink>
-                <ProductLink to={'/product/7'} img={product1}>Product 7</ProductLink>
-                <ProductLink to={'/product/8'} img={product1}>Product 8</ProductLink>
-            </div>
+        <div className="w-full h-[600px] flex flex-col justify-center scrollbar-hide ">
+            <ScrollMenu onWheel={handleWheel} wrapperClassName="no-scrollbar">
+                {products.map((product) => (
+                    <div key={product.productID} itemID={product.productID} className="mr-5">
+                        <ProductLink
+                            to={`/product/${product.productID}`}
+                            img={product.productImageBase64}
+                        >
+                            {product.productName}
+                        </ProductLink>
+                    </div>
+                ))}
+            </ScrollMenu>
         </div>
     );
 };

@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="cab90dac-43aa-4229-937a-039c50a338f6" name="Narcissus" url="">
-        <fileTransfer rootFolder="/home/vuhongquang/" accessType="SFTP" host="20.89.177.142" port="22" sshConfigId="383db34c-7c09-426b-b679-94e21d780c09" sshConfig="Narcissus">
+        <fileTransfer rootFolder="/home/vuhongquang" accessType="SFTP" host="20.89.177.142" port="22" sshConfigId="383db34c-7c09-426b-b679-94e21d780c09" sshConfig="Narcissus">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
