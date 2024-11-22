@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoginBanner from '../../assets/loginbanner.jpg';
 import { Link } from "react-router-dom";
+import {FEHost} from "../../config.js";
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -30,7 +31,7 @@ const LoginForm = () => {
 
                 // Save the token in localStorage for future requests
                 localStorage.setItem('authToken', fullToken);
-                window.location.href = 'http://localhost:5173';
+                window.location.href = `${FEHost}`;
 
                 // Redirect or update the UI based on successful login
             } else {
@@ -60,7 +61,7 @@ const LoginForm = () => {
                                         placeholder="Email"
                                         className='bg-transparent w-[calc(100%-1rem)] focus:outline-none ml-2 mr-2 mt-1 mb-1 font-abeezee placeholder:text-black'
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                            onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </div>
                             </div>

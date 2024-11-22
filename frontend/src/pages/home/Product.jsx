@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { host } from "../../config.js";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import "react-horizontal-scrolling-menu/dist/styles.css";
 
@@ -20,11 +21,10 @@ const ProductLink = ({ to, children, img }) => {
 
 const Product = () => {
     const [products, setProducts] = useState([]);
-    const host = "127.0.0.1:8080"; // Replace with your actual host
 
     useEffect(() => {
         // Fetch product list
-        fetch(`http://${host}/api/products/all`)
+        fetch(`${host}/products/all`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

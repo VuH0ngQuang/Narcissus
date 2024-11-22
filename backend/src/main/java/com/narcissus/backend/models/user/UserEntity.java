@@ -23,6 +23,7 @@ public class UserEntity {
     @Column(name = "username")
     private String userName;
     private String phoneNumber;
+    private String address;
     private Date date;
 
     @Override
