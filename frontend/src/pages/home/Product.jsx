@@ -34,7 +34,7 @@ const Product = () => {
             .then((data) => {
                 // Fetch images for each product
                 const productsWithImages = data.map((product) =>
-                    fetch(`http://${host}/api/products/getImage/${product.productID}`)
+                    fetch(`${host}/products/getImage/${product.productID}`)
                         .then((response) => {
                             if (!response.ok) {
                                 throw new Error(`HTTP error! status: ${response.status}`);

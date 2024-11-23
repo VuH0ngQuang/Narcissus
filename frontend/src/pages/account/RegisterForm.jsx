@@ -1,4 +1,3 @@
-import {Link} from "react-router-dom";
 import LoginBanner from "../../assets/loginbanner.jpg";
 import {useState} from "react";
 import {FEHost, host} from "../../config.js";
@@ -7,15 +6,13 @@ const RegisterForm = () => {
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [birthday, setBirthday] = useState('');
-    const [gender, setGender] = useState('');
     const [address, setAddress] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
 
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        const registerData = {userName, email, password, address, phoneNumber}
+        const registerData = {username: userName, email, password, address, phoneNumber}
 
         try {
             const response = await fetch(`${host}/auth/register`, {
