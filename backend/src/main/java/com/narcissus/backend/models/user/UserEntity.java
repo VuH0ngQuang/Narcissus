@@ -1,7 +1,9 @@
 package com.narcissus.backend.models.user;
 
+import com.narcissus.backend.models.orders.ConsistOf;
 import com.narcissus.backend.models.orders.Disburse;
 import com.narcissus.backend.models.orders.Orders;
+import com.narcissus.backend.models.product.Review;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -51,6 +53,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userEntity", fetch = FetchType.EAGER)
     private List<Orders> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch =FetchType.EAGER)
+    List<Review> reviews;
 
 
 }

@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -31,6 +32,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch =FetchType.EAGER)
     Set<UserCart> userCarts;
+
+    @OneToMany(mappedBy = "product", fetch =FetchType.EAGER)
+    List<Review> reviews;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Seller seller;
