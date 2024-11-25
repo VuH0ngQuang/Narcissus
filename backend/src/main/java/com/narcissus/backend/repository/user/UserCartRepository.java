@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface UserCartRepository  extends JpaRepository<UserCart, UserCartKey> {
-    @Query("SELECT uc FROM UserCart uc WHERE uc.user.userId = :userId AND uc.product.ProductId = :productId")
+    @Query("SELECT uc FROM UserCart uc WHERE uc.user.userId = :userId AND uc.product.productId = :productId")
     UserCart findByUserIdAndProductId(@Param("userId") Long userId, @Param("productId") Long productId);
 
-    @Query("DELETE FROM UserCart uc WHERE uc.user.userId = :userId AND uc.product.ProductId = :productId")
+    @Query("DELETE FROM UserCart uc WHERE uc.user.userId = :userId AND uc.product.productId = :productId")
     @Modifying
     @Transactional
     void deleteByUserIdAndProductId(@Param("userId") Long userId, @Param("productId") Long productId);

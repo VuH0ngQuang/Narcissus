@@ -20,12 +20,12 @@ import java.util.Set;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long ProductId;
-    private String ProductName;
-    private String ProductInfo;
-    private int ProductStockQuantity;
-    private long ProductPrice;
-    private Date ProductDate;
+    private long productId;
+    private String productName;
+    private String productInfo;
+    private int productStockQuantity;
+    private long productPrice;
+    private Date productDate;
 
     @OneToMany(mappedBy = "product", fetch =FetchType.EAGER)
     Set<ConsistOf> consistOfs;
@@ -40,5 +40,5 @@ public class Product {
     private Seller seller;
 
     @Lob
-    private byte[] ProductImage;
+    private byte[] productImage;
 }
