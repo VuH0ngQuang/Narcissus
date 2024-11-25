@@ -49,14 +49,17 @@ public class OrdersServiceImpl implements OrdersService {
     public OrdersDto createOrders(Set<ConsistOfDto> consistOfDtos, String token) throws Exception {
         Orders orders = new Orders();
 
-        long totalPrice = consistOfDtos.stream()
-                .mapToLong(dto -> {
-                    Product product = productRepository.findById(dto.getProductId())
-                            .orElseThrow(() -> new NotFoundException("Product not found"));
-                    return product.getProductPrice() * dto.getQuantity();
-                })
-                .sum();
+        CompletableFuture<Long> totalPriceFuture = CompletableFuture.supplyAsync(() ->
+                consistOfDtos.stream()
+                        .mapToLong(dto -> {
+                            Product product = productRepository.findById(dto.getProductId())
+                                    .orElseThrow(() -> new NotFoundException("Product not found"));
+                            return product.getProductPrice() * dto.getQuantity();
+                        })
+                        .sum()
+        );
 
+        long totalPrice = totalPriceFuture.get();
         orders.setMoney(totalPrice);
         orders.setShipped(false);
         orders.setStatus("PENDING");
@@ -68,7 +71,7 @@ public class OrdersServiceImpl implements OrdersService {
 
         Set<ConsistOf> consistOfs = new HashSet<>();
 
-        consistOfDtos.forEach(dto -> {
+        consistOfDtos.parallelStream().forEach(dto -> {
             ConsistOf consistOf = new ConsistOf();
             ConsistOfKey id = new ConsistOfKey(orders.getOrdersId(), dto.getProductId());
 
@@ -135,7 +138,7 @@ public class OrdersServiceImpl implements OrdersService {
         ordersDto.setCanceledAt(orders.getCanceledAt());
         ordersDto.setCancellationReason(orders.getCancellationReason());
         ordersDto.setConsistOfDtos(orders.getConsistOfs()
-                .stream()
+                .parallelStream()
                 .map(
                         consistOf -> consistOfToDto(consistOf, new ConsistOfDto()))
                 .collect(Collectors.toSet()));

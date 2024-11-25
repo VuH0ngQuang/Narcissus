@@ -36,7 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     public void createPayment (Orders order) throws Exception {
         List<ItemData> itemData = new ArrayList<>();
-        order.getConsistOfs().forEach(consistOf -> {
+        order.getConsistOfs().parallelStream().forEach(consistOf -> {
             Product product = consistOf.getProduct();
             ItemData item = ItemData
                     .builder()

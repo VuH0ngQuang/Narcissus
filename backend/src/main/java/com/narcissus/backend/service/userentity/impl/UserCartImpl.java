@@ -93,7 +93,7 @@ public class  UserCartImpl implements UserCartService {
 
         List<ConsistOfDto> consistOfs = userCartRepository
                 .findAllByUserId(user.getUserId())
-                .stream()
+                .parallelStream()
                 .map(userCart -> toDto(userCart, new ConsistOfDto())).collect(Collectors.toList());
 
         return consistOfs;
