@@ -21,6 +21,7 @@ const ProductLink = ({ to, children, img }) => {
 
 const Product = () => {
     const [products, setProducts] = useState([]);
+    const productIDs = new Set();
 
     useEffect(() => {
         // Fetch product list
@@ -32,28 +33,35 @@ const Product = () => {
                 return response.json();
             })
             .then((data) => {
-                // Fetch images for each product
-                const productsWithImages = data.map((product) =>
-                    fetch(`${host}/products/getImage/${product.productID}`)
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.text();
-                        })
-                        .then((imageBase64) => ({
-                            ...product,
-                            productImageBase64: `data:image/jpeg;base64,${imageBase64}`,
-                        }))
-                        .catch((error) => {
-                            console.error(`Error fetching image for product ${product.productID}:`, error);
-                            return { ...product, productImageBase64: "" }; // Fallback to empty image
-                        })
-                );
-
-                return Promise.all(productsWithImages);
+                data.forEach((product) => {
+                    if (!productIDs.has(product.productID)) {
+                        productIDs.add(product.productID);
+                        fetch(`${host}/products/getImage/${product.productID}`)
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.text();
+                            })
+                            .then((imageBase64) => {
+                                setProducts((prevProducts) => [
+                                    ...prevProducts,
+                                    {
+                                        ...product,
+                                        productImageBase64: `data:image/jpeg;base64,${imageBase64}`,
+                                    },
+                                ]);
+                            })
+                            .catch((error) => {
+                                console.error(`Error fetching image for product ${product.productID}:`, error);
+                                setProducts((prevProducts) => [
+                                    ...prevProducts,
+                                    { ...product, productImageBase64: "" }, // Fallback to empty image
+                                ]);
+                            });
+                    }
+                });
             })
-            .then((productsWithImages) => setProducts(productsWithImages))
             .catch((error) => console.error("Error fetching products:", error));
     }, [host]);
 
@@ -66,7 +74,7 @@ const Product = () => {
     };
 
     return (
-        <div className="w-full h-[600px] flex flex-col justify-center scrollbar-hide ">
+        <div className="bg-red-500 w-full flex flex-col justify-center scrollbar-hide">
             <ScrollMenu onWheel={handleWheel} wrapperClassName="no-scrollbar">
                 {products.map((product) => (
                     <div key={product.productID} itemID={product.productID} className="mr-5">

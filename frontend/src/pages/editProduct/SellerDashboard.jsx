@@ -10,7 +10,6 @@ const SellerDashboard = () => {
 
     return (
         <>
-            <NavBar />
             <div className="container mx-auto px-4 pt-16">
                 <h1 className="text-4xl font-bold mb-8 text-center">Seller Dashboard</h1>
                 <table className="w-full border-collapse border border-gray-300 text-center">

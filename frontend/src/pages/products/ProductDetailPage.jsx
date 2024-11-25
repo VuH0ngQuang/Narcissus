@@ -90,7 +90,6 @@ const ProductDetailPage = () => {
 
     return (
         <>
-            <NavBar />
             <div className="pt-12 flex flex-col md:flex-row justify-center items-center md:items-start m-10">
                 <div className="w-full md:w-1/2 flex justify-center">
                     {product.productImageBase64 ? (

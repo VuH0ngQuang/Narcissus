@@ -5,7 +5,6 @@ import productImage from '../../assets/product1.jpg';
 const PurchasedProduct2 = () => {
     return (
         <>
-            <NavBar />
             <div className="pt-16 container mx-auto px-4 py-8">
                 <h1 className="text-4xl font-bold mb-8 text-center">Purchased Product</h1>
 

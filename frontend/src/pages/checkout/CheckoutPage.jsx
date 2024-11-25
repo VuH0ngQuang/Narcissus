@@ -9,7 +9,6 @@ import OrderSummary from "./OrderSummary.jsx";
 const CheckoutPage = () => {
      return (
         <div className=''>
-            <NavBar />
             <Cart />
 
             <NavBar />

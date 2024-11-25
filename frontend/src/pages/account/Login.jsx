@@ -4,7 +4,6 @@ import LoginForm from "./LoginForm.jsx";
 const Login = () => {
     return (
         <div className='h-screen'>
-            <NavBar />
             <LoginForm />
         </div>
     );

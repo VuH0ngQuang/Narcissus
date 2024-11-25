@@ -4,7 +4,6 @@ import RegisterForm from "./RegisterForm.jsx";
 const Register = () => {
     return (
         <div>
-            <NavBar />
             <RegisterForm />
         </div>
     );

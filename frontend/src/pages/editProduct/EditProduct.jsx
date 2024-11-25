@@ -4,7 +4,6 @@ import NavBar from '../home/NavBar';
 const EditProduct = () => {
     return (
         <>
-            <NavBar />
             <div className="container mx-auto px-8 pt-20">
                 <h1 className="text-4xl font-bold mb-10 text-center">Edit Product</h1>
                 <form className="border border-gray-300 rounded-lg p-6 space-y-6 shadow-md max-w-3xl mx-auto">

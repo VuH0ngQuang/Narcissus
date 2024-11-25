@@ -4,7 +4,6 @@ import NavBar from '../home//NavBar';
 const PurchasedProduct1 = () => {
     return (
         <>
-            <NavBar />
             <div className="pt-16 flex flex-col items-center bg-gray-50">
                 <h1 className="text-4xl font-bold mb-6 text-center">Purchased Product</h1>
                 <table className="table-auto border-collapse border border-gray-300 text-left w-3/4">
