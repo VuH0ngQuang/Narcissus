@@ -1,5 +1,6 @@
 package com.narcissus.backend.security;
 
+import com.narcissus.backend.config.WebConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,18 +24,21 @@ public class SecurityConfig {
     private JwtAuthEntryPoint jwtAuthEntryPoint;
     private CustomUserDetailsService userDetailsService;
     private TokenGenerator tokenGenerator;
+    private WebConfig webConfig;
 
     @Autowired
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthEntryPoint jwtAuthEntryPoint, TokenGenerator tokenGenerator) {
+    public SecurityConfig(WebConfig webConfig, CustomUserDetailsService userDetailsService, JwtAuthEntryPoint jwtAuthEntryPoint, TokenGenerator tokenGenerator) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthEntryPoint = jwtAuthEntryPoint;
         this.tokenGenerator = tokenGenerator;
+        this.webConfig = webConfig;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(c -> c.configurationSource(webConfig.corsFilter()))
                 .exceptionHandling((exceptionHandling) -> exceptionHandling
                         .authenticationEntryPoint(jwtAuthEntryPoint)
                 )

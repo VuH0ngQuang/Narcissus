@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import LoginBanner from '../../assets/loginbanner.jpg';
 import { Link } from "react-router-dom";
-import {FEHost} from "../../config.js";
+import {FEHost, host} from "../../config.js";
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ const LoginForm = () => {
         const loginData = { email, password };
 
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+            const response = await fetch(`${host}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,14 +26,14 @@ const LoginForm = () => {
 
                 // Extract and store the token
                 const { accessToken, tokenType } = data;
-                const fullToken = `${tokenType.trim()} ${accessToken}`;
+                const fullToken = `${tokenType.trim()} ${accessToken.trim()}`; // Trim both parts
                 console.log("Login successful, token:", fullToken);
 
-                // Save the token in localStorage for future requests
+                // Save the token in localStorage
                 localStorage.setItem('authToken', fullToken);
-                window.location.href = `${FEHost}`;
 
-                // Redirect or update the UI based on successful login
+                // Redirect to another page or update the UI
+                window.location.href = `${FEHost}`;
             } else {
                 const errorData = await response.json();
                 alert(`Login failed: ${errorData.message || 'Unknown error'}`);
