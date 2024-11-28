@@ -69,7 +69,7 @@ public class ProductController {
 
     @PostMapping("/review/add/{id}")
     public ResponseEntity<ReviewDto> addReview(@RequestBody ReviewDto reviewDto, @PathVariable long id, @RequestHeader("Authorization") String token) {
-        return new ResponseEntity<>(reviewService.addReview(id, token, reviewDto), HttpStatus.OK);
+        return new ResponseEntity<>(reviewService.addReview(token, id, reviewDto), HttpStatus.OK);
     }
 
 }
