@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import combine from '../../assets/combine.png';
 import { useEffect, useState } from "react";
 import {FEHost, host} from "../../config.js";
+import Product from '../../utils/Product.js'
 
 const ProductDetailPage = () => {
     const { id } = useParams();
@@ -23,7 +24,7 @@ const ProductDetailPage = () => {
         return true;
     }
 
-    const addToCart = async (e) => {
+    const addToCart = async () => {
         const addToCartData = { productId, quantity };
 
         if (isLogin()) {
@@ -64,6 +65,11 @@ const ProductDetailPage = () => {
         } else {
             window.location.href = `${FEHost}/login`;
         }
+    };
+
+    const buyNow = async () => {
+        let product = new Product(productId, quantity)
+        localStorage.setItem("products",JSON.stringify(product))
     };
 
     useEffect(() => {
@@ -139,7 +145,7 @@ const ProductDetailPage = () => {
                         <button onClick={addToCart} className="bg-black text-white px-8 py-3 rounded-lg mr-4">
                             ADD TO CART
                         </button>
-                        <button className="bg-[#FF0099] text-white px-8 py-3 rounded-lg">
+                        <button onClick={buyNow} className="bg-[#FF0099] text-white px-8 py-3 rounded-lg">
                             BUY NOW
                         </button>
                     </div>
