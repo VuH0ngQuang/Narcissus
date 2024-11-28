@@ -10,8 +10,6 @@ const CheckoutPage = () => {
      return (
         <div className=''>
             <Cart />
-
-            <NavBar />
             <div className="h-screen w-full flex flex-row">
                 <div className="flex-[1.1] border-r-[1px] border-black">
                     <Pay />
@@ -19,9 +17,7 @@ const CheckoutPage = () => {
                 <div className="flex-[1] bg-gray-100 ">
                     <OrderSummary />
                 </div>
-            </div> 
-
-            <NavBar />
+            </div>
             <div className="h-screen w-full flex flex-row">
                 <div className="flex-[1.1] border-r-[1px] border-black">
                    <Comment/>
@@ -29,14 +25,9 @@ const CheckoutPage = () => {
                 <div className="flex-[1] bg-gray-100 ">
                     <OrderSummary />
                 </div>
-            </div> 
-
-            <NavBar/>
+            </div>
             <PayFailed/>
-
-            <NavBar/>
             <PaySuccessful/>
-
         </div>
      );
 }

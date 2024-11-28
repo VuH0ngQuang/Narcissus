@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import NavBar from '../home/NavBar.jsx';
 import combine from '../../assets/combine.png';
 import { useEffect, useState } from "react";
 import {FEHost, host} from "../../config.js";
@@ -29,8 +28,7 @@ const ProductDetailPage = () => {
 
         if (isLogin()) {
             const authToken = localStorage.getItem('authToken');
-            if (!authToken || typeof authToken !== 'string') {
-                alert('User is not authenticated. Please log in again.');
+            if (!authToken || typeof authToken !== 'string' ) {
                 window.location.href = `${FEHost}/login`;
                 return;
             }
@@ -48,6 +46,11 @@ const ProductDetailPage = () => {
                     },
                     body: JSON.stringify(addToCartData),
                 });
+
+                if (response.status === 401) {
+                    window.location.href = `${FEHost}/login`;
+                    return;
+                }
 
                 if (response.ok) {
                     console.log("Done without error");

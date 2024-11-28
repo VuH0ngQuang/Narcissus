@@ -1,8 +1,6 @@
 package com.narcissus.backend.models.product;
 
 import com.narcissus.backend.models.orders.ConsistOf;
-import com.narcissus.backend.models.user.Role;
-import com.narcissus.backend.models.user.Seller;
 import com.narcissus.backend.models.user.UserCart;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,9 +33,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch =FetchType.EAGER)
     List<Review> reviews;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Seller seller;
 
     @Lob
     private byte[] productImage;
