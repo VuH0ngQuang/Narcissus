@@ -10,6 +10,8 @@ import PurchasedProduct2 from "./pages/purchasedProduct/PurchasedProduct2.jsx";
 import SellerDashboard from "./pages/editProduct/SellerDashboard.jsx";
 import EditProduct from "./pages/editProduct/EditProduct.jsx";
 import NavBar from "./pages/home/NavBar.jsx";
+import CheckoutPage from "./pages/checkout/CheckoutPage.jsx";
+import Cart from "./pages/checkout/Cart.jsx";
 
 const App = () => {
     return (
@@ -28,6 +30,8 @@ const App = () => {
                     <Route path="/purchasedproduct2" element={<PurchasedProduct2 />} />
                     <Route path="/editproduct" element={<EditProduct />} />
                     <Route path="/sellerdashboard" element={<SellerDashboard />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/cart" element={<Cart />} />
                 </Routes>
         </BrowserRouter>
     );

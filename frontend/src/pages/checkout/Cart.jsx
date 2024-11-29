@@ -1,126 +1,87 @@
+import React from 'react';
 import Banner1 from '../../assets/banner2.jpg';
 
+const CartItem = ({ image, name, quantity, price }) => (
+    <tr>
+        <td className="w-auto"></td>
+        <td className="w-[7%] h-[128px]">
+            <input type="checkbox" className="w-[20px] h-[20px]" />
+        </td>
+        <td className="w-32 h-32 p-0 border border-black">
+            <img src={image} alt={name} className="w-full h-full object-cover" />
+        </td>
+        <td className="w-[20%] pl-6 border-b text-left font-semibold">
+            <p>{name}</p>
+            <p>
+                Quantity: <span>{quantity}</span>
+            </p>
+        </td>
+        <td className="w-[20%] border-b text-right font-semibold">
+            <p>${price}</p>
+        </td>
+        <td className="w-[15%] font-semibold">
+            <div className="flex items-center justify-center">
+                <button className="w-8 h-8 border">-</button>
+                <input
+                    type="number"
+                    min="1"
+                    value={quantity}
+                    readOnly
+                    className="w-12 h-8 text-center border-t border-b"
+                />
+                <button className="w-8 h-8 border">+</button>
+            </div>
+        </td>
+        <td className="w-[160px]">
+            <button className="w-full bg-red-500 text-black border border-black rounded-full px-4 py-2 hover:bg-red-600">
+                Remove
+            </button>
+        </td>
+        <td className="w-auto"></td>
+    </tr>
+);
+
 const Cart = () => {
-     return (
-         <div className='mx-[8%]'>
-               <div className='h-12'></div>
-               <div className='flex flex-col h-screen'>
-                    <form action="">
-                         <table className="w-full">
-                              <tbody>
-                                   <br />
-                                   <br />
+    const cartItems = [
+        { image: Banner1, name: 'SnowFall', quantity: 1, price: 100 },
+        { image: Banner1, name: 'SnowFall', quantity: 1, price: 100 },
+    ];
 
-                                   <tr className="">
-                                        <th className="w-auto"></th>
-                                        <th className="w-[7%] h-[128px]">
-                                             <input type="checkbox" name="" id="" className="w-[20px] h-[20px]"/>
-                                        </th>
+    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-                                        <th className="w-32 h-32 p-0 border border-solid border-black">
-                                             <img src={Banner1} alt="Banner" className="w-full h-full object-cover"/>
-                                        </th>
+    return (
+        <div className="">
+            <div className="h-12"></div>
+            <div className="flex flex-col">
+                <form>
+                    <table className="w-full">
+                        {cartItems.map((item, index) => (
+                            <CartItem key={index} {...item} />
+                        ))}
+                        <tbody>
+                        <tr>
+                            <td colSpan="3"></td>
+                            <td className="w-[20%] pl-24 text-left font-semibold">Total</td>
+                            <td className="w-[20%] pr-6 text-right font-semibold">${total}</td>
+                            <td colSpan="3"></td>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr>
+                            <td colSpan="3"></td>
+                            <td colSpan="2" className="pl-24 h-16 font-semibold">
+                                <button className="w-full py-2 px-4 bg-black text-white border">
+                                    MAKE A PURCHASE
+                                </button>
+                            </td>
+                            <td colSpan="3"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    );
+};
 
-                                        <th className="w-[20%] pl-[24px] border-b text-left font-semibold">
-                                             <p>SnowFall</p>
-                                             <p>Quantity {'{'}<span>1</span>{'}'}</p>
-                                        </th>
-
-                                        <th className="w-[20%] border-b text-right font-semibold">
-                                             <p>$<span>100</span></p>
-                                        </th>
-
-                                        <th className="w-[15%] font-semibold">
-                                             <div className=' flex flex-row items-center justify-center '>
-                                                  <button className='w-[32px] h-[32px] border '>-</button>
-                                                  <input type="text-number" min="1" value="1" className="w-[48px] h-[32px] text-center border-t border-b" />
-                                                  <button className='w-[32px] h-[32px] border'>+</button>
-                                             </div>
-                                        </th>
-
-                                        <th className="w-[160px]">
-                                             <button className="w-full bg-red-500 text-black border border-black rounded-full px-4 py-2 hover:bg-red-600">Remove</button>
-                                        </th>
-                                        <th className="w-auto"></th>
-                                   </tr>
-
-                                   <br />
-                                   <br />
-
-                                   <tr className="">
-                                        <th className="w-auto"></th>
-                                        <th className="w-[7%] h-[128px]">
-                                             <input type="checkbox" name="" id="" className="w-[20px] h-[20px]"/>
-                                        </th>
-
-                                        <th className="w-32 h-32 p-0 border border-solid border-black">
-                                             <img src={Banner1} alt="Banner" className="w-full h-full object-cover"/>
-                                        </th>
-
-                                        <th className="w-[20%] pl-[24px] border-b text-left font-semibold">
-                                             <p>SnowFall</p>
-                                             <p>Quantity {'{'}<span>1</span>{'}'}</p>
-                                        </th>
-
-                                        <th className="w-[20%] border-b text-right font-semibold">
-                                             <p>$<span>100</span></p>
-                                        </th>
-
-                                        <th className="w-[15%] font-semibold">
-                                             <div className=' flex flex-row items-center justify-center '>
-                                                  <button className='w-[32px] h-[32px] border'>-</button>
-                                                  <input type="text-number" min="1" value="1" className="w-[48px] h-[32px] text-center border-t border-b" />
-                                                  <button className='w-[32px] h-[32px] border'>+</button>
-                                             </div>
-                                        </th>
-
-                                        <th className="w-[160px]">
-                                             <button className="w-full bg-red-500 text-black border border-black rounded-full px-4 py-2 hover:bg-red-600">Remove</button>
-                                        </th>
-                                        <th className="w-auto"></th>
-                                   </tr>
-                              </tbody>
-                              <br />
-                              <tfoot>
-                                   <tr className="">
-                                        <th className="w-auto"></th>
-                                        <th className="">
-                                        </th>
-
-                                        <th className="">
-                                        </th>
-
-                                        <th className="w-[20%] pl-[96px] text-left font-semibold">
-                                             <p>Total</p>
-                                        </th>
-                                        <th className="w-[20%] pr-[24px] text-right font-semibold">
-                                             <p>$<span>100</span></p>
-                                        </th>
-                                        <th className="w-auto"></th>
-                                   </tr>
-                                   <br />
-                                   <br />
-                                   <br />
-                                   <tr className="">
-                                        <th className="w-auto"></th>
-                                        <th className="">
-                                        </th>
-
-                                        <th className="">
-                                        </th>
-
-                                        <th className="pl-[120px] h-[64px] font-semibold" colSpan="2">
-                                             <button className="border w-full h-full py-2 px-4 bg-black text-white">MAKE A PURCHASE</button>
-                                        </th>
-                                        <th className="w-auto"></th>
-                                   </tr>
-                              
-                              </tfoot>
-                         </table>
-                    </form>
-               </div>
-         </div>
-     );
-}
- 
 export default Cart;

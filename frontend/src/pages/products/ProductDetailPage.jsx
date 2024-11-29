@@ -66,6 +66,16 @@ const ProductDetailPage = () => {
         }
     };
 
+<<<<<<< Updated upstream
+=======
+    const buyNow = async () => {
+        let product = new Product(productId, quantity);
+        if (isLogin()) {
+            localStorage.setItem("products", JSON.stringify(product));
+        }
+    };
+
+>>>>>>> Stashed changes
     useEffect(() => {
         const fetchProduct = async () => {
             try {
