@@ -1,5 +1,5 @@
-import React from 'react';
-import Banner1 from '../../assets/banner2.jpg';
+import React, { useEffect, useState } from 'react';
+import { FEHost, host } from "../../config.js";
 
 const CartItem = ({ image, name, quantity, price }) => (
     <tr>
@@ -12,9 +12,7 @@ const CartItem = ({ image, name, quantity, price }) => (
         </td>
         <td className="w-[20%] pl-6 border-b text-left font-semibold">
             <p>{name}</p>
-            <p>
-                Quantity: <span>{quantity}</span>
-            </p>
+            <p>Quantity: <span>{quantity}</span></p>
         </td>
         <td className="w-[20%] border-b text-right font-semibold">
             <p>${price}</p>
@@ -42,12 +40,56 @@ const CartItem = ({ image, name, quantity, price }) => (
 );
 
 const Cart = () => {
-    const cartItems = [
-        { image: Banner1, name: 'SnowFall', quantity: 1, price: 100 },
-        { image: Banner1, name: 'SnowFall', quantity: 1, price: 100 },
-    ];
+    const [products, setProducts] = useState([]);
+    const productsIDs = new Set();
+    let authToken = useState([]);
 
-    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    if (localStorage.getItem('authToken') == null) {
+        window.location.href = `${FEHost}/login`;
+    } else authToken = localStorage.getItem('authToken');
+
+    useEffect(() => {
+        fetch(`${host}/user/getCart`, {
+            headers: {
+                'Authorization': `${authToken}`, // Add the JWT token to the Authorization header
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const fetchProductDetails = data.map((product) => {
+                    if (!productsIDs.has(product.productId)) {
+                        productsIDs.add(product.productId);
+                        return fetch(`${host}/products/${product.productId}`)
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then((productDetails) => ({
+                                image: `data:image/jpeg;base64,${productDetails.productImageBase64}`,
+                                name: productDetails.productName,
+                                quantity: product.quantity,
+                                price: productDetails.productPrice
+                            }));
+                    }
+                    return Promise.resolve(product);
+                });
+
+                Promise.all(fetchProductDetails)
+                    .then((products) => setProducts(products))
+                    .catch((error) => console.error('Error fetching product details:', error));
+            })
+            .catch((error) => console.error('Error fetching cart items:', error));
+    }, [authToken]);
+
+    const total = products.reduce((sum, product) => sum + product.price * product.quantity, 0);
 
     return (
         <div className="">
@@ -55,18 +97,18 @@ const Cart = () => {
             <div className="flex flex-col">
                 <form>
                     <table className="w-full">
-                        {cartItems.map((item, index) => (
-                            <CartItem key={index} {...item} />
-                        ))}
                         <tbody>
+                        {products.map((product) => (
+                            <CartItem key={product.productId} {...product} />
+                        ))}
+                        </tbody>
+                        <tfoot>
                         <tr>
                             <td colSpan="3"></td>
                             <td className="w-[20%] pl-24 text-left font-semibold">Total</td>
                             <td className="w-[20%] pr-6 text-right font-semibold">${total}</td>
                             <td colSpan="3"></td>
                         </tr>
-                        </tbody>
-                        <tbody>
                         <tr>
                             <td colSpan="3"></td>
                             <td colSpan="2" className="pl-24 h-16 font-semibold">
@@ -76,7 +118,7 @@ const Cart = () => {
                             </td>
                             <td colSpan="3"></td>
                         </tr>
-                        </tbody>
+                        </tfoot>
                     </table>
                 </form>
             </div>

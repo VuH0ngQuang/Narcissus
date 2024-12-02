@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import combine from '../../assets/combine.png';
 import { useEffect, useState } from "react";
-import {FEHost, host} from "../../config.js";
+import { FEHost, host } from "../../config.js";
 
 const ProductDetailPage = () => {
     const { id } = useParams();
@@ -28,7 +28,7 @@ const ProductDetailPage = () => {
 
         if (isLogin()) {
             const authToken = localStorage.getItem('authToken');
-            if (!authToken || typeof authToken !== 'string' ) {
+            if (!authToken || typeof authToken !== 'string') {
                 window.location.href = `${FEHost}/login`;
                 return;
             }
@@ -66,16 +66,13 @@ const ProductDetailPage = () => {
         }
     };
 
-<<<<<<< Updated upstream
-=======
     const buyNow = async () => {
-        let product = new Product(productId, quantity);
+        let product = { productId, quantity };
         if (isLogin()) {
             localStorage.setItem("products", JSON.stringify(product));
         }
     };
 
->>>>>>> Stashed changes
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -98,8 +95,6 @@ const ProductDetailPage = () => {
     if (loading) {
         return <h1>Loading...</h1>;
     }
-
-
 
     return (
         <>
@@ -141,7 +136,7 @@ const ProductDetailPage = () => {
                             src={combine}
                             alt="Excellent Combination"
                             className="w-80 h-auto rounded-md"
-                            style={{maxWidth: '100%' }}
+                            style={{ maxWidth: '100%' }}
                         />
                     </div>
 
@@ -149,7 +144,7 @@ const ProductDetailPage = () => {
                         <button onClick={addToCart} className="bg-black text-white px-8 py-3 rounded-lg mr-4">
                             ADD TO CART
                         </button>
-                        <button className="bg-[#FF0099] text-white px-8 py-3 rounded-lg">
+                        <button onClick={buyNow} className="bg-[#FF0099] text-white px-8 py-3 rounded-lg">
                             BUY NOW
                         </button>
                     </div>
