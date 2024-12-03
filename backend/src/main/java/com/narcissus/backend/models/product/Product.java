@@ -5,6 +5,7 @@ import com.narcissus.backend.models.user.UserCart;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode(exclude = "consistOfs")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

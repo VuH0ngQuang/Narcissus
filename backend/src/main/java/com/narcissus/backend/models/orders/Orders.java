@@ -27,7 +27,7 @@ public class Orders {
     private String canceledAt;
     private String transactionDateTime;
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<ConsistOf> consistOfs;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)

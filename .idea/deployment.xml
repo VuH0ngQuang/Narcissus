@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="Narcissus" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+  <component name="PublishConfigData" serverName="Narcissus" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" compareModeInSync="TIMESTAMP">
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="Narcissus">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/Narcissus" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/Narcissus/backend" local="$PROJECT_DIR$/backend" />
           </mappings>
         </serverdata>
       </paths>
