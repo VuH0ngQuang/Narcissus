@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -111,6 +112,14 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
+    public List<OrdersDto> getAll() {
+        List<Orders> orders = ordersRepository.findAll();
+        return orders.parallelStream()
+                .map(order -> toDto(order, new OrdersDto()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public OrdersDto getDetailsOrders(long id) {
         return toDto(
                 ordersRepository
@@ -130,23 +139,41 @@ public class OrdersServiceImpl implements OrdersService {
 //    public String deleteOrders(long id) {
 //        return "";
 //    }
-    public OrdersDto toDto (Orders orders, OrdersDto ordersDto) {
-        ordersDto.setMoney(orders.getMoney());
-        ordersDto.setShipped(orders.isShipped());
-        ordersDto.setStatus(orders.getStatus());
-        ordersDto.setDate(orders.getDate());
-        ordersDto.setCanceledAt(orders.getCanceledAt());
-        ordersDto.setCancellationReason(orders.getCancellationReason());
-        ordersDto.setConsistOfDtos(orders.getConsistOfs()
-                .parallelStream()
-                .map(
-                        consistOf -> consistOfToDto(consistOf, new ConsistOfDto()))
-                .collect(Collectors.toSet()));
-
-        return ordersDto;
+public OrdersDto toDto(Orders orders, OrdersDto ordersDto) {
+    if (orders == null || ordersDto == null) {
+        throw new IllegalArgumentException("Orders and OrdersDto must not be null");
     }
 
-    public ConsistOfDto consistOfToDto (ConsistOf consistOf, ConsistOfDto consistOfDto) {
+    ordersDto.setMoney(orders.getMoney());
+    ordersDto.setShipped(orders.isShipped());
+    ordersDto.setStatus(orders.getStatus());
+    ordersDto.setDate(orders.getDate());
+    ordersDto.setCanceledAt(orders.getCanceledAt());
+    ordersDto.setCancellationReason(orders.getCancellationReason());
+
+    if (orders.getConsistOfs() != null) {
+        ordersDto.setConsistOfDtos(orders.getConsistOfs()
+                .parallelStream()
+                .filter(consistOf -> consistOf != null && consistOf.getId() != null)
+                .map(consistOf -> consistOfToDto(consistOf, new ConsistOfDto()))
+                .collect(Collectors.toSet()));
+    } else {
+        ordersDto.setConsistOfDtos(new HashSet<>());
+    }
+
+    return ordersDto;
+}
+
+    public ConsistOfDto consistOfToDto(ConsistOf consistOf, ConsistOfDto consistOfDto) {
+        if (consistOf == null || consistOfDto == null) {
+            System.out.println("ConsistOf is null: " + (consistOf == null));
+            System.out.println("ConsistOfDto is null: " + (consistOfDto == null));
+            if (consistOf != null) {
+                System.out.println("Orders in ConsistOf is null: " + (consistOf.getOrders() == null));
+            }
+            throw new IllegalArgumentException("ConsistOf and ConsistOfDto must not be null");
+        }
+
         consistOfDto.setProductId(consistOf.getId().getProductId());
         consistOfDto.setQuantity(consistOf.getQuantity());
 

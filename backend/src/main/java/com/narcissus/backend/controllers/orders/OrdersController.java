@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -30,5 +31,10 @@ public class OrdersController {
     @GetMapping("/{id}")
     public ResponseEntity<OrdersDto> getDetails(@PathVariable long id) {
         return new ResponseEntity<>(ordersService.getDetailsOrders(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<OrdersDto>> getAll() {
+        return new ResponseEntity<>(ordersService.getAll(),HttpStatus.OK);
     }
 }
