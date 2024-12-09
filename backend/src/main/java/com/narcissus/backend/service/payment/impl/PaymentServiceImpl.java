@@ -22,7 +22,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final String PAYOSID = "e77b6cdb-4a17-4af9-9900-501cee1f7dc7"; //this is for testing only, this will be invalid after this repo public
     private final String PAYOSAPI = "e0a0ec2b-2981-44e0-a94d-a7b5edad57eb"; //this is for testing only, this will be invalid after this repo public
     private final String PAYOSCHECKSUM = "0f81aaf3911f6f3724f7def8d6927422a511fbbe2be15d2fdf1939d11a1c836d"; //this is for testing only, this will be invalid after this repo public
-    private final String HOSTIP = "20.89.177.142";
+    private final String HOSTIP = "74.226.216.170";
     private final OrdersRepository ordersRepository;
     private final SSEService sseService;
     private final PayOS payOS = new PayOS(PAYOSID, PAYOSAPI, PAYOSCHECKSUM);
