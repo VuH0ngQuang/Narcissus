@@ -5,7 +5,7 @@ import com.narcissus.backend.models.orders.Orders;
 import vn.payos.type.*;
 
 public interface PaymentService {
-    public void createPayment (Orders order) throws Exception;
+    public String createPayment (Orders order) throws Exception;
     public PaymentLinkData getPaymentData(long orderId) throws Exception;
     public String cancelPayment(CancelPaymentDto cancelPaymentDto) throws Exception;
     public void verifyPayment (Webhook webhook) throws Exception;

@@ -2,6 +2,7 @@ package com.narcissus.backend.service.orders.impl;
 
 import com.narcissus.backend.dto.orders.ConsistOfDto;
 import com.narcissus.backend.dto.orders.OrdersDto;
+import com.narcissus.backend.dto.orders.OrdersResponse;
 import com.narcissus.backend.exceptions.NotFoundException;
 import com.narcissus.backend.models.email.EmailDetails;
 import com.narcissus.backend.models.orders.ConsistOf;
@@ -47,69 +48,74 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public OrdersDto createOrders(Set<ConsistOfDto> consistOfDtos, String token) throws Exception {
+    public OrdersResponse createOrders(Set<ConsistOfDto> consistOfDtos, String token) throws Exception {
         Orders orders = new Orders();
 
-        CompletableFuture<Long> totalPriceFuture = CompletableFuture.supplyAsync(() ->
-                consistOfDtos.stream()
-                        .mapToLong(dto -> {
-                            Product product = productRepository.findById(dto.getProductId())
-                                    .orElseThrow(() -> new NotFoundException("Product not found"));
-                            return product.getProductPrice() * dto.getQuantity();
-                        })
-                        .sum()
-        );
-
-        long totalPrice = totalPriceFuture.get();
+        long totalPrice = consistOfDtos.stream()
+                .mapToLong(dto -> {
+                    Product product = productRepository.findById(dto.getProductId())
+                            .orElseThrow(() -> new NotFoundException("Product not found"));
+                    return product.getProductPrice() * dto.getQuantity();
+                })
+                .sum();
         orders.setMoney(totalPrice);
         orders.setShipped(false);
         orders.setStatus("PENDING");
         orders.setDate(new Date());
+
         String jwtToken = token.substring(7);
         UserEntity user = userRepository.findByEmail(tokenGenerator.getEmailFromJWT(jwtToken))
                 .orElseThrow(() -> new NotFoundException("Invalid Token"));
         orders.setUserEntity(user);
 
-        Set<ConsistOf> consistOfs = new HashSet<>();
+        Set<ConsistOf> consistOfs = consistOfDtos.stream()
+                .map(dto -> {
+                    ConsistOf consistOf = new ConsistOf();
+                    ConsistOfKey id = new ConsistOfKey(orders.getOrdersId(), dto.getProductId());
 
-        consistOfDtos.parallelStream().forEach(dto -> {
-            ConsistOf consistOf = new ConsistOf();
-            ConsistOfKey id = new ConsistOfKey(orders.getOrdersId(), dto.getProductId());
+                    consistOf.setId(id);
+                    consistOf.setQuantity(dto.getQuantity());
+                    consistOf.setOrders(orders);
 
-            consistOf.setId(id);
-            consistOf.setQuantity(dto.getQuantity());
-            consistOf.setOrders(orders);
+                    Product product = productRepository.findById(dto.getProductId())
+                            .orElseThrow(() -> new NotFoundException("Product not found"));
+                    consistOf.setProduct(product);
 
-            Product product = productRepository.findById(dto.getProductId())
-                    .orElseThrow(() -> new NotFoundException("Product not found"));
-            consistOf.setProduct(product);
-
-            consistOfs.add(consistOf);
-        });
+                    return consistOf;
+                })
+                .collect(Collectors.toSet());
         orders.setConsistOfs(consistOfs);
 
-        ordersRepository.save(orders);
+        // fucking stupid CompletableFuture dont let me reassign orders so have to change the name to get orderId
+        Orders newOrder = ordersRepository.save(orders);
 
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(user.getEmail());
         emailDetails.setSubject("Thank you for your order! Your flowers are on their way");
-        emailDetails.setMsgBody(emailService.mailOrder(user.getUserName(),totalPrice, consistOfs));
+        emailDetails.setMsgBody(emailService.mailOrder(user.getUserName(), totalPrice, consistOfs));
 
-        //make asynchronously
         CompletableFuture<Void> emailFuture = CompletableFuture.runAsync(() -> emailService.sendEmail(emailDetails));
-        CompletableFuture<Void> paymentFuture = CompletableFuture.runAsync(() -> {
+
+        CompletableFuture<String> paymentFuture = CompletableFuture.supplyAsync(() -> {
             try {
-                paymentService.createPayment(orders);
+                return paymentService.createPayment(orders);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
 
-        //waits for both tasks to complete
+        String checkoutUrl = paymentFuture.get();
+
         CompletableFuture.allOf(emailFuture, paymentFuture).join();
 
-        return toDto(orders, new OrdersDto());
+        OrdersResponse ordersResponse = new OrdersResponse();
+        ordersResponse.setOrdersId(newOrder.getOrdersId());
+        ordersResponse.setCheckoutUrl(checkoutUrl);
+
+        return ordersResponse;
     }
+
+
 
     @Override
     public List<OrdersDto> getAll() {

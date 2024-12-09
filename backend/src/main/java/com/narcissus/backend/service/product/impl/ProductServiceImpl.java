@@ -52,11 +52,13 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto updateProduct(long id, ProductDto productDto, MultipartFile image) throws IOException {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product with ID "+id+" not found"));
 
-        if (productDto.getProductName() != null) product.setProductName(productDto.getProductName());
-        if (productDto.getProductInfo() != null) product.setProductInfo(productDto.getProductInfo());
-        if (productDto.getProductStockQuantity() != null) product.setProductStockQuantity(productDto.getProductStockQuantity());
-        if (productDto.getProductPrice() != null) product.setProductPrice(productDto.getProductPrice());
-        if (productDto.getProductDate() != null) product.setProductDate(productDto.getProductDate());
+        if (productDto != null) {
+            if (productDto.getProductName() != null) product.setProductName(productDto.getProductName());
+            if (productDto.getProductInfo() != null) product.setProductInfo(productDto.getProductInfo());
+            if (productDto.getProductStockQuantity() != null) product.setProductStockQuantity(productDto.getProductStockQuantity());
+            if (productDto.getProductPrice() != null) product.setProductPrice(productDto.getProductPrice());
+            if (productDto.getProductDate() != null) product.setProductDate(productDto.getProductDate());
+        }
         if (image != null && !image.isEmpty()) product.setProductImage(image.getBytes());
 
         productRepository.save(product);

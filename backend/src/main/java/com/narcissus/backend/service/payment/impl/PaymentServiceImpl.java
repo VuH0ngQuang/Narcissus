@@ -25,6 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final String HOSTIP = "20.89.177.142";
     private final OrdersRepository ordersRepository;
     private final SSEService sseService;
+    private final PayOS payOS = new PayOS(PAYOSID, PAYOSAPI, PAYOSCHECKSUM);
 
     @Autowired
     public PaymentServiceImpl(SSEService sseService, OrdersRepository ordersRepository) {
@@ -32,9 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
         this.ordersRepository = ordersRepository;
     }
 
-    PayOS payOS = new PayOS(PAYOSID, PAYOSAPI, PAYOSCHECKSUM);
-
-    public void createPayment (Orders order) throws Exception {
+    public String createPayment (Orders order) throws Exception {
         List<ItemData> itemData = new ArrayList<>();
         order.getConsistOfs().parallelStream().forEach(consistOf -> {
             Product product = consistOf.getProduct();
@@ -52,13 +51,15 @@ public class PaymentServiceImpl implements PaymentService {
                 .orderCode(order.getOrdersId())
                 .amount((int) order.getMoney())
                 .description("Order id: "+order.getOrdersId()+" NARCISSUS")
-                .returnUrl(HOSTIP+"/success")
-                .cancelUrl(HOSTIP+"/cancel")
+                .returnUrl(HOSTIP+"/successful")
+                .cancelUrl(HOSTIP+"/failed")
                 .items(itemData).build();
 
         CheckoutResponseData responseData = payOS.createPaymentLink(paymentData);
         System.out.println(responseData.toString());
         System.out.println(responseData.getCheckoutUrl());
+
+        return responseData.getCheckoutUrl();
     }
 
     public PaymentLinkData getPaymentData(long orderId) throws Exception {

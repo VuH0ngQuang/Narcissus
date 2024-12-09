@@ -54,7 +54,6 @@ const ProductDetailPage = () => {
 
                 if (response.ok) {
                     console.log("Done without error");
-                    window.location.href = `${FEHost}/cart`;
                 } else {
                     const errorData = await response.json();
                     alert(`Add to cart failed: ${errorData.message || 'Unknown Error'}`);
@@ -69,9 +68,10 @@ const ProductDetailPage = () => {
 
     const buyNow = async () => {
         let product = { productId, quantity };
-        localStorage.removeItem("products");
         if (isLogin()) {
+            localStorage.removeItem("products");
             localStorage.setItem("products", JSON.stringify(product));
+            window.location.href = `${FEHost}/checkout`;
         }
     };
 
