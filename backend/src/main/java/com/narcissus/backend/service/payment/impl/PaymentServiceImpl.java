@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
 @Service
 public class PaymentServiceImpl implements PaymentService {
     private static final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
-    private final String PAYOSID = "e77b6cdb-4a17-4af9-9900-501cee1f7dc7"; //this is for testing only, this will be invalid after this repo public
-    private final String PAYOSAPI = "e0a0ec2b-2981-44e0-a94d-a7b5edad57eb"; //this is for testing only, this will be invalid after this repo public
-    private final String PAYOSCHECKSUM = "0f81aaf3911f6f3724f7def8d6927422a511fbbe2be15d2fdf1939d11a1c836d"; //this is for testing only, this will be invalid after this repo public
-    private final String HOSTIP = "74.226.216.170";
+    private final String PAYOSID = "f83ace68-bc25-4af4-b557-d842b7fbe511"; //this is for testing only, this will be invalid after this repo public
+    private final String PAYOSAPI = "80dbd91f-fd92-424d-88e6-4369e6682bf8"; //this is for testing only, this will be invalid after this repo public
+    private final String PAYOSCHECKSUM = "3738cedd62709316a25ad065a9e3f68ee111db2f3cb76e81ab239255c91b97bc"; //this is for testing only, this will be invalid after this repo public
+    private final String HOSTIP = "http://localhost:5173";
     private final OrdersRepository ordersRepository;
     private final SSEService sseService;
     private final PayOS payOS = new PayOS(PAYOSID, PAYOSAPI, PAYOSCHECKSUM);
@@ -51,8 +51,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .orderCode(order.getOrdersId())
                 .amount((int) order.getMoney())
                 .description("Order id: "+order.getOrdersId()+" NARCISSUS")
-                .returnUrl(HOSTIP+"/successful")
-                .cancelUrl(HOSTIP+"/failed")
+                .returnUrl(HOSTIP)
+                .cancelUrl(HOSTIP)
                 .items(itemData).build();
 
         CheckoutResponseData responseData = payOS.createPaymentLink(paymentData);

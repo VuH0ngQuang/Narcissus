@@ -62,7 +62,7 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
 
             setPayOSConfig((oldConfig) => ({
                 ...oldConfig,
-                CHECKOUT_URL: data.checkoutUrl, // Use data.checkoutUrl directly
+                CHECKOUT_URL: data.checkoutUrl,
             }));
         } catch (error) {
             console.error('Error fetching payment:', error);
@@ -77,28 +77,33 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
 
     //open the qr code when checkout url exist
     useEffect(() => {
-        if (payOSConfig.CHECKOUT_URL != null) open();
-    }, [payOSConfig]);
+        if (payOSConfig.CHECKOUT_URL) {
+            open();
+        }
+    }, [payOSConfig.CHECKOUT_URL]);
 
     //run getpayment when showQR is true
     useEffect(() => {
         if (showQR && !hasFetchedPayment) {
-            getPayment()
+            getPayment();
             setHasFetchedPayment(true);
         }
-    }, [showQR]);
+    }, [showQR, hasFetchedPayment]);
 
     //cancel when user send request to server
     useEffect(() => {
-        if (isCanceled) exit();
-    }, []);
+        if (isCanceled) {
+            exit();
+            setShowPay(false); // Ensure UI updates
+        }
+    }, [isCanceled]);
 
     return (
         <div className='mx-[8%]'>
             <div className='h-12'></div>
             <div className='font-semibold'>
                 <form action="">
-                    <div>
+                    <div className="w-full h-full">
                         <br />
                         <div className='bg-gray-300 w-full h-[70px] flex justify-center items-center'>
                             <h3>Wanna change your address Information? <button><b>Click here</b></button></h3>
@@ -115,21 +120,20 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
                         {showQR ? (
                             <div>
                                 <div id="embedded-payment-container" className="w-full h-full">
+                            </div>
 
-                                </div>
+                            <br/>
 
-                                <br/>
-
-                                <button
-                                    type="button"
-                                    className="w-full bg-red-500 text-white border border-black px-4 py-2 hover:bg-red-600"
-                                    onClick={() => {
-                                        exit();
-                                        setShowPay(false)
-                                    }}
-                                >
-                                    I DON'T WANT TO PAY
-                                </button>
+                            <button
+                                type="button"
+                                className="w-full bg-red-500 text-white border border-black px-4 py-2 hover:bg-red-600"
+                                onClick={() => {
+                                    exit();
+                                    setShowPay(false)
+                                }}
+                            >
+                                I DON'T WANT TO PAY
+                            </button>
 
                             </div>
                         ) : null}
