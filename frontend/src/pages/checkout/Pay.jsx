@@ -118,7 +118,7 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
                         <br />
 
                         {showQR ? (
-                            <div>
+                            <div className='w-full aspect-square'>
                                 <div id="embedded-payment-container" className="w-full h-full">
                             </div>
 
