@@ -118,22 +118,21 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
                         <br />
 
                         {showQR ? (
-                            <div className='w-full aspect-square'>
-                                <div id="embedded-payment-container" className="w-full h-full">
-                            </div>
+                            <div>
+                                <div id="embedded-payment-container" className="w-full h-[330px] mt-8 mb-8"></div>
 
-                            <br/>
+                                <br/>
 
-                            <button
-                                type="button"
-                                className="w-full bg-red-500 text-white border border-black px-4 py-2 hover:bg-red-600"
-                                onClick={() => {
-                                    exit();
-                                    setShowPay(false)
-                                }}
-                            >
-                                I DON'T WANT TO PAY
-                            </button>
+                                <button
+                                    type="button"
+                                    className="w-full bg-red-500 text-white border border-black px-4 py-2 hover:bg-red-600"
+                                    onClick={() => {
+                                        exit();
+                                        setShowPay(false)
+                                    }}
+                                >
+                                    I DON'T WANT TO PAY
+                                </button>
 
                             </div>
                         ) : null}
