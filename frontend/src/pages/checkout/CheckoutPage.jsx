@@ -37,14 +37,15 @@ const CheckoutPage = () => {
     });
 
     return (
-        <div>
+        <div className='scrollbar-hide'>
             <div className="h-screen w-full flex flex-row">
                 <div className="flex-[1.1] border-r-[1px] border-black">
                     {showPay ? <Pay
                         setShowPay={setShowPay}
                         showQR={showQR}
                         orderId={orderId}
-                        setOrderId={setOrderId} /> : <Comment
+                        setOrderId={setOrderId}
+                        isCanceled={isCanceled} /> : <Comment
                                                         setShowPay={setShowPay}
                                                         orderId={orderId}
                                                         setIsCancel={setIsCancel}/>}

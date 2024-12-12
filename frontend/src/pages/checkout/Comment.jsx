@@ -30,7 +30,7 @@ const Comment = ({ setShowPay, orderId, setIsCancel }) => {
     }
 
     return (
-        <div className='mx-[8%]'>
+        <div className='mx-[8%] scrollbar-hide'>
             <div className='h-12'></div>
             <div className=''>
                 <form action="">
@@ -45,6 +45,7 @@ const Comment = ({ setShowPay, orderId, setIsCancel }) => {
                             onClick={() => {
                                 handleCancel()
                                 setIsCancel(true)
+                                window.location.href = `${FEHost}/orders`
                             }}
                     >SEND</button>
                     <button type="button"

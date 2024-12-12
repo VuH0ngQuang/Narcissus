@@ -60,7 +60,7 @@ const OrderSummary = ({showQR, setShowQR}) => {
     const total = products.reduce((sum, product) => sum + product.price * product.quantity, 0);
 
     return (
-        <div className='relative flex flex-col h-screen mx-[8%]'>
+        <div className='relative flex flex-col h-screen mx-[8%] scrollbar-hide'>
             <div className='h-12'></div>
             <div className='font-semibold'>
                 <br/>

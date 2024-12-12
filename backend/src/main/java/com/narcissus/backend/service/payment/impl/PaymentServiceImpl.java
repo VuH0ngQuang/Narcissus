@@ -50,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentData paymentData = PaymentData.builder()
                 .orderCode(order.getOrdersId())
                 .amount((int) order.getMoney())
-                .description("Order id: "+order.getOrdersId()+" NARCISSUS")
+                .description("NARCISSUS "+order.getOrdersId())
                 .returnUrl(HOSTIP)
                 .cancelUrl(HOSTIP)
                 .items(itemData).build();
@@ -67,8 +67,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public String cancelPayment(CancelPaymentDto cancelPaymentDto) throws Exception {
-        Orders orders = ordersRepository.findById(cancelPaymentDto.getId()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+cancelPaymentDto.getId()));
-        PaymentLinkData result = payOS.cancelPaymentLink(cancelPaymentDto.getId(), cancelPaymentDto.getReason());
+        Orders orders = ordersRepository.findById(cancelPaymentDto.getOrderId()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+cancelPaymentDto.getOrderId()));
+        PaymentLinkData result = payOS.cancelPaymentLink(cancelPaymentDto.getOrderId(), cancelPaymentDto.getReason());
 
         orders.setStatus(result.getStatus());
         orders.setCanceledAt(result.getCanceledAt());

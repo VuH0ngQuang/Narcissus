@@ -99,7 +99,7 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
     }, [isCanceled]);
 
     return (
-        <div className='mx-[8%]'>
+        <div className='mx-[8%] scrollbar-hide'>
             <div className='h-12'></div>
             <div className='font-semibold'>
                 <form action="">

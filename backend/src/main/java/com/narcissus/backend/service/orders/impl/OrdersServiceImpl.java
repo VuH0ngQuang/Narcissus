@@ -12,6 +12,7 @@ import com.narcissus.backend.models.product.Product;
 import com.narcissus.backend.models.user.UserEntity;
 import com.narcissus.backend.repository.orders.OrdersRepository;
 import com.narcissus.backend.repository.product.ProductRepository;
+import com.narcissus.backend.repository.user.UserCartRepository;
 import com.narcissus.backend.repository.user.UserRepository;
 import com.narcissus.backend.security.TokenGenerator;
 import com.narcissus.backend.service.email.EmailService;
@@ -21,11 +22,9 @@ import com.narcissus.backend.service.payment.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,20 +35,27 @@ public class OrdersServiceImpl implements OrdersService {
     private final OrdersRepository ordersRepository;
     private final PaymentService paymentService;
     private final EmailService emailService;
+    private final UserCartRepository userCartRepository;
 
     @Autowired
-    public OrdersServiceImpl(EmailService emailService, OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService) {
+    public OrdersServiceImpl(EmailService emailService, OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService, UserCartRepository userCartRepository) {
         this.ordersRepository = ordersRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.tokenGenerator = tokenGenerator;
         this.paymentService = paymentService;
         this.emailService = emailService;
+        this.userCartRepository = userCartRepository;
     }
 
     @Override
     public OrdersResponse createOrders(Set<ConsistOfDto> consistOfDtos, String token) throws Exception {
         Orders orders = new Orders();
+
+        long timestamp = System.currentTimeMillis() % 1000000000;
+        long randomNum = ThreadLocalRandom.current().nextLong(1000, 9999);
+        long orderId = timestamp * 10000 + randomNum;
+        orders.setOrdersId(orderId);
 
         long totalPrice = consistOfDtos.stream()
                 .mapToLong(dto -> {
@@ -70,6 +76,7 @@ public class OrdersServiceImpl implements OrdersService {
 
         Set<ConsistOf> consistOfs = consistOfDtos.stream()
                 .map(dto -> {
+                    userCartRepository.deleteByUserIdAndProductId(user.getUserId(), dto.getProductId());
                     ConsistOf consistOf = new ConsistOf();
                     ConsistOfKey id = new ConsistOfKey(orders.getOrdersId(), dto.getProductId());
 
@@ -86,13 +93,14 @@ public class OrdersServiceImpl implements OrdersService {
                 .collect(Collectors.toSet());
         orders.setConsistOfs(consistOfs);
 
-        // fucking stupid CompletableFuture dont let me reassign orders so have to change the name to get orderId
-        Orders newOrder = ordersRepository.save(orders);
+        ordersRepository.save(orders);
+//        // fucking stupid CompletableFuture dont let me reassign orders so have to change the name to get orderId
+//        Orders newOrders = ordersRepository.save(orders);
 
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(user.getEmail());
         emailDetails.setSubject("Thank you for your order! Your flowers are on their way");
-        emailDetails.setMsgBody(emailService.mailOrder(user.getUserName(), totalPrice, consistOfs));
+        emailDetails.setMsgBody(emailService.mailOrder(user.getUserName(), user.getAddress(), totalPrice, consistOfs));
 
         CompletableFuture<Void> emailFuture = CompletableFuture.runAsync(() -> emailService.sendEmail(emailDetails));
 
@@ -109,11 +117,12 @@ public class OrdersServiceImpl implements OrdersService {
         CompletableFuture.allOf(emailFuture, paymentFuture).join();
 
         OrdersResponse ordersResponse = new OrdersResponse();
-        ordersResponse.setOrdersId(newOrder.getOrdersId());
+        ordersResponse.setOrdersId(orders.getOrdersId());
         ordersResponse.setCheckoutUrl(checkoutUrl);
 
         return ordersResponse;
     }
+
 
 
 

@@ -70,7 +70,7 @@ const ProductDetailPage = () => {
         let product = { productId, quantity };
         if (isLogin()) {
             localStorage.removeItem("products");
-            localStorage.setItem("products", JSON.stringify(product));
+            localStorage.setItem("products", JSON.stringify([product]));
             window.location.href = `${FEHost}/checkout`;
         }
     };
