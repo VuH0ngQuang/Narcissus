@@ -4,7 +4,6 @@ import ManageTab from "./ManageTab.jsx";
 const AdminDashboard = () => {
     return (
         <div>
-            <NavBar />
             <ManageTab />
         </div>
     );

@@ -21,7 +21,15 @@ const NavBar = () => {
             </div>
             <div className='w-1/4 flex flex-row justify-center items-center'>
                 <div>
-                    <Link className='mr-4 ml-4 text-[#FF0099] font-abeezee font-bold' to={'/login'}>Account</Link>
+                    <Link
+                        to={{
+                            pathname: '/login',
+                            state: { from: location.pathname } // Lưu đường dẫn hiện tại vào state
+                        }}
+                        className='mr-4 ml-4 text-[#FF0099] font-abeezee font-bold'
+                    >
+                        Account
+                    </Link>
                 </div>
                 <div>
                     <Link className='ml-4 mr-4 text-[#FF0099] font-abeezee font-bold' to={'/contact'}>Contact</Link>
