@@ -102,18 +102,18 @@
 
 import React, { useState } from 'react';
 import LoginBanner from '../../assets/loginbanner.jpg';
-import { FEHost, host } from "../../config.js";
+import { Link } from "react-router-dom";
+import {FEHost, host} from "../../config.js";
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const location = useLocation();  // Dùng để lấy thông tin từ location.state
 
     const handleLogin = async (e) => {
         e.preventDefault(); // Prevent default form submission
-    
+
         const loginData = { email, password };
-    
+
         try {
             const response = await fetch(`${host}/auth/login`, {
                 method: 'POST',
@@ -122,23 +122,22 @@ const LoginForm = () => {
                 },
                 body: JSON.stringify(loginData),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
-    
-                const { accessToken, tokenType } = data;
-                const fullToken = `${tokenType.trim()} ${accessToken.trim()}`; // Trim both parts
-                console.log("Login successful, token:", fullToken);
-    
+
+                const { accessToken, tokenType,role } = data;
+                const fullToken = `${tokenType.trim()} ${accessToken.trim()}`;
+                console.log("Login successful, token:", fullToken,"role",role);
+
                 localStorage.setItem('authToken', fullToken);
-    
-                // Kiểm tra location.state?.from và lấy pathname nếu có, nếu không dùng host
-                const redirectTo = location.state?.from || '/'; // Nếu không có trang trước đó thì về trang chủ
-    
-                console.log("location.state.from:", location.state?.from);
-                console.log("Redirecting to:", redirectTo);
-    
-                window.location.href = `${FEHost}`;
+                localStorage.setItem('role',role);
+
+                if (role === 'ROLE_ADMIN') {
+                    window.location.href = `${FEHost}/admin/dashboard`;
+                }else {
+                    window.location.href = `${FEHost}`;
+                }
             } else {
                 const errorData = await response.json();
                 alert(`Login failed: ${errorData.message || 'Unknown error'}`);
@@ -147,8 +146,7 @@ const LoginForm = () => {
             alert(`An error occurred: ${error.message}`);
         }
     };
-    
-    
+
 
     return (
         <div className='divide-y-2 divide-black'>

@@ -1,29 +1,20 @@
 import { useState, useEffect } from 'react';
+import { FEHost } from '../../config.js';
 
-const UseAuth = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);  // Thêm loading để xử lý trạng thái khi đang kiểm tra token
-    const navigate = useNavigate();
-    const location = useLocation();
+const UseAuth = (requiredRole = null) => {
+    const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
-        if (token) {
-            setIsAuthenticated(true);
-        } else {
-            if (!location.state) {
-                location.state = { from: location.pathname };  // Lưu đường dẫn ban đầu
-            }
-            window.location.href = `${FEHost}`+'/login', { state: { from: location.pathname } };
+
+        if (!token) {
+            window.location.href = `${FEHost}/login`;
+        } else if (requiredRole && token !== requiredRole) {
+            window.location.href = `${FEHost}/login`;
         }
-        setLoading(false);  // Đảm bảo loading được tắt sau khi kiểm tra
-    }, [location, navigate]);
+    }, [authToken, requiredRole]);
 
-    if (loading) {
-        return <div>Loading...</div>;  // Hiển thị loading khi kiểm tra token
-    }
-
-    return isAuthenticated;
+    return authToken;
 };
 
 export default UseAuth;
