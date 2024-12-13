@@ -5,6 +5,7 @@ import Register from "./pages/account/Register.jsx";
 import AdminDashboard from "./pages/account/admin/AdminDashBoard.jsx";
 import ProductDetailPage from './pages/products/ProductDetailPage.jsx';
 import Order from "./pages/account/admin/Order.jsx";
+import Update from "./pages/account/admin/Update.jsx";
 import PurchasedProduct1 from "./pages/purchasedProduct/PurchasedProduct1.jsx";
 import PurchasedProduct2 from "./pages/purchasedProduct/PurchasedProduct2.jsx";
 import SellerDashboard from "./pages/editProduct/SellerDashboard.jsx";
@@ -25,7 +26,7 @@ const App = () => {
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/product/:id" element={<ProductDetailPage />} />
                     <Route path="/admin/addproduct" element={<h1>Not Found</h1>} />
-                    <Route path="/admin/updateproduct" element={<h1>Not Found</h1>} />
+                    <Route path="/admin/update" element={<Update/>} />
                     <Route path="/admin/order" element={<Order />} />
                     <Route path="/orders" element={<PurchasedProduct1 />} />
                     <Route path="/purchasedproduct2" element={<PurchasedProduct2 />} />

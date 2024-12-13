@@ -6,8 +6,7 @@
       <paths name="Narcissus">
         <serverdata>
           <mappings>
-            <mapping deploy="/Narcissus" local="$PROJECT_DIR$" web="/" />
-            <mapping deploy="/Narcissus/backend" local="$PROJECT_DIR$/backend" />
+            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
