@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import combine from '../../assets/combine.png';
 import { useEffect, useState } from "react";
-import { FEHost, host } from "../../config.js";
+import {FEHost, host} from "../../config.js";
+import Product from '../../utils/Product.js'
 
 const ProductDetailPage = () => {
     const { id } = useParams();
@@ -23,7 +24,7 @@ const ProductDetailPage = () => {
         return true;
     }
 
-    const addToCart = async (e) => {
+    const addToCart = async () => {
         const addToCartData = { productId, quantity };
 
         if (isLogin()) {

@@ -42,6 +42,11 @@ public class OrdersController {
         return new ResponseEntity<>(ordersService.getAll(),HttpStatus.OK);
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<List<OrdersDto>> get(@RequestHeader("Authorization") String token) {
+        return new ResponseEntity<>(ordersService.get(token),HttpStatus.OK);
+    }
+
     @PostMapping("/forTesting")
     public ResponseEntity<String> testing(@RequestBody String text){
         System.out.println(text);
