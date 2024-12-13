@@ -72,7 +72,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public String mailOrder(String userName,long totalPrice, Set<ConsistOf> consistOfs) {
+    public String mailOrder(String userName, String address,long totalPrice, Set<ConsistOf> consistOfs) {
 
         return "Hi " + userName + ",\n" +
                 "\n" +
@@ -91,9 +91,9 @@ public class EmailServiceImpl implements EmailService {
                 "\n" +
                 "\n" +
                 "\n" +
-                "Delivery Address: [Delivery Address]\n" +
+                "Delivery Address: "+address+"\n" +
                 "\n" +
-                "Estimated Delivery Time: [hours]\n" +
+                "Estimated Delivery Time: about 1 hours\n" +
                 "\n" +
                 "Your flowers are being prepared with utmost care, ensuring they arrive fresh and perfect for the occasion.\n" +
                 "\n" +

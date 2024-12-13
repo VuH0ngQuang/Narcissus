@@ -29,7 +29,7 @@ const ProductDetailPage = () => {
 
         if (isLogin()) {
             const authToken = localStorage.getItem('authToken');
-            if (!authToken || typeof authToken !== 'string' ) {
+            if (!authToken || typeof authToken !== 'string') {
                 window.location.href = `${FEHost}/login`;
                 return;
             }
@@ -68,8 +68,12 @@ const ProductDetailPage = () => {
     };
 
     const buyNow = async () => {
-        let product = new Product(productId, quantity)
-        localStorage.setItem("products",JSON.stringify(product))
+        let product = { productId, quantity };
+        if (isLogin()) {
+            localStorage.removeItem("products");
+            localStorage.setItem("products", JSON.stringify([product]));
+            window.location.href = `${FEHost}/checkout`;
+        }
     };
 
     useEffect(() => {
@@ -94,8 +98,6 @@ const ProductDetailPage = () => {
     if (loading) {
         return <h1>Loading...</h1>;
     }
-
-
 
     return (
         <>
@@ -137,7 +139,7 @@ const ProductDetailPage = () => {
                             src={combine}
                             alt="Excellent Combination"
                             className="w-80 h-auto rounded-md"
-                            style={{maxWidth: '100%' }}
+                            style={{ maxWidth: '100%' }}
                         />
                     </div>
 

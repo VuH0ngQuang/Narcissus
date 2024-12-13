@@ -19,12 +19,13 @@ import org.slf4j.LoggerFactory;
 @Service
 public class PaymentServiceImpl implements PaymentService {
     private static final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
-    private final String PAYOSID = "e77b6cdb-4a17-4af9-9900-501cee1f7dc7"; //this is for testing only, this will be invalid after this repo public
-    private final String PAYOSAPI = "e0a0ec2b-2981-44e0-a94d-a7b5edad57eb"; //this is for testing only, this will be invalid after this repo public
-    private final String PAYOSCHECKSUM = "0f81aaf3911f6f3724f7def8d6927422a511fbbe2be15d2fdf1939d11a1c836d"; //this is for testing only, this will be invalid after this repo public
-    private final String HOSTIP = "20.89.177.142";
+    private final String PAYOSID = "f83ace68-bc25-4af4-b557-d842b7fbe511"; //this is for testing only, this will be invalid after this repo public
+    private final String PAYOSAPI = "80dbd91f-fd92-424d-88e6-4369e6682bf8"; //this is for testing only, this will be invalid after this repo public
+    private final String PAYOSCHECKSUM = "3738cedd62709316a25ad065a9e3f68ee111db2f3cb76e81ab239255c91b97bc"; //this is for testing only, this will be invalid after this repo public
+    private final String HOSTIP = "http://localhost:5173";
     private final OrdersRepository ordersRepository;
     private final SSEService sseService;
+    private final PayOS payOS = new PayOS(PAYOSID, PAYOSAPI, PAYOSCHECKSUM);
 
     @Autowired
     public PaymentServiceImpl(SSEService sseService, OrdersRepository ordersRepository) {
@@ -32,9 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
         this.ordersRepository = ordersRepository;
     }
 
-    PayOS payOS = new PayOS(PAYOSID, PAYOSAPI, PAYOSCHECKSUM);
-
-    public void createPayment (Orders order) throws Exception {
+    public String createPayment (Orders order) throws Exception {
         List<ItemData> itemData = new ArrayList<>();
         order.getConsistOfs().parallelStream().forEach(consistOf -> {
             Product product = consistOf.getProduct();
@@ -51,14 +50,16 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentData paymentData = PaymentData.builder()
                 .orderCode(order.getOrdersId())
                 .amount((int) order.getMoney())
-                .description("Order id: "+order.getOrdersId()+" NARCISSUS")
-                .returnUrl(HOSTIP+"/success")
-                .cancelUrl(HOSTIP+"/cancel")
+                .description("NARCISSUS "+order.getOrdersId())
+                .returnUrl(HOSTIP)
+                .cancelUrl(HOSTIP)
                 .items(itemData).build();
 
         CheckoutResponseData responseData = payOS.createPaymentLink(paymentData);
         System.out.println(responseData.toString());
         System.out.println(responseData.getCheckoutUrl());
+
+        return responseData.getCheckoutUrl();
     }
 
     public PaymentLinkData getPaymentData(long orderId) throws Exception {
@@ -66,8 +67,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public String cancelPayment(CancelPaymentDto cancelPaymentDto) throws Exception {
-        Orders orders = ordersRepository.findById(cancelPaymentDto.getId()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+cancelPaymentDto.getId()));
-        PaymentLinkData result = payOS.cancelPaymentLink(cancelPaymentDto.getId(), cancelPaymentDto.getReason());
+        Orders orders = ordersRepository.findById(cancelPaymentDto.getOrderId()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+cancelPaymentDto.getOrderId()));
+        PaymentLinkData result = payOS.cancelPaymentLink(cancelPaymentDto.getOrderId(), cancelPaymentDto.getReason());
 
         orders.setStatus(result.getStatus());
         orders.setCanceledAt(result.getCanceledAt());

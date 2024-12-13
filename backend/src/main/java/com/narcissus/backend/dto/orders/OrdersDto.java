@@ -9,6 +9,7 @@ import java.util.Set;
 public class OrdersDto {
     private long money;
     private boolean shipped;
+    private String address;
     private String status;
     private Date date;
     private String cancellationReason;

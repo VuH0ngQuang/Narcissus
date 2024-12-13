@@ -80,7 +80,8 @@ public class AuthServiceImpl implements AuthService {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = tokenGenerator.generatorToken(authentication);
-            return new AuthResponseDto(token);
+            String role = tokenGenerator.getRoleFromJWT(token);
+            return new AuthResponseDto(token, role);
         } catch (Exception e) {
             return null;
         }

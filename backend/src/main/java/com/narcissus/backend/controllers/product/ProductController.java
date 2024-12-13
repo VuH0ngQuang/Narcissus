@@ -44,8 +44,8 @@ public class ProductController {
 
     @PostMapping("/update/{id}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable long id,
-                                                    @RequestPart("product") ProductDto productDto,
-                                                    @RequestPart(value = "image") MultipartFile image) throws IOException {
+                                                    @RequestPart(value = "product", required = false) ProductDto productDto,
+                                                    @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
         return new ResponseEntity<>(productService.updateProduct(id, productDto, image), HttpStatus.OK);
     }
 

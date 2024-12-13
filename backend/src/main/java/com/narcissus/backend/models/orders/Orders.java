@@ -17,17 +17,17 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = "consistOfs") //avoid hashcode and equals run to infinity loops
 public class Orders {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ordersId;
     private long money;
     private boolean shipped;
+    private String address;
     private String status;
     private Date date;
     private String cancellationReason;
     private String canceledAt;
     private String transactionDateTime;
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<ConsistOf> consistOfs;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
