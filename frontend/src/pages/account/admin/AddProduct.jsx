@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const NewProduct = () => {
+const AddProduct = () => {
     const location = useLocation();
     const id = location.search.replace("?", "");
 
@@ -116,4 +116,4 @@ const NewProduct = () => {
     );
 };
 
-export default NewProduct;
+export default AddProduct;

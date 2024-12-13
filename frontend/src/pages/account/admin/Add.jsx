@@ -1,15 +1,16 @@
+import AddProduct from "./AddProduct.jsx"
 import UseAuth from '../UseAuth.jsx';
-import UpdateProduct from "./UpdateProduct.jsx"
 
-const Update = () => {
+
+const Add = () => {
     // UseAuth('ROLE_ADMIN');
 
 
     return (
         <div>
-            <UpdateProduct />
+            <AddProduct />
         </div>
     );
 }
 
-export default Update;
+export default Add;
