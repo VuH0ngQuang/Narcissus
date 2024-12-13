@@ -19,20 +19,20 @@ const App = () => {
         <BrowserRouter>
                 <NavBar />
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/" element={<HomePage />} />             {/*done*/}
+                    <Route path="/login" element={<Login />} />             {/*done*/}
+                    <Route path="/register" element={<Register />} />             {/*done*/}
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/product/:id" element={<ProductDetailPage />} />
                     <Route path="/admin/addproduct" element={<h1>Not Found</h1>} />
                     <Route path="/admin/updateproduct" element={<h1>Not Found</h1>} />
                     <Route path="/admin/order" element={<Order />} />
-                    <Route path="/orders" element={<PurchasedProduct1 />} />
-                    <Route path="/orders/:orderId" element={<PurchasedProduct2 />} />
+                    <Route path="/orders" element={<PurchasedProduct1 />} />             {/*done*/}
+                    <Route path="/orders/:orderId" element={<PurchasedProduct2 />} />             {/*done*/}
                     <Route path="/editproduct" element={<EditProduct />} />
                     <Route path="/sellerdashboard" element={<SellerDashboard />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
-                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />             {/*done*/}
+                    <Route path="/cart" element={<Cart />} />             {/*done*/}
                     <Route path="/successful" element={<PaySuccessful />} />
                     <Route path="/failed" element={<PayFailed />} />
                 </Routes>
