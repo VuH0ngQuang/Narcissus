@@ -1,13 +1,13 @@
 import Banner1 from '../../assets/banner2.jpg';
 import { usePayOS } from "@payos/payos-checkout";
-import {useEffect, useState} from "react";
-import {FEHost, host} from "../../config.js";
+import { useEffect, useState } from "react";
+import { FEHost, host } from "../../config.js";
 
 const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
-    const [checkoutUrl, setCheckoutUrl] = useState('')
+    const [checkoutUrl, setCheckoutUrl] = useState('');
     const [authToken] = useState(localStorage.getItem('authToken'));
     const [hasFetchedPayment, setHasFetchedPayment] = useState(false);
-
+    const [countdown, setCountdown] = useState(30); // Countdown timer state
 
     const [payOSConfig, setPayOSConfig] = useState({
         RETURN_URL: window.location.origin, // required
@@ -15,16 +15,16 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
         CHECKOUT_URL: null, // required
         embedded: true, // Nếu dùng giao diện nhúng
         onSuccess: (event) => {
-            localStorage.removeItem('products')
-            window.location.href = `${FEHost}/successful`
+            localStorage.removeItem('products');
+            window.location.href = `${FEHost}/successful`;
         },
         onCancel: (event) => {
-            localStorage.removeItem('products')
-            window.location.href = `${FEHost}/failed`
+            localStorage.removeItem('products');
+            window.location.href = `${FEHost}/failed`;
         },
         onExit: (event) => {
-            localStorage.removeItem('products')
-            window.location.href = `${FEHost}/failed`
+            localStorage.removeItem('products');
+            window.location.href = `${FEHost}/failed`;
         }
     });
 
@@ -32,7 +32,6 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
 
     const getPayment = async () => {
         try {
-            // Retrieve and parse products from localStorage
             const products = JSON.parse(localStorage.getItem('products'));
 
             const response = await fetch(`${host}/orders/create`, {
@@ -75,14 +74,12 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
         }
     }, [checkoutUrl]);
 
-    //open the qr code when checkout url exist
     useEffect(() => {
         if (payOSConfig.CHECKOUT_URL) {
             open();
         }
     }, [payOSConfig.CHECKOUT_URL]);
 
-    //run getpayment when showQR is true
     useEffect(() => {
         if (showQR && !hasFetchedPayment) {
             getPayment();
@@ -90,13 +87,29 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
         }
     }, [showQR, hasFetchedPayment]);
 
-    //cancel when user send request to server
     useEffect(() => {
         if (isCanceled) {
             exit();
-            setShowPay(false); // Ensure UI updates
+            setShowPay(false);
         }
     }, [isCanceled]);
+
+    // Countdown logic
+    useEffect(() => {
+        let timer;
+        if (showQR && countdown > 0) {
+            timer = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+        }
+
+        if (countdown === 0) {
+            exit();
+            setShowPay(false);
+        }
+
+        return () => clearInterval(timer);
+    }, [showQR, countdown]);
 
     return (
         <div className='mx-[8%] scrollbar-hide'>
@@ -121,6 +134,23 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
                             <div>
                                 <div id="embedded-payment-container" className="w-full h-[330px] mt-8 mb-8"></div>
 
+                                <button
+                                    type="button"
+                                    className={`w-full text-white border border-black px-4 py-2 relative overflow-hidden ${countdown > 10 ? 'bg-blue-500' : 'bg-red-500'} hover:opacity-90`}
+                                    style={{ position: 'relative' }}
+                                >
+                                    <span className="absolute inset-0 flex justify-center items-center text-xl font-bold">
+                                        {countdown > 0 ? countdown : 'Time Up!'}
+                                    </span>
+                                    <span
+                                        className="absolute inset-0 bg-black opacity-20"
+                                        style={{
+                                            width: `${(countdown / 30) * 100}%`,
+                                            transition: 'width 1s linear',
+                                        }}
+                                    ></span>
+                                </button>
+
                                 <br/>
 
                                 <button
@@ -128,12 +158,11 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
                                     className="w-full bg-red-500 text-white border border-black px-4 py-2 hover:bg-red-600"
                                     onClick={() => {
                                         exit();
-                                        setShowPay(false)
+                                        setShowPay(false);
                                     }}
                                 >
                                     I DON'T WANT TO PAY
                                 </button>
-
                             </div>
                         ) : null}
                     </div>
