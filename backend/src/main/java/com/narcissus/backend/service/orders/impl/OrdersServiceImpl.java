@@ -145,7 +145,19 @@ public class OrdersServiceImpl implements OrdersService {
         );
     }
 
-//    @Override
+    @Override
+    public List<OrdersDto> get(String token) {
+        String jwtToken = token.substring(7);
+        UserEntity user = userRepository.findByEmail(tokenGenerator.getEmailFromJWT(jwtToken))
+                .orElseThrow(() -> new NotFoundException("Invalid Token"));
+
+        List<Orders> orders = ordersRepository.findOrdersByUserEntityUserId(user.getUserId());
+        return orders.parallelStream()
+                .map(order -> toDto(order, new OrdersDto()))
+                .collect(Collectors.toList());
+    }
+
+    //    @Override
 //    public OrdersDto updateOrders(long id, OrdersDto ordersDto) {
 //        return null;
 //    }
@@ -159,6 +171,7 @@ public OrdersDto toDto(Orders orders, OrdersDto ordersDto) {
         throw new IllegalArgumentException("Orders and OrdersDto must not be null");
     }
 
+    ordersDto.setOrderId(orders.getOrdersId());
     ordersDto.setMoney(orders.getMoney());
     ordersDto.setShipped(orders.isShipped());
     ordersDto.setStatus(orders.getStatus());

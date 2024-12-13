@@ -28,7 +28,7 @@ const App = () => {
                     <Route path="/admin/updateproduct" element={<h1>Not Found</h1>} />
                     <Route path="/admin/order" element={<Order />} />
                     <Route path="/orders" element={<PurchasedProduct1 />} />
-                    <Route path="/purchasedproduct2" element={<PurchasedProduct2 />} />
+                    <Route path="/orders/:orderId" element={<PurchasedProduct2 />} />
                     <Route path="/editproduct" element={<EditProduct />} />
                     <Route path="/sellerdashboard" element={<SellerDashboard />} />
                     <Route path="/checkout" element={<CheckoutPage />} />

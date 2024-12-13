@@ -11,6 +11,7 @@ public interface OrdersService {
     OrdersResponse createOrders (Set<ConsistOfDto> consistOfDtos, String token) throws Exception;
     OrdersDto getDetailsOrders (long id);
     List<OrdersDto> getAll();
+    List<OrdersDto> get(String token);
 //    OrdersDto updateOrders (long id, OrdersDto ordersDto);
 //    String deleteOrders (long id);
 }

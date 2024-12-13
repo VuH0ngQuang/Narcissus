@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 public class OrdersDto {
+    private long orderId;
     private long money;
     private boolean shipped;
     private String address;
