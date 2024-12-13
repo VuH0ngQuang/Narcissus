@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CancelPaymentDto {
-    private long id;
+    private long orderId;
     private String reason;
 }

@@ -2,6 +2,7 @@ package com.narcissus.backend.service.orders.impl;
 
 import com.narcissus.backend.dto.orders.ConsistOfDto;
 import com.narcissus.backend.dto.orders.OrdersDto;
+import com.narcissus.backend.dto.orders.OrdersResponse;
 import com.narcissus.backend.exceptions.NotFoundException;
 import com.narcissus.backend.models.email.EmailDetails;
 import com.narcissus.backend.models.orders.ConsistOf;
@@ -11,6 +12,7 @@ import com.narcissus.backend.models.product.Product;
 import com.narcissus.backend.models.user.UserEntity;
 import com.narcissus.backend.repository.orders.OrdersRepository;
 import com.narcissus.backend.repository.product.ProductRepository;
+import com.narcissus.backend.repository.user.UserCartRepository;
 import com.narcissus.backend.repository.user.UserRepository;
 import com.narcissus.backend.security.TokenGenerator;
 import com.narcissus.backend.service.email.EmailService;
@@ -20,11 +22,9 @@ import com.narcissus.backend.service.payment.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,81 +35,96 @@ public class OrdersServiceImpl implements OrdersService {
     private final OrdersRepository ordersRepository;
     private final PaymentService paymentService;
     private final EmailService emailService;
+    private final UserCartRepository userCartRepository;
 
     @Autowired
-    public OrdersServiceImpl(EmailService emailService, OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService) {
+    public OrdersServiceImpl(EmailService emailService, OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService, UserCartRepository userCartRepository) {
         this.ordersRepository = ordersRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.tokenGenerator = tokenGenerator;
         this.paymentService = paymentService;
         this.emailService = emailService;
+        this.userCartRepository = userCartRepository;
     }
 
     @Override
-    public OrdersDto createOrders(Set<ConsistOfDto> consistOfDtos, String token) throws Exception {
+    public OrdersResponse createOrders(Set<ConsistOfDto> consistOfDtos, String token) throws Exception {
         Orders orders = new Orders();
 
-        CompletableFuture<Long> totalPriceFuture = CompletableFuture.supplyAsync(() ->
-                consistOfDtos.stream()
-                        .mapToLong(dto -> {
-                            Product product = productRepository.findById(dto.getProductId())
-                                    .orElseThrow(() -> new NotFoundException("Product not found"));
-                            return product.getProductPrice() * dto.getQuantity();
-                        })
-                        .sum()
-        );
+        long timestamp = System.currentTimeMillis() % 1000000000;
+        long randomNum = ThreadLocalRandom.current().nextLong(1000, 9999);
+        long orderId = timestamp * 10000 + randomNum;
+        orders.setOrdersId(orderId);
 
-        long totalPrice = totalPriceFuture.get();
+        long totalPrice = consistOfDtos.stream()
+                .mapToLong(dto -> {
+                    Product product = productRepository.findById(dto.getProductId())
+                            .orElseThrow(() -> new NotFoundException("Product not found"));
+                    return product.getProductPrice() * dto.getQuantity();
+                })
+                .sum();
         orders.setMoney(totalPrice);
         orders.setShipped(false);
         orders.setStatus("PENDING");
         orders.setDate(new Date());
+
         String jwtToken = token.substring(7);
         UserEntity user = userRepository.findByEmail(tokenGenerator.getEmailFromJWT(jwtToken))
                 .orElseThrow(() -> new NotFoundException("Invalid Token"));
         orders.setUserEntity(user);
 
-        Set<ConsistOf> consistOfs = new HashSet<>();
+        Set<ConsistOf> consistOfs = consistOfDtos.stream()
+                .map(dto -> {
+                    userCartRepository.deleteByUserIdAndProductId(user.getUserId(), dto.getProductId());
+                    ConsistOf consistOf = new ConsistOf();
+                    ConsistOfKey id = new ConsistOfKey(orders.getOrdersId(), dto.getProductId());
 
-        consistOfDtos.parallelStream().forEach(dto -> {
-            ConsistOf consistOf = new ConsistOf();
-            ConsistOfKey id = new ConsistOfKey(orders.getOrdersId(), dto.getProductId());
+                    consistOf.setId(id);
+                    consistOf.setQuantity(dto.getQuantity());
+                    consistOf.setOrders(orders);
 
-            consistOf.setId(id);
-            consistOf.setQuantity(dto.getQuantity());
-            consistOf.setOrders(orders);
+                    Product product = productRepository.findById(dto.getProductId())
+                            .orElseThrow(() -> new NotFoundException("Product not found"));
+                    consistOf.setProduct(product);
 
-            Product product = productRepository.findById(dto.getProductId())
-                    .orElseThrow(() -> new NotFoundException("Product not found"));
-            consistOf.setProduct(product);
-
-            consistOfs.add(consistOf);
-        });
+                    return consistOf;
+                })
+                .collect(Collectors.toSet());
         orders.setConsistOfs(consistOfs);
 
         ordersRepository.save(orders);
+//        // fucking stupid CompletableFuture dont let me reassign orders so have to change the name to get orderId
+//        Orders newOrders = ordersRepository.save(orders);
 
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(user.getEmail());
         emailDetails.setSubject("Thank you for your order! Your flowers are on their way");
-        emailDetails.setMsgBody(emailService.mailOrder(user.getUserName(),totalPrice, consistOfs));
+        emailDetails.setMsgBody(emailService.mailOrder(user.getUserName(), user.getAddress(), totalPrice, consistOfs));
 
-        //make asynchronously
         CompletableFuture<Void> emailFuture = CompletableFuture.runAsync(() -> emailService.sendEmail(emailDetails));
-        CompletableFuture<Void> paymentFuture = CompletableFuture.runAsync(() -> {
+
+        CompletableFuture<String> paymentFuture = CompletableFuture.supplyAsync(() -> {
             try {
-                paymentService.createPayment(orders);
+                return paymentService.createPayment(orders);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
 
-        //waits for both tasks to complete
+        String checkoutUrl = paymentFuture.get();
+
         CompletableFuture.allOf(emailFuture, paymentFuture).join();
 
-        return toDto(orders, new OrdersDto());
+        OrdersResponse ordersResponse = new OrdersResponse();
+        ordersResponse.setOrdersId(orders.getOrdersId());
+        ordersResponse.setCheckoutUrl(checkoutUrl);
+
+        return ordersResponse;
     }
+
+
+
 
     @Override
     public List<OrdersDto> getAll() {

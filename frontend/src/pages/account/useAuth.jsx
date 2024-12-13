@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 
 const UseAuth = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,7 +14,7 @@ const UseAuth = () => {
             if (!location.state) {
                 location.state = { from: location.pathname };  // Lưu đường dẫn ban đầu
             }
-            navigate('/login', { state: { from: location.pathname } });
+            window.location.href = `${FEHost}`+'/login', { state: { from: location.pathname } };
         }
         setLoading(false);  // Đảm bảo loading được tắt sau khi kiểm tra
     }, [location, navigate]);

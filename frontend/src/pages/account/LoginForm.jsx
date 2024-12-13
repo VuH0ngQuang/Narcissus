@@ -102,13 +102,11 @@
 
 import React, { useState } from 'react';
 import LoginBanner from '../../assets/loginbanner.jpg';
-import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FEHost, host } from "../../config.js";
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();  // Dùng để điều hướng
     const location = useLocation();  // Dùng để lấy thông tin từ location.state
 
     const handleLogin = async (e) => {
@@ -140,8 +138,7 @@ const LoginForm = () => {
                 console.log("location.state.from:", location.state?.from);
                 console.log("Redirecting to:", redirectTo);
     
-                navigate(redirectTo); // Điều hướng đến trang trước đó hoặc trang chủ
-    
+                window.location.href = `${FEHost}`;
             } else {
                 const errorData = await response.json();
                 alert(`Login failed: ${errorData.message || 'Unknown error'}`);

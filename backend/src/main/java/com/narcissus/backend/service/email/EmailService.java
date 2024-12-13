@@ -10,5 +10,5 @@ public interface EmailService {
     String sendEmail(EmailDetails emailDetails);
     public String mailResetPassword(String userName, String password);
     public String mailRegister(String userName);
-    public String mailOrder(String userName,long totalPrice, Set<ConsistOf> consistOfs);
+    public String mailOrder(String userName, String address, long totalPrice, Set<ConsistOf> consistOfs);
 }
