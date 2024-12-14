@@ -21,7 +21,7 @@ const List = ({ productID, productName, quantity, price }) => {
     );
 };
 
-const ProductDetail = () => {
+const OrderDetail = () => {
     const { orderID } = useParams();
     const [authToken] = useState(localStorage.getItem('authToken'));
     const [products, setProducts] = useState([]);
@@ -109,4 +109,4 @@ const ProductDetail = () => {
     );
 };
 
-export default ProductDetail;
+export default OrderDetail;

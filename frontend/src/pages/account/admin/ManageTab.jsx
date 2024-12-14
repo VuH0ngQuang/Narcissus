@@ -146,7 +146,7 @@ const ManageTab = () => {
                             {products.map((product) => (
                                 <ProductList 
                                     key={product.id}
-                                    to={`/admin/updateproduct?${product.id}`} 
+                                    to={`/admin/updateproduct/${product.id}`} 
                                     id={product.id} 
                                     name={product.name} 
                                     quantity={product.quantity} 

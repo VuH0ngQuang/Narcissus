@@ -1,12 +1,12 @@
 import UseAuth from '../UseAuth.jsx';
-import ProductDetail from "./ProductDetail.jsx"
+import OrderDetail from "./OrderDetail.jsx"
 
 const Detail = () => {
     // UseAuth('ROLE_ADMIN');
 
     return (
         <div>
-            <ProductDetail/>
+            <OrderDetail/>
         </div>
     );
 }
