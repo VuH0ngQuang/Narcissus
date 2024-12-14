@@ -16,15 +16,24 @@ import NavBar from "./pages/home/NavBar.jsx";
 import CheckoutPage from "./pages/checkout/CheckoutPage.jsx";
 import Cart from "./pages/checkout/Cart.jsx";
 import {PayFailed, PaySuccessful} from "./pages/checkout/PayInfo.jsx";
+import clarity from '@microsoft/clarity';
+import {useEffect} from "react";
+
 
 const App = () => {
+
+    useEffect(() => {
+        const projectId = "p1uwyhlg5q";
+        clarity.init(projectId);
+    }, []);
+
     return (
         <BrowserRouter>
                 <NavBar />
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/" element={<HomePage />} />             {/*done*/}
+                    <Route path="/login" element={<Login />} />             {/*done*/}
+                    <Route path="/register" element={<Register />} />             {/*done*/}
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/product/:id" element={<ProductDetailPage />} />
                     <Route path="/admin/updateproduct/:productID" element={<Update/>} />
@@ -35,8 +44,8 @@ const App = () => {
                     <Route path="/orders/:orderId" element={<PurchasedProduct2 />} />
                     <Route path="/editproduct" element={<EditProduct />} />
                     <Route path="/sellerdashboard" element={<SellerDashboard />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
-                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />             {/*done*/}
+                    <Route path="/cart" element={<Cart />} />             {/*done*/}
                     <Route path="/successful" element={<PaySuccessful />} />
                     <Route path="/failed" element={<PayFailed />} />
                 </Routes>

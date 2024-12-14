@@ -55,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
         if (productDto != null) {
             if (productDto.getProductName() != null) product.setProductName(productDto.getProductName());
             if (productDto.getProductInfo() != null) product.setProductInfo(productDto.getProductInfo());
+            if (productDto.getProductType() != null) product.setProductType(productDto.getProductType());
             if (productDto.getProductStockQuantity() != null) product.setProductStockQuantity(productDto.getProductStockQuantity());
             if (productDto.getProductPrice() != null) product.setProductPrice(productDto.getProductPrice());
             if (productDto.getProductDate() != null) product.setProductDate(productDto.getProductDate());
@@ -83,6 +84,7 @@ public class ProductServiceImpl implements ProductService {
         productDto.setProductID(product.getProductId());
         productDto.setProductName(product.getProductName());
         productDto.setProductInfo(product.getProductInfo());
+        productDto.setProductType(product.getProductType());
         productDto.setProductStockQuantity(product.getProductStockQuantity());
         productDto.setProductPrice(product.getProductPrice());
         if (includeImage) {
@@ -97,6 +99,7 @@ public class ProductServiceImpl implements ProductService {
     public Product toEntity(ProductDto productDto, Product product) throws IOException {
         product.setProductName(productDto.getProductName());
         product.setProductInfo(productDto.getProductInfo());
+        product.setProductType(productDto.getProductType());
         product.setProductStockQuantity(productDto.getProductStockQuantity());
         product.setProductPrice(productDto.getProductPrice());
         product.setProductDate(new Date());

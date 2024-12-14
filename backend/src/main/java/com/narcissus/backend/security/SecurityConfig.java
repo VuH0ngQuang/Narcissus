@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("api/orders/forTesting").permitAll()
                         .requestMatchers("api/orders/getAll").hasRole("ADMIN")
                         .requestMatchers("/api/orders/**").authenticated()
+                        .requestMatchers("api/payment/closed-tab").permitAll()
                         .requestMatchers("api/payment/webhook").permitAll()
                         .requestMatchers("/api/payment/**").authenticated()
                         .requestMatchers("/api/user/**").authenticated()
