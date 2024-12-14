@@ -22,7 +22,7 @@ const Comment = ({ setShowPay, orderId, setIsCancel }) => {
             })
                 .then((response) => {
                     if (response.status === 401) window.location.href = `${FEHost}/login`
-                    if (response.ok) window.location.href = `${FEHost}/orders`
+                    if (response.ok) window.location.href = `${FEHost}/failed`
                 })
         } catch (error) {
             alert(`An error occurred: ${error.message}`);

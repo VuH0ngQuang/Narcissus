@@ -7,12 +7,13 @@ import java.util.Date;
 
 @Data
 public class ProductDto {
-    private Long ProductID;
-    private String ProductName;
-    private String ProductInfo;
-    private Integer ProductStockQuantity;
-    private Long ProductPrice;
-    private Date ProductDate;
-    private MultipartFile ProductImage;
-    private String ProductImageBase64;
+    private Long productID;
+    private String productName;
+    private String productInfo;
+    private String productType;
+    private Integer productStockQuantity;
+    private Long productPrice;
+    private Date productDate;
+    private MultipartFile productImage;
+    private String productImageBase64;
 }

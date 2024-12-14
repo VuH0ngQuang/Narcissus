@@ -1,4 +1,24 @@
+import {useState, useEffect } from "react";
+import {FEHost} from "../../config.js";
+
 const PayFailed = () => {
+    const [time, setTime] = useState(10);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(prevTime => {
+                if (prevTime <= 1) {
+                    clearInterval(interval);
+                    window.location.href = '/';
+                    return 0;
+                }
+                return prevTime - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div>
             <div className='h-12'></div>
@@ -22,10 +42,10 @@ const PayFailed = () => {
                         <button
                             onClick={() => window.location.href = '/'}
                             className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                            Back to Homepage
+                            Back to Homepage ({time})
                         </button>
                         <button
-                            onClick={() => null}
+                            onClick={() => window.location.href = `${FEHost}/orders`}
                             className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
                             View Order
                         </button>
@@ -37,6 +57,22 @@ const PayFailed = () => {
 }
 
 const PaySuccessful = () => {
+    const [time, setTime] = useState(10);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(prevTime => {
+                if (prevTime <= 1) {
+                    clearInterval(interval);
+                    window.location.href = '/';
+                    return 0;
+                }
+                return prevTime - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div>
             <div className='h-12'></div>
@@ -59,10 +95,10 @@ const PaySuccessful = () => {
                         <button
                             onClick={() => window.location.href = '/'}
                             className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                            Back to Homepage
+                            Back to Homepage ({time})
                         </button>
                         <button
-                            onClick={() => null}
+                            onClick={() => window.location.href = `${FEHost}/orders`}
                             className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
                             View Order
                         </button>

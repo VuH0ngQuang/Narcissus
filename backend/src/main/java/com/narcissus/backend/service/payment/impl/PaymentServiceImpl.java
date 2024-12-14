@@ -1,10 +1,14 @@
 package com.narcissus.backend.service.payment.impl;
 
 import com.narcissus.backend.dto.orders.CancelPaymentDto;
+import com.narcissus.backend.dto.orders.ClosedTabDto;
 import com.narcissus.backend.exceptions.NotFoundException;
 import com.narcissus.backend.models.orders.Orders;
 import com.narcissus.backend.models.product.Product;
+import com.narcissus.backend.models.user.UserEntity;
 import com.narcissus.backend.repository.orders.OrdersRepository;
+import com.narcissus.backend.repository.user.UserRepository;
+import com.narcissus.backend.security.TokenGenerator;
 import com.narcissus.backend.service.SSE.SSEService;
 import com.narcissus.backend.service.payment.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +30,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrdersRepository ordersRepository;
     private final SSEService sseService;
     private final PayOS payOS = new PayOS(PAYOSID, PAYOSAPI, PAYOSCHECKSUM);
+    private final UserRepository userRepository;
+    private final TokenGenerator tokenGenerator;
 
     @Autowired
-    public PaymentServiceImpl(SSEService sseService, OrdersRepository ordersRepository) {
+    public PaymentServiceImpl(SSEService sseService, OrdersRepository ordersRepository, UserRepository userRepository, TokenGenerator tokenGenerator) {
         this.sseService = sseService;
         this.ordersRepository = ordersRepository;
+        this.tokenGenerator = tokenGenerator;
+        this.userRepository = userRepository;
     }
 
     public String createPayment (Orders order) throws Exception {
@@ -80,7 +88,38 @@ public class PaymentServiceImpl implements PaymentService {
         return "Successfully";
     }
 
-//    public String confirmWebHook(String url) throws Exception {
+    @Override
+    public String tabClosed(ClosedTabDto closedTabDto) throws Exception {
+        String jwtToken = closedTabDto.getAuthToken().substring(7);
+        UserEntity user = userRepository.findByEmail(tokenGenerator.getEmailFromJWT(jwtToken))
+                .orElseThrow(() -> new NotFoundException("Invalid Token"));
+        Orders orders = ordersRepository.findById(closedTabDto.getOrderId()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+closedTabDto.getOrderId()));
+        if (orders.getUserEntity() == user || user.getRole().getName().equals("ADMIN")) {
+            PaymentLinkData result = payOS.cancelPaymentLink(closedTabDto.getOrderId(), closedTabDto.getReason());
+
+            orders.setStatus(result.getStatus());
+            orders.setCanceledAt(result.getCanceledAt());
+            orders.setCancellationReason(closedTabDto.getReason());
+
+            ordersRepository.save(orders);
+
+            if(!result.getStatus().equals("CANCELLED")) return "Failed";
+            return "Successfully";
+        }
+        return "Failed";
+//        PaymentLinkData result = payOS.cancelPaymentLink(closedTabDto.getOrderId(), "SYSTEM: USER CLOSED THE TAB OR MOVE TO ANOTHER PAGE");
+//
+//        orders.setStatus(result.getStatus());
+//        orders.setCanceledAt(result.getCanceledAt());
+//        orders.setCancellationReason("SYSTEM: USER CLOSED THE TAB OR MOVE TO ANOTHER PAGE");
+//
+//        ordersRepository.save(orders);
+//
+//        if(!result.getStatus().equals("CANCELLED")) return "Failed";
+//        return "Successfully";
+    }
+
+    //    public String confirmWebHook(String url) throws Exception {
 //        logger.info("confirmWebHook service ran");
 //        try {
 //            // Call to PayOS.confirmWebhook()

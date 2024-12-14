@@ -3,6 +3,7 @@ package com.narcissus.backend.controllers.payment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.narcissus.backend.dto.orders.CancelPaymentDto;
+import com.narcissus.backend.dto.orders.ClosedTabDto;
 import com.narcissus.backend.service.payment.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,5 +58,9 @@ public class PaymentController {
     @PostMapping("/cancel-payment")
     public ResponseEntity<String> cancelPayment(@RequestBody CancelPaymentDto cancelPaymentDto) throws Exception {
         return new ResponseEntity<>(paymentService.cancelPayment(cancelPaymentDto), HttpStatus.OK);
+    }
+    @PostMapping("/closed-tab")
+    public ResponseEntity<String> cancelPayment(@RequestBody ClosedTabDto closedTabDto) throws Exception {
+        return new ResponseEntity<>(paymentService.tabClosed(closedTabDto), HttpStatus.OK);
     }
 }

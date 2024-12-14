@@ -23,6 +23,7 @@ public class Product {
     private long productId;
     private String productName;
     private String productInfo;
+    private String productType;
     private int productStockQuantity;
     private long productPrice;
     private Date productDate;

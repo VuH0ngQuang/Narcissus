@@ -3,11 +3,11 @@ import { usePayOS } from "@payos/payos-checkout";
 import { useEffect, useState } from "react";
 import { FEHost, host } from "../../config.js";
 
-const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
+const Pay = ({ setShowPay, showQR, orderId, setOrderId, isCanceled, setIsCreatingLink, isCreatingLink, setIsPaid }) => {
     const [checkoutUrl, setCheckoutUrl] = useState('');
     const [authToken] = useState(localStorage.getItem('authToken'));
     const [hasFetchedPayment, setHasFetchedPayment] = useState(false);
-    const [countdown, setCountdown] = useState(30); // Countdown timer state
+    const [countdown, setCountdown] = useState(300); // Countdown timer state
 
     const [payOSConfig, setPayOSConfig] = useState({
         RETURN_URL: window.location.origin, // required
@@ -15,6 +15,7 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
         CHECKOUT_URL: null, // required
         embedded: true, // Nếu dùng giao diện nhúng
         onSuccess: (event) => {
+            setIsPaid(true);
             localStorage.removeItem('products');
             window.location.href = `${FEHost}/successful`;
         },
@@ -31,40 +32,48 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
     const { open, exit } = usePayOS(payOSConfig);
 
     const getPayment = async () => {
-        try {
-            const products = JSON.parse(localStorage.getItem('products'));
+        if (localStorage.getItem('products') !== null) {
+            console.log(isCreatingLink)
+            try {
+                const products = JSON.parse(localStorage.getItem('products'));
 
-            const response = await fetch(`${host}/orders/create`, {
-                headers: {
-                    'Authorization': authToken,
-                    'Content-Type': 'application/json',
-                },
-                method: "POST",
-                body: JSON.stringify(products)
-            });
+                const response = await fetch(`${host}/orders/create`, {
+                    headers: {
+                        'Authorization': authToken,
+                        'Content-Type': 'application/json',
+                    },
+                    method: "POST",
+                    body: JSON.stringify(products)
+                });
 
-            if (response.status === 401) {
-                console.log("Request Body:", products);
-                window.location.href = `${FEHost}/login`;
-                return;
+                if (response.status === 401) {
+                    console.log("Request Body:", products);
+                    window.location.href = `${FEHost}/login`;
+                    return;
+                }
+
+                if (!response.ok) {
+                    console.log("Server doesn't respond");
+                    return;
+                }
+
+                const data = await response.json();
+                setOrderId(data.ordersId);
+                setCheckoutUrl(data.checkoutUrl);
+                console.log("Checkout URL from API:", data.checkoutUrl);
+
+                setPayOSConfig((oldConfig) => ({
+                    ...oldConfig,
+                    CHECKOUT_URL: data.checkoutUrl,
+                }));
+            } catch (error) {
+                console.error('Error fetching payment:', error);
+            } finally {
+                setIsCreatingLink(false);
             }
-
-            if (!response.ok) {
-                console.log("Server doesn't respond");
-                return;
-            }
-
-            const data = await response.json();
-            setOrderId(data.ordersId);
-            setCheckoutUrl(data.checkoutUrl);
-            console.log("Checkout URL from API:", data.checkoutUrl);
-
-            setPayOSConfig((oldConfig) => ({
-                ...oldConfig,
-                CHECKOUT_URL: data.checkoutUrl,
-            }));
-        } catch (error) {
-            console.error('Error fetching payment:', error);
+        } else {
+            console.log('No products found in localStorage.');
+            return;
         }
     };
 
@@ -97,19 +106,35 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
     // Countdown logic
     useEffect(() => {
         let timer;
-        if (showQR && countdown > 0) {
+        if (showQR && countdown > 0 && !isCreatingLink) {
             timer = setInterval(() => {
                 setCountdown((prev) => prev - 1);
             }, 1000);
         }
 
         if (countdown === 0) {
-            exit();
-            setShowPay(false);
+            const cancelData = { orderId: orderId, reason: 'SYSTEM: PAYMENT TIME OUT' };
+            fetch(`${host}/payment/cancel-payment`, {
+                headers: {
+                    'Authorization': authToken,
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify(cancelData)
+            }).then(response => {
+                if (!response.ok) {
+                    console.log('Some thing wrong, check the system');
+                }
+                if (response.status === 401) {
+                    window.location.href = `${FEHost}/login`;
+                } else {
+                    window.location.href = `${FEHost}/orders`;
+                }
+            });
         }
 
         return () => clearInterval(timer);
-    }, [showQR, countdown]);
+    }, [showQR, countdown, isCreatingLink]);
 
     return (
         <div className='mx-[8%] scrollbar-hide'>
@@ -140,7 +165,7 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
                                     style={{ position: 'relative' }}
                                 >
                                     <span className="absolute inset-0 flex justify-center items-center text-xl font-bold">
-                                        {countdown > 0 ? countdown : 'Time Up!'}
+                                        {countdown > 0? countdown : 'Time Up!'}
                                     </span>
                                     <span
                                         className="absolute inset-0 bg-black opacity-20"
@@ -153,16 +178,18 @@ const Pay = ({ setShowPay, showQR, setOrderId, isCanceled }) => {
 
                                 <br/>
 
-                                <button
-                                    type="button"
-                                    className="w-full bg-red-500 text-white border border-black px-4 py-2 hover:bg-red-600"
-                                    onClick={() => {
-                                        exit();
-                                        setShowPay(false);
-                                    }}
-                                >
-                                    I DON'T WANT TO PAY
-                                </button>
+                                {!isCreatingLink ? (
+                                    <button
+                                        type="button"
+                                        className="w-full bg-red-500 text-white border border-black px-4 py-2 hover:bg-red-600"
+                                        onClick={() => {
+                                            exit();
+                                            setShowPay(false);
+                                        }}
+                                    >
+                                        I DON'T WANT TO PAY
+                                    </button>
+                                ): null}
                             </div>
                         ) : null}
                     </div>

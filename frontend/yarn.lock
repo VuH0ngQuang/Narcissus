@@ -413,6 +413,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@microsoft/clarity@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/clarity/-/clarity-1.0.0.tgz#e5f6c87d4aac9bac0cedeaa94158a3fd32fbcd5e"
+  integrity sha512-2QY6SmXnqRj6dWhNY8NYCN3e53j4zCFebH4wGnNhdGV1mqAsQwql2fT0w8TISxCvwwfVp8idsWLIdrRHOms1PQ==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -1407,7 +1412,8 @@ fraction.js@^4.3.7:
 "frontend@file:.":
   version "0.0.0"
   dependencies:
-    frontend "file:../../../AppData/Local/Yarn/Cache/v6/npm-frontend-0.0.0-6d2d32d3-5188-4766-be29-88e124fbbae9-1733585543520/node_modules/frontend"
+    "@payos/payos-checkout" "^1.0.8"
+    frontend "file:../../../AppData/Local/Yarn/Cache/v6/npm-frontend-0.0.0-64017abe-67e5-4f5b-bc8a-9fedf5aa41d3-1734141873049/node_modules/frontend"
     react "^18.3.1"
     react-dom "^18.3.1"
     react-horizontal-scrolling-menu "^8.2.0"

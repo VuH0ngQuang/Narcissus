@@ -13,8 +13,17 @@ import NavBar from "./pages/home/NavBar.jsx";
 import CheckoutPage from "./pages/checkout/CheckoutPage.jsx";
 import Cart from "./pages/checkout/Cart.jsx";
 import {PayFailed, PaySuccessful} from "./pages/checkout/PayInfo.jsx";
+import clarity from '@microsoft/clarity';
+import {useEffect} from "react";
+
 
 const App = () => {
+
+    useEffect(() => {
+        const projectId = "p1uwyhlg5q";
+        clarity.init(projectId);
+    }, []);
+
     return (
         <BrowserRouter>
                 <NavBar />

@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@microsoft/clarity": "^1.0.0",
     "@payos/payos-checkout": "^1.0.8",
     "frontend": "file:",
     "react": "^18.3.1",
