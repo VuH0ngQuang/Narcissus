@@ -270,7 +270,7 @@ const AddProduct = () => {
                         isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-[#D2A41D] hover:bg-[#b08b19]"
                     } text-black font-bold py-2 px-6 rounded-lg w-full transition duration-200`}
                 >
-                    {isSubmitting ? "Adding..." : "Add"}
+                    {isSubmitting ? "Adding..." : "Add Product"}
                 </button>
             </div>
 

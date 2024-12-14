@@ -6,6 +6,36 @@ const UpdateProduct = () => {
     const { productID } = useParams();
     const [authToken] = useState(localStorage.getItem("authToken"));
     
+    const deleteProduct = async () => {
+        if (isDeleting) return;
+
+        setIsDeleting(true);
+
+        if (window.confirm("Are you sure you want to delete this product?")) {
+            try {
+                const response = await fetch(`${host}/products/delete/${productID}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: authToken,
+                    },
+                });
+    
+                if (!response.ok) {
+                    throw new Error("Failed to delete product.");
+                }
+    
+                setNotification("Product deleted successfully!");
+                setTimeout(() => {
+                    window.location.href = `${FEHost}/admin/dashboard`;
+                }, 3000);
+            } catch (error) {
+                console.error("Error deleting product:", error);
+                setIsDeleting(false);
+                setNotification("Failed to delete product. Please try again.");
+            }
+        }
+    };
+    
     const [productData, setProductData] = useState({
         productName: "",
         productInfo: "",
@@ -18,6 +48,8 @@ const UpdateProduct = () => {
     const [productImage, setProductImage] = useState(null);
     const [notification, setNotification] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
     const [formErrors, setFormErrors] = useState({
         productName: false,
         productType: false,
@@ -157,6 +189,13 @@ const UpdateProduct = () => {
         }
     };
 
+    // console.log("isDeleting");
+    // console.log(isDeleting);
+    // console.log("isSubmitting");
+    // console.log(isSubmitting);
+    // console.log("isDeleting||isSubmitting");
+    // console.log(isDeleting||isSubmitting);
+
     return (
         <div className="h-screen items-center">
             {/* Khoảng cách cho thanh công cụ */}
@@ -282,16 +321,25 @@ const UpdateProduct = () => {
                     </div>
                 )}
 
-                <div className="mb-4 text-center">
+                <div className="mb-6 flex justify-center space-x-4">
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        className="bg-[#3a3a3a] text-white py-2 px-6 rounded-md"
-                        disabled={isSubmitting}
+                        className="bg-[#3a3a3a] text-white py-3 px-8 rounded-lg shadow-md hover:bg-[#2a2a2a] transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSubmitting||isDeleting}
                     >
                         {isSubmitting ? "Submitting..." : "Update Product"}
                     </button>
+                    <button
+                        type="button"
+                        onClick={deleteProduct}
+                        className="bg-red-500 text-white py-3 px-8 rounded-lg shadow-md hover:bg-red-600 transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isDeleting||isSubmitting}
+                    >
+                        {isDeleting ? "Deleting..." : "Delete Product"}
+                    </button>
                 </div>
+
             </div>
         </div>
     );
