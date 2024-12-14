@@ -134,7 +134,6 @@ const AddProduct = () => {
 
             <div className="h-4"></div>
 
-    
             {/* Phần tiêu đề */}
             <div className="w-full max-w-2xl mx-auto"> {/* Trung tâm hóa cả phần tiêu đề và form */}
                 <div className="flex flex-row w-full mb-5">
@@ -165,7 +164,7 @@ const AddProduct = () => {
                         <p className="text-red-500 text-sm">Product Name is required.</p>
                     )}
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Information</label>
                     <textarea
@@ -176,7 +175,7 @@ const AddProduct = () => {
                         rows={4}
                     />
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Type</label>
                     <select
@@ -196,7 +195,7 @@ const AddProduct = () => {
                         <p className="text-red-500 text-sm">Product Type is required.</p>
                     )}
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Price</label>
                     <input
@@ -212,7 +211,7 @@ const AddProduct = () => {
                         <p className="text-red-500 text-sm">Product Price must be greater than 0.</p>
                     )}
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Stock</label>
                     <input
@@ -228,7 +227,7 @@ const AddProduct = () => {
                         <p className="text-red-500 text-sm">Product Stock must be greater than 0.</p>
                     )}
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Image</label>
                     <input
@@ -243,13 +242,27 @@ const AddProduct = () => {
                         <p className="text-red-500 text-sm">Product Image is required.</p>
                     )}
                 </div>
-    
+
+                {/* Hiển thị hình ảnh sau khi tải lên */}
+                {productImage && (
+                    
+                    <div className="mb-4">
+                        <label className="block font-bold mb-1">Image</label>
+
+                        <img
+                            src={URL.createObjectURL(productImage)}
+                            alt="Product Preview"
+                            className="w-full h-auto border p-2"
+                        />
+                    </div>
+                )}
+
                 {notification && (
                     <div className="mb-4 text-center text-lg font-bold text-green-600">
                         {notification}
                     </div>
                 )}
-    
+
                 <button
                     onClick={handleSubmit}
                     disabled={isSubmitting}
@@ -262,11 +275,8 @@ const AddProduct = () => {
             </div>
 
             <div className="h-12"></div>
-
         </div>
     );
-    
-    
 };
 
 export default AddProduct;

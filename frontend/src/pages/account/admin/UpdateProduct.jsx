@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { host, FEHost } from "../../../config.js";
 
-const AddProduct = () => {
+const UpdateProduct = () => {
+    const { productID } = useParams();
     const [authToken] = useState(localStorage.getItem("authToken"));
-
+    
     const [productData, setProductData] = useState({
         productName: "",
         productInfo: "",
@@ -31,6 +32,35 @@ const AddProduct = () => {
     const productPriceRef = useRef(null);
     const productStockQuantityRef = useRef(null);
     const productImageRef = useRef(null);
+
+    // Fetch product details when component mounts
+    useEffect(() => {
+        const fetchProductDetails = async () => {
+            try {
+                const response = await fetch(`${host}/products/${productID}`, {
+                    method: "GET"
+                });
+                if (!response.ok) {
+                    throw new Error("Failed to fetch product data.");
+                }
+                const data = await response.json();
+                setProductData({
+                    productName: data.productName,
+                    productInfo: data.productInfo,
+                    productDate: data.productDate,
+                    productType: data.productType,
+                    productPrice: data.productPrice,
+                    productStockQuantity: data.productStockQuantity,
+                });
+                setProductImage(data.productImageBase64); // Lưu URL hình ảnh để hiển thị
+            } catch (error) {
+                console.error("Error fetching product details:", error);
+                setNotification("Failed to load product data.");
+            }
+        };
+
+        fetchProductDetails();
+    }, [productID, authToken]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -62,8 +92,8 @@ const AddProduct = () => {
         const errors = {
             productName: !productData.productName,
             productType: !productData.productType,
-            productPrice: productData.productPrice <= 0,
-            productStockQuantity: productData.productStockQuantity <= 0,
+            productPrice: productData.productPrice < 0,
+            productStockQuantity: productData.productStockQuantity < 0,
             productImage: !productImage,
         };
 
@@ -103,7 +133,7 @@ const AddProduct = () => {
                 formData.append("image", productImage);
             }
 
-            const response = await fetch(`${host}/products/add`, {
+            const response = await fetch(`${host}/products/update/${productID}`, {
                 method: "POST",
                 headers: {
                     Authorization: authToken,
@@ -115,14 +145,14 @@ const AddProduct = () => {
                 throw new Error("Failed to upload product data and image");
             }
 
-            setNotification("Product added successfully!");
+            setNotification("Product updated successfully!");
 
             setTimeout(() => {
                 window.location.href = `${FEHost}/admin/dashboard`;
             }, 3000);
         } catch (error) {
             console.error("Error uploading product and image:", error);
-            setNotification("Failed to add product. Please try again.");
+            setNotification("Failed to update product. Please try again.");
             setIsSubmitting(false);
         }
     };
@@ -134,11 +164,10 @@ const AddProduct = () => {
 
             <div className="h-4"></div>
 
-    
             {/* Phần tiêu đề */}
-            <div className="w-full max-w-2xl mx-auto"> {/* Trung tâm hóa cả phần tiêu đề và form */}
+            <div className="w-full max-w-2xl mx-auto">
                 <div className="flex flex-row w-full mb-5">
-                    <h1 className="text-4xl font-bold ml-5 mb-3">Add Product</h1> {/* Thụt vào giống như form */}
+                    <h1 className="text-4xl font-bold ml-5 mb-3">Update Product {productID}</h1>
                     <div className="flex flex-grow items-center justify-end">
                         <div className="bg-[#00FF0A] border-2 border-black font-abeezee bg-opacity-50 h-10 w-40 rounded-xl flex mr-10">
                             <Link to="/admin/dashboard" className="h-full w-full justify-center flex items-center font-abeezee">
@@ -148,8 +177,9 @@ const AddProduct = () => {
                     </div>
                 </div>
             </div>
+
             {/* Form nhập liệu */}
-            <div className="w-full max-w-2xl mx-auto"> {/* Trung tâm hóa form với margin auto */}
+            <div className="w-full max-w-2xl mx-auto">
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Name</label>
                     <input
@@ -165,7 +195,7 @@ const AddProduct = () => {
                         <p className="text-red-500 text-sm">Product Name is required.</p>
                     )}
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Information</label>
                     <textarea
@@ -176,7 +206,7 @@ const AddProduct = () => {
                         rows={4}
                     />
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Type</label>
                     <select
@@ -196,7 +226,7 @@ const AddProduct = () => {
                         <p className="text-red-500 text-sm">Product Type is required.</p>
                     )}
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Price</label>
                     <input
@@ -208,11 +238,8 @@ const AddProduct = () => {
                         className={`border w-full p-2 ${formErrors.productPrice ? "border-red-500" : ""}`}
                         required
                     />
-                    {formErrors.productPrice && (
-                        <p className="text-red-500 text-sm">Product Price must be greater than 0.</p>
-                    )}
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Stock</label>
                     <input
@@ -224,11 +251,8 @@ const AddProduct = () => {
                         className={`border w-full p-2 ${formErrors.productStockQuantity ? "border-red-500" : ""}`}
                         required
                     />
-                    {formErrors.productStockQuantity && (
-                        <p className="text-red-500 text-sm">Product Stock must be greater than 0.</p>
-                    )}
                 </div>
-    
+
                 <div className="mb-4">
                     <label className="block font-bold mb-1">Product Image</label>
                     <input
@@ -243,30 +267,34 @@ const AddProduct = () => {
                         <p className="text-red-500 text-sm">Product Image is required.</p>
                     )}
                 </div>
-    
+
+                {/* Hiển thị hình ảnh nếu có */}
+                {productImage && (
+                    <div className="mb-4">
+                        <label className="block font-bold mb-1">Image</label>
+                        <img src={productImage instanceof File ? URL.createObjectURL(productImage) : `data:image/png;base64,${productImage}`} alt="Product" className="w-full h-64 object-contain" />
+                    </div>
+                )}
+
                 {notification && (
-                    <div className="mb-4 text-center text-lg font-bold text-green-600">
+                    <div className="mb-4 text-center text-red-500">
                         {notification}
                     </div>
                 )}
-    
-                <button
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    className={`${
-                        isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-[#D2A41D] hover:bg-[#b08b19]"
-                    } text-black font-bold py-2 px-6 rounded-lg w-full transition duration-200`}
-                >
-                    {isSubmitting ? "Adding..." : "Add"}
-                </button>
+
+                <div className="mb-4 text-center">
+                    <button
+                        type="button"
+                        onClick={handleSubmit}
+                        className="bg-[#3a3a3a] text-white py-2 px-6 rounded-md"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? "Submitting..." : "Update Product"}
+                    </button>
+                </div>
             </div>
-
-            <div className="h-12"></div>
-
         </div>
     );
-    
-    
 };
 
-export default AddProduct;
+export default UpdateProduct;
