@@ -5,6 +5,7 @@ import Register from "./pages/account/Register.jsx";
 import AdminDashboard from "./pages/account/admin/AdminDashBoard.jsx";
 import ProductDetailPage from './pages/products/ProductDetailPage.jsx';
 import Order from "./pages/account/admin/Order.jsx";
+import Detail from "./pages/account/admin/Detail.jsx";
 import Update from "./pages/account/admin/Update.jsx";
 import Add from "./pages/account/admin/Add.jsx";
 import PurchasedProduct1 from "./pages/purchasedProduct/PurchasedProduct1.jsx";
@@ -26,9 +27,10 @@ const App = () => {
                     <Route path="/register" element={<Register />} />
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/product/:id" element={<ProductDetailPage />} />
-                    <Route path="/admin/update" element={<Update/>} />
+                    <Route path="/admin/updateproduct" element={<Update/>} />
                     <Route path="/admin/addproduct" element={<Add/>} />
                     <Route path="/admin/order" element={<Order />} />
+                    <Route path="/admin/vieworder/:orderID" element={<Detail />} />
                     <Route path="/orders" element={<PurchasedProduct1 />} />
                     <Route path="/orders/:orderId" element={<PurchasedProduct2 />} />
                     <Route path="/editproduct" element={<EditProduct />} />
