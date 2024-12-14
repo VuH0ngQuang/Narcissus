@@ -5,7 +5,7 @@ const UseAuth = (requiredRole = null) => {
     const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
 
     useEffect(() => {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('role');
 
         if (!token) {
             window.location.href = `${FEHost}/login`;

@@ -3,7 +3,7 @@ import UseAuth from '../UseAuth.jsx';
 
 
 const Add = () => {
-    // UseAuth('ROLE_ADMIN');
+    UseAuth('ROLE_ADMIN');
 
 
     return (

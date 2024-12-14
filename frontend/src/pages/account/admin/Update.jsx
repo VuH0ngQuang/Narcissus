@@ -2,7 +2,7 @@ import UseAuth from '../UseAuth.jsx';
 import UpdateProduct from "./UpdateProduct.jsx"
 
 const Update = () => {
-    // UseAuth('ROLE_ADMIN');
+    UseAuth('ROLE_ADMIN');
 
 
     return (
