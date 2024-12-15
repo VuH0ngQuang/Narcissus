@@ -21,4 +21,9 @@ public interface UserCartRepository  extends JpaRepository<UserCart, UserCartKey
 
     @Query("SELECT uc FROM UserCart uc WHERE uc.user.userId = :userId")
     List<UserCart> findAllByUserId(@Param("userId") Long userId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM UserCart uc WHERE uc.product.productId = :productId")
+    void deleteByProductId(@Param("productId") Long productId);
 }

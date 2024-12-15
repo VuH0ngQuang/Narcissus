@@ -78,13 +78,15 @@ public class PaymentServiceImpl implements PaymentService {
         Orders orders = ordersRepository.findById(cancelPaymentDto.getOrderId()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+cancelPaymentDto.getOrderId()));
         PaymentLinkData result = payOS.cancelPaymentLink(cancelPaymentDto.getOrderId(), cancelPaymentDto.getReason());
 
-        orders.setStatus(result.getStatus());
-        orders.setCanceledAt(result.getCanceledAt());
-        orders.setCancellationReason(result.getCancellationReason());
+        if(!result.getStatus().equals("CANCELLED")) {
+            return "Failed";
+        } else {
+            orders.setStatus(result.getStatus());
+            orders.setCanceledAt(result.getCanceledAt());
+            orders.setCancellationReason(result.getCancellationReason());
 
-        ordersRepository.save(orders);
-
-        if(!result.getStatus().equals("CANCELLED")) return "Failed";
+            ordersRepository.save(orders);
+        }
         return "Successfully";
     }
 

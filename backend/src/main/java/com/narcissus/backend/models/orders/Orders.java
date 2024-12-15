@@ -27,11 +27,8 @@ public class Orders {
     private String canceledAt;
     private String transactionDateTime;
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     Set<ConsistOf> consistOfs;
-
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
-    Set<Disburse> disburses;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

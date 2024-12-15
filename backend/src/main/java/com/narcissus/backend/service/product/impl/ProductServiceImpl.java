@@ -4,7 +4,10 @@ package com.narcissus.backend.service.product.impl;
 import com.narcissus.backend.dto.product.ProductDto;
 import com.narcissus.backend.exceptions.NotFoundException;
 import com.narcissus.backend.models.product.Product;
+import com.narcissus.backend.repository.orders.ConsistOfRepository;
 import com.narcissus.backend.repository.product.ProductRepository;
+import com.narcissus.backend.repository.product.ReviewRepository;
+import com.narcissus.backend.repository.user.UserCartRepository;
 import com.narcissus.backend.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,10 +22,16 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final ConsistOfRepository consistOfRepository;
+    private final UserCartRepository userCartRepository;
+    private final ReviewRepository reviewRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ConsistOfRepository consistOfRepository, UserCartRepository userCartRepository, ReviewRepository reviewRepository) {
         this.productRepository = productRepository;
+        this.consistOfRepository = consistOfRepository;
+        this.userCartRepository = userCartRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @Override
@@ -70,7 +79,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String deleteProduct(long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product with ID "+id+" cannot be found"));
-        productRepository.delete(product);
+        consistOfRepository.deleteByProductId(product.getProductId());
+        userCartRepository.deleteByProductId(product.getProductId());
+        reviewRepository.deleteByProductId(product.getProductId());
+        productRepository.deleteByProductId(product.getProductId());
+
         return "The product with id: "+id+" has been deleted";
     }
 
