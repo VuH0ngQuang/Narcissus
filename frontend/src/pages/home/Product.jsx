@@ -74,7 +74,7 @@ const Product = () => {
     };
 
     return (
-        <div className="bg-red-500 w-full flex flex-col justify-center scrollbar-hide">
+        <div className="w-full flex flex-col justify-center scrollbar-hide">
             <ScrollMenu onWheel={handleWheel} wrapperClassName="no-scrollbar">
                 {products.map((product) => (
                     <div key={product.productID} itemID={product.productID} className="mr-5">
