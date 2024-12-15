@@ -4,6 +4,7 @@ import com.narcissus.backend.dto.product.ReviewDto;
 import com.narcissus.backend.exceptions.NotFoundException;
 import com.narcissus.backend.models.product.Product;
 import com.narcissus.backend.models.product.Review;
+import com.narcissus.backend.models.product.ReviewKey;
 import com.narcissus.backend.models.user.UserEntity;
 import com.narcissus.backend.repository.product.ProductRepository;
 import com.narcissus.backend.repository.product.ReviewRepository;
@@ -13,6 +14,7 @@ import com.narcissus.backend.service.product.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,10 +42,16 @@ public class ReviewServiceImpl implements ReviewService {
                 .findByEmail(tokenGenerator.getEmailFromJWT(jwtToken))
                 .orElseThrow(() -> new NotFoundException("Invalid Token"));
 
+        ReviewKey reviewKey = new ReviewKey();
+        reviewKey.setProductId(product.getProductId());
+        reviewKey.setUserId(user.getUserId());
+
         Review review = new Review();
+        review.setId(reviewKey);
         review.setUser(user);
         review.setProduct(product);
         review.setStars(reviewDto.getStars());
+        review.setDate(new Date());
         review.setContent(reviewDto.getContent());
 
         reviewRepository.save(review);
@@ -65,6 +73,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDto.setContent(review.getContent());
         reviewDto.setStars(review.getStars());
         reviewDto.setUserName(review.getUser().getUserName());
+        reviewDto.setDate(review.getDate());
 
         return reviewDto;
     }
