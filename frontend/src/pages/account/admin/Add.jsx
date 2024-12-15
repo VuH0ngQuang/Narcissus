@@ -1,14 +1,16 @@
+import AddProduct from "./AddProduct.jsx"
 import UseAuth from '../UseAuth.jsx';
-import OrderList from "./OrderList.jsx"
 
-const Order = () => {
+
+const Add = () => {
     UseAuth('ROLE_ADMIN');
+
 
     return (
         <div>
-            <OrderList />
+            <AddProduct />
         </div>
     );
 }
 
-export default Order;
+export default Add;

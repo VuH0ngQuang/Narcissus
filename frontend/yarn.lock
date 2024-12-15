@@ -441,7 +441,7 @@
 
 "@payos/payos-checkout@^1.0.8":
   version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@payos/payos-checkout/-/payos-checkout-1.0.8.tgz#ccf1938542e2f86afa0fb288988e71bdad7e2a7e"
+  resolved "https://registry.npmjs.org/@payos/payos-checkout/-/payos-checkout-1.0.8.tgz"
   integrity sha512-9h2sZ/QeOIsOR3+6LDswDMYPfRGQ9kXiWJC4yrWFbpAzUYoI3gH84oFRHlAmx4CRFh2SCBKE1Q2pdzJ1atPRCA==
 
 "@pkgjs/parseargs@^0.11.0":
@@ -907,7 +907,7 @@ commander@^4.0.0:
 
 compute-scroll-into-view@^3.0.2:
   version "3.1.0"
-  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-3.1.0.tgz#753f11d972596558d8fe7c6bcbc8497690ab4c87"
+  resolved "https://registry.npmjs.org/compute-scroll-into-view/-/compute-scroll-into-view-3.1.0.tgz"
   integrity sha512-rj8l8pD4bJ1nx+dAkMhV1xB5RuZEyVysfxJqB1pRchh1KVvwOv9b7CGB8ZfjTImVv2oF+sYMUkMZq6Na5Ftmbg==
 
 concat-map@0.0.1:
@@ -1412,8 +1412,9 @@ fraction.js@^4.3.7:
 "frontend@file:.":
   version "0.0.0"
   dependencies:
+    "@microsoft/clarity" "^1.0.0"
     "@payos/payos-checkout" "^1.0.8"
-    frontend "file:../../../AppData/Local/Yarn/Cache/v6/npm-frontend-0.0.0-64017abe-67e5-4f5b-bc8a-9fedf5aa41d3-1734141873049/node_modules/frontend"
+    frontend "file:../../../../AppData/Local/Yarn/Cache/v6/npm-frontend-0.0.0-536b6c50-f15f-48ce-bd83-6a16a512ba3f-1734206632474/node_modules/frontend"
     react "^18.3.1"
     react-dom "^18.3.1"
     react-horizontal-scrolling-menu "^8.2.0"
@@ -2227,7 +2228,7 @@ react-dom@^18.3.1:
 
 react-horizontal-scrolling-menu@^8.2.0:
   version "8.2.0"
-  resolved "https://registry.yarnpkg.com/react-horizontal-scrolling-menu/-/react-horizontal-scrolling-menu-8.2.0.tgz#dc12766ccb39a33cbd337a7e4872d7bcaf0e151b"
+  resolved "https://registry.npmjs.org/react-horizontal-scrolling-menu/-/react-horizontal-scrolling-menu-8.2.0.tgz"
   integrity sha512-WQEMkauUFLRWjhpHpiPGo1mfnLCvmeO840U+JZDB8Vn7eykQG6nklz0PxfBP91gneFBw6Ab11xuXcv17TU+Uig==
   dependencies:
     smooth-scroll-into-view-if-needed "^2.0.2"
@@ -2394,7 +2395,7 @@ scheduler@^0.23.2:
 
 scroll-into-view-if-needed@^3.1.0:
   version "3.1.0"
-  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-3.1.0.tgz#fa9524518c799b45a2ef6bbffb92bcad0296d01f"
+  resolved "https://registry.npmjs.org/scroll-into-view-if-needed/-/scroll-into-view-if-needed-3.1.0.tgz"
   integrity sha512-49oNpRjWRvnU8NyGVmUaYG4jtTkNonFZI86MmGRDqBphEK2EXT9gdEUoQPZhuBM8yWHxCWbobltqYO5M4XrUvQ==
   dependencies:
     compute-scroll-into-view "^3.0.2"
@@ -2455,7 +2456,7 @@ signal-exit@^4.0.1:
 
 smooth-scroll-into-view-if-needed@^2.0.2:
   version "2.0.2"
-  resolved "https://registry.yarnpkg.com/smooth-scroll-into-view-if-needed/-/smooth-scroll-into-view-if-needed-2.0.2.tgz#5bd4ebef668474d6618ce8704650082e93068371"
+  resolved "https://registry.npmjs.org/smooth-scroll-into-view-if-needed/-/smooth-scroll-into-view-if-needed-2.0.2.tgz"
   integrity sha512-z54WzUSlM+xHHvJu3lMIsh+1d1kA4vaakcAtQvqzeGJ5Ffau7EKjpRrMHh1/OBo5zyU2h30ZYEt77vWmPHqg7Q==
   dependencies:
     scroll-into-view-if-needed "^3.1.0"

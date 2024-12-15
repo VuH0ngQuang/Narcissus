@@ -1,14 +1,14 @@
 import UseAuth from '../UseAuth.jsx';
-import OrderList from "./OrderList.jsx"
+import OrderDetail from "./OrderDetail.jsx"
 
-const Order = () => {
+const Detail = () => {
     UseAuth('ROLE_ADMIN');
 
     return (
         <div>
-            <OrderList />
+            <OrderDetail/>
         </div>
     );
 }
 
-export default Order;
+export default Detail;
