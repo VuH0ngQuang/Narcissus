@@ -24,7 +24,10 @@ const NavBar = () => {
                     <Link className='mr-4 ml-4 text-[#FF0099] font-abeezee font-bold' to={'/login'}>Account</Link>
                 </div>
                 <div>
-                    <Link className='ml-4 mr-4 text-[#FF0099] font-abeezee font-bold' to={'/contact'}>Contact</Link>
+                    <Link className='ml-4 mr-4 text-[#FF0099] font-abeezee font-bold' to={'/orders'}>Orders</Link>
+                </div>
+                <div>
+                    <Link className='ml-4 mr-4 text-[#FF0099] font-abeezee font-bold' to={'/cart'}>Cart</Link>
                 </div>
             </div>
         </div>

@@ -35,19 +35,19 @@ const App = () => {
                     <Route path="/login" element={<Login />} />             {/*done*/}
                     <Route path="/register" element={<Register />} />             {/*done*/}
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                    <Route path="/product/:id" element={<ProductDetailPage />} />
+                    <Route path="/product/:id" element={<ProductDetailPage />} />             {/*done*/}
                     <Route path="/admin/updateproduct/:productID" element={<Update/>} />
                     <Route path="/admin/addproduct" element={<Add/>} />
                     <Route path="/admin/order" element={<Order />} />
                     <Route path="/admin/vieworder/:orderID" element={<Detail />} />
-                    <Route path="/orders" element={<PurchasedProduct1 />} />
-                    <Route path="/orders/:orderId" element={<PurchasedProduct2 />} />
+                    <Route path="/orders" element={<PurchasedProduct1 />} />             {/*done*/}
+                    <Route path="/orders/:orderId" element={<PurchasedProduct2 />} />             {/*done*/}
                     <Route path="/editproduct" element={<EditProduct />} />
                     <Route path="/sellerdashboard" element={<SellerDashboard />} />
                     <Route path="/checkout" element={<CheckoutPage />} />             {/*done*/}
                     <Route path="/cart" element={<Cart />} />             {/*done*/}
-                    <Route path="/successful" element={<PaySuccessful />} />
-                    <Route path="/failed" element={<PayFailed />} />
+                    <Route path="/successful" element={<PaySuccessful />} />             {/*done*/}
+                    <Route path="/failed" element={<PayFailed />} />             {/*done*/}
                 </Routes>
         </BrowserRouter>
     );
