@@ -11,6 +11,11 @@ const ProductDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
 
+    const [stars, setStars] = useState(0);
+    const [content, setContent] = useState("");
+    const [reviews, setReviews] = useState([]);
+    const [authToken] = useState(localStorage.getItem("authToken"));
+
     const incrementQuantity = () => {
         setQuantity(prevQuantity => prevQuantity + 1);
     };
@@ -20,7 +25,7 @@ const ProductDetailPage = () => {
     };
 
     function isLogin() {
-        if (localStorage.getItem('authToken') == null) return false;
+        if (authToken == null) return false;
         return true;
     }
 
@@ -28,7 +33,6 @@ const ProductDetailPage = () => {
         const addToCartData = { productId, quantity };
 
         if (isLogin()) {
-            const authToken = localStorage.getItem('authToken');
             if (!authToken || typeof authToken !== 'string') {
                 window.location.href = `${FEHost}/login`;
                 return;
@@ -76,6 +80,54 @@ const ProductDetailPage = () => {
         }
     };
 
+    const submitReview = async () => {
+        if (!isLogin()) {
+            window.location.href = `${FEHost}/login`;
+            return;
+        }
+
+        if (!content.trim() || stars < 1 || stars > 5) {
+            alert("Please provide valid feedback and a star rating.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${host}/products/review/add/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': authToken,
+                },
+                body: JSON.stringify({ content, stars }),
+            });
+
+            if (response.ok) {
+                const review = await response.json();
+                setReviews(prev => [review, ...prev]); // Add new review to the list
+                setContent("");
+                setStars(0);
+            } else {
+                alert("Failed to submit review.");
+            }
+        } catch (error) {
+            console.error("Error submitting review:", error);
+        }
+    };
+
+    const fetchReviews = async () => {
+        try {
+            const response = await fetch(`${host}/products/review/getAll/${id}`);
+            if (response.ok) {
+                const data = await response.json();
+                setReviews(data);
+            } else {
+                console.error("Failed to fetch reviews.");
+            }
+        } catch (error) {
+            console.error("Error fetching reviews:", error);
+        }
+    };
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -93,6 +145,7 @@ const ProductDetailPage = () => {
             }
         };
         fetchProduct();
+        fetchReviews();
     }, [id]);
 
     if (loading) {
@@ -151,8 +204,71 @@ const ProductDetailPage = () => {
                             BUY NOW
                         </button>
                     </div>
+
+                    
                 </div>
             </div>
+
+                    <div className="pt-12 m-10">
+                        {/* Existing product details */}
+                        
+                        {/* Feedback form */}
+                        <div className="w-full md:w-1/2 mt-10 md:mt-0 md:ml-10">
+                            <h2 className="text-xl font-semibold mb-4">Leave a Review</h2>
+                            <div className="mb-4 flex items-center">
+                                <span>Rate:</span>
+                                <div className="flex">
+                                    {[1, 2, 3, 4, 5].map(star => (
+                                        <button
+                                            key={star}
+                                            className={`px-2 ${stars >= star ? 'text-yellow-500' : 'text-gray-300'}`}
+                                            onClick={() => setStars(star)}
+                                        >
+                                            ★
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <textarea
+                                className="w-full border rounded-md p-2 resize-none"
+                                rows="4"
+                                placeholder="Write your review..."
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)}
+                            ></textarea>
+                            <button
+                                className="bg-black text-white px-8 py-2 rounded-lg mt-4"
+                                onClick={submitReview}
+                            >
+                                Submit Review
+                            </button>
+
+                            {/* Display reviews */}
+                            <div className="mt-8">
+                                <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
+                                {reviews.length > 0 ? (
+                                    reviews.map((review, index) => (
+                                        <div key={index} className="border-b border-gray-300 pb-4 mb-4">
+                                            <p className="text-lg font-bold">{review.userName}</p>
+                                            <div className="flex">
+                                                {[1, 2, 3, 4, 5].map(star => (
+                                                    <span
+                                                        key={star}
+                                                        className={`px-1 ${review.stars >= star ? 'text-yellow-500' : 'text-gray-300'}`}
+                                                    >
+                                                        ★
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            <p className="text-gray-600">{review.content}</p>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>No reviews yet.</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
         </>
     );
 };
