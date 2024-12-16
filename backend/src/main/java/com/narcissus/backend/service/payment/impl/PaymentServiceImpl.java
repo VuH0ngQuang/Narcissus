@@ -27,6 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final String PAYOSAPI = "80dbd91f-fd92-424d-88e6-4369e6682bf8"; //this is for testing only, this will be invalid after this repo public
     private final String PAYOSCHECKSUM = "3738cedd62709316a25ad065a9e3f68ee111db2f3cb76e81ab239255c91b97bc"; //this is for testing only, this will be invalid after this repo public
     private final String HOSTIP = "http://74.226.216.170:5173";
+//    private final String HOSTIP = "http://localhost:5173";
     private final OrdersRepository ordersRepository;
     private final SSEService sseService;
     private final PayOS payOS = new PayOS(PAYOSID, PAYOSAPI, PAYOSCHECKSUM);
@@ -92,7 +93,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public String tabClosed(ClosedTabDto closedTabDto) throws Exception {
-        String jwtToken = closedTabDto.getAuthToken().substring(7);
+        System.out.println(closedTabDto.getAuthToken());
+        String jwtToken = closedTabDto.getAuthToken().trim().substring(7);
         UserEntity user = userRepository.findByEmail(tokenGenerator.getEmailFromJWT(jwtToken))
                 .orElseThrow(() -> new NotFoundException("Invalid Token"));
         Orders orders = ordersRepository.findById(closedTabDto.getOrderId()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+closedTabDto.getOrderId()));

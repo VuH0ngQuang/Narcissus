@@ -13,6 +13,7 @@ const CheckoutPage = () => {
     const [isCanceled, setIsCancel] = useState(false);
     const [isCreatingLink, setIsCreatingLink] = useState(true);
     const [isPaid, setIsPaid] = useState(false);
+    const [isPaymentInitiated, setIsPaymentInitiated] = useState(false); // New state to track payment initiation
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -30,7 +31,7 @@ const CheckoutPage = () => {
     useEffect(() => {
         const cancelData = { orderId, reason: 'SYSTEM: User close the tab', authToken };
         const handleBeforeUnload = () => {
-            if (!isPaid) {
+            if (!isPaid && isPaymentInitiated) {
                 const url = `${host}/payment/closed-tab`;
                 const data = JSON.stringify(cancelData);
                 const blob = new Blob([data], { type: "application/json" });
@@ -43,20 +44,20 @@ const CheckoutPage = () => {
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-    }, [orderId, isPaid, authToken]);
+    }, [orderId, isPaid, authToken, isPaymentInitiated]);
 
     // Handle URL changes (detect navigation away from the page)
     useEffect(() => {
         const cancelData = { orderId, reason: 'SYSTEM: User navigated away', authToken };
 
         // If user navigates away (URL change), send cancellation info
-        if (!isPaid) {
+        if (!isPaid && isPaymentInitiated) {
             const url = `${host}/payment/closed-tab`;
             const data = JSON.stringify(cancelData);
             const blob = new Blob([data], { type: "application/json" });
             navigator.sendBeacon(url, blob);
         }
-    }, [location, orderId, isPaid, authToken]); // Trigger effect when location changes
+    }, [location, orderId, isPaid, authToken, isPaymentInitiated]); // Trigger effect when location changes
 
     return (
         <div className="scrollbar-hide">
@@ -82,7 +83,12 @@ const CheckoutPage = () => {
                     )}
                 </div>
                 <div className="flex-[1] bg-gray-100">
-                    <OrderSummary setShowQR={setShowQR} showQR={showQR} />
+                    <OrderSummary
+                        setShowQR={setShowQR}
+                        showQR={showQR}
+                        setIsPaymentInitiated={setIsPaymentInitiated}
+                        isPaymentInitiated={isPaymentInitiated}
+                    />
                 </div>
             </div>
         </div>
