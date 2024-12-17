@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './pages/home/HomePage.jsx';
 import Login from './pages/account/Login.jsx';
 import Register from "./pages/account/Register.jsx";
+import ForgottenPassword from './pages/account/ForgottenPassword.jsx';
 import AdminDashboard from "./pages/account/admin/AdminDashBoard.jsx";
 import ProductDetailPage from './pages/products/ProductDetailPage.jsx';
 import Order from "./pages/account/admin/Order.jsx";
@@ -34,6 +35,7 @@ const App = () => {
                     <Route path="/" element={<HomePage />} />             {/*done*/}
                     <Route path="/login" element={<Login />} />             {/*done*/}
                     <Route path="/register" element={<Register />} />             {/*done*/}
+                    <Route path="/forgottenpassword" element={<ForgottenPassword />} />             {/*done*/}
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/product/:id" element={<ProductDetailPage />} />             {/*done*/}
                     <Route path="/admin/updateproduct/:productID" element={<Update/>} />

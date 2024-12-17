@@ -191,6 +191,9 @@ const LoginForm = () => {
                             <h1 className='font-abeezee'>New user?</h1>
                             <Link to="/register" className='font-abeezee text-red-600 ml-2'>sign up here</Link>
                         </div>
+                        <div className='mt-8 flex flex-row'>
+                            <Link to="/forgottenpassword" className='font-abeezee text-red-600 ml-2'>Forgotten Password ?</Link>
+                        </div>
                     </div>
                 </div>
                 <div className='h-full aspect-[331/494]'>
