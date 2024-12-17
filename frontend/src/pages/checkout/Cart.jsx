@@ -97,9 +97,39 @@ const CartItem = ({ productId, image, name, quantity, price, onQuantityChange, a
             </div>
         </td>
         <td className="w-[160px]">
-            <button className="w-full bg-red-500 text-black border border-black rounded-full px-4 py-2 hover:bg-red-600">
+            {/* <button className="w-full bg-red-500 text-black border border-black rounded-full px-4 py-2 hover:bg-red-600">
+                Remove
+            </button> */}
+
+            {/* nghia thay doi*/}
+            <button
+                className="w-full bg-red-500 text-black border border-black rounded-full px-4 py-2 hover:bg-red-600"
+                onClick={async () => {
+                    try {
+                        const response = await fetch(`${host}/products/delete/${productsIDs}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': authToken,
+                                'Content-Type': 'application/json',
+                            }
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            alert(`Failed to delete product: ${errorData.message || 'Unknown error'}`);
+                            return;
+                        }
+
+                        alert('Product deleted successfully.');
+                        onQuantityChange(productId, 0);
+                    } catch (error) {
+                        alert(`An error has occurred: ${error.message}`);
+                    }
+                }}
+            >
                 Remove
             </button>
+
         </td>
         <td className="w-auto"></td>
     </tr>
@@ -181,15 +211,31 @@ const Cart = () => {
             .catch(error => console.error('Error fetching cart items:', error));
     }, [authToken]);
 
+    // const onQuantityChange = (productId, newQuantity) => {
+    //     setProducts(prevProducts =>
+    //         prevProducts.map(product =>
+    //             product.productId === productId
+    //                 ? { ...product, quantity: newQuantity }
+    //                 : product
+    //         )
+    //     );
+    // };
+
+    // Nghia thay doi
     const onQuantityChange = (productId, newQuantity) => {
         setProducts(prevProducts =>
-            prevProducts.map(product =>
+            prevProducts.filter(product =>
+                product.productId === productId && newQuantity === 0
+                    ? false
+                    : true
+            ).map(product =>
                 product.productId === productId
                     ? { ...product, quantity: newQuantity }
                     : product
             )
         );
     };
+    
 
     const onCheckboxChange = (productId, quantity) => {
         setItems(prevItems => {
