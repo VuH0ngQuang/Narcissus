@@ -12,7 +12,6 @@ const CheckoutPage = () => {
     const [orderId, setOrderId] = useState('');
     const [isCanceled, setIsCancel] = useState(false);
     const [isCreatingLink, setIsCreatingLink] = useState(true);
-    const [isPaid, setIsPaid] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -25,38 +24,6 @@ const CheckoutPage = () => {
             setAuthToken(token);
         }
     }, []);
-
-    // Handle when the user closes the tab
-    useEffect(() => {
-        const cancelData = { orderId, reason: 'SYSTEM: User close the tab', authToken };
-        const handleBeforeUnload = () => {
-            if (!isPaid) {
-                const url = `${host}/payment/closed-tab`;
-                const data = JSON.stringify(cancelData);
-                const blob = new Blob([data], { type: "application/json" });
-                navigator.sendBeacon(url, blob);
-            }
-        };
-
-        window.addEventListener("beforeunload", handleBeforeUnload);
-
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-    }, [orderId, isPaid, authToken]);
-
-    // Handle URL changes (detect navigation away from the page)
-    useEffect(() => {
-        const cancelData = { orderId, reason: 'SYSTEM: User navigated away', authToken };
-
-        // If user navigates away (URL change), send cancellation info
-        if (!isPaid) {
-            const url = `${host}/payment/closed-tab`;
-            const data = JSON.stringify(cancelData);
-            const blob = new Blob([data], { type: "application/json" });
-            navigator.sendBeacon(url, blob);
-        }
-    }, [location, orderId, isPaid, authToken]); // Trigger effect when location changes
 
     return (
         <div className="scrollbar-hide">
@@ -71,7 +38,6 @@ const CheckoutPage = () => {
                             isCanceled={isCanceled}
                             setIsCreatingLink={setIsCreatingLink}
                             isCreatingLink={isCreatingLink}
-                            setIsPaid={setIsPaid}
                         />
                     ) : (
                         <Comment
@@ -82,7 +48,10 @@ const CheckoutPage = () => {
                     )}
                 </div>
                 <div className="flex-[1] bg-gray-100">
-                    <OrderSummary setShowQR={setShowQR} showQR={showQR} />
+                    <OrderSummary
+                        setShowQR={setShowQR}
+                        showQR={showQR}
+                    />
                 </div>
             </div>
         </div>

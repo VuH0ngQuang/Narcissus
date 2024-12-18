@@ -26,6 +26,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final String PAYOSID = "f83ace68-bc25-4af4-b557-d842b7fbe511"; //this is for testing only, this will be invalid after this repo public
     private final String PAYOSAPI = "80dbd91f-fd92-424d-88e6-4369e6682bf8"; //this is for testing only, this will be invalid after this repo public
     private final String PAYOSCHECKSUM = "3738cedd62709316a25ad065a9e3f68ee111db2f3cb76e81ab239255c91b97bc"; //this is for testing only, this will be invalid after this repo public
+//    private final String HOSTIP = "http://74.226.216.170:5173";
     private final String HOSTIP = "http://localhost:5173";
     private final OrdersRepository ordersRepository;
     private final SSEService sseService;
@@ -78,19 +79,22 @@ public class PaymentServiceImpl implements PaymentService {
         Orders orders = ordersRepository.findById(cancelPaymentDto.getOrderId()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+cancelPaymentDto.getOrderId()));
         PaymentLinkData result = payOS.cancelPaymentLink(cancelPaymentDto.getOrderId(), cancelPaymentDto.getReason());
 
-        orders.setStatus(result.getStatus());
-        orders.setCanceledAt(result.getCanceledAt());
-        orders.setCancellationReason(result.getCancellationReason());
+        if(!result.getStatus().equals("CANCELLED")) {
+            return "Failed";
+        } else {
+            orders.setStatus(result.getStatus());
+            orders.setCanceledAt(result.getCanceledAt());
+            orders.setCancellationReason(result.getCancellationReason());
 
-        ordersRepository.save(orders);
-
-        if(!result.getStatus().equals("CANCELLED")) return "Failed";
+            ordersRepository.save(orders);
+        }
         return "Successfully";
     }
 
     @Override
     public String tabClosed(ClosedTabDto closedTabDto) throws Exception {
-        String jwtToken = closedTabDto.getAuthToken().substring(7);
+        System.out.println(closedTabDto.getAuthToken());
+        String jwtToken = closedTabDto.getAuthToken().trim().substring(7);
         UserEntity user = userRepository.findByEmail(tokenGenerator.getEmailFromJWT(jwtToken))
                 .orElseThrow(() -> new NotFoundException("Invalid Token"));
         Orders orders = ordersRepository.findById(closedTabDto.getOrderId()).orElseThrow(() -> new NotFoundException("Cannot find order with id: "+closedTabDto.getOrderId()));

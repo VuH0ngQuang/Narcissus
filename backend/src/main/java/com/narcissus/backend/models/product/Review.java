@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +17,7 @@ public class Review {
     ReviewKey id;
     int stars;
     String content;
+    Date date;
 
     @ManyToOne
     @MapsId("userId")

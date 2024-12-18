@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { host, FEHost } from '../../config.js';
 
-const CartItem = ({ productId, image, name, quantity, price, onQuantityChange, authToken, onCheckboxChange }) => (
+const CartItem = ({ productId, image, name, quantity, price, onQuantityChange, authToken, onCheckboxChange, onRemoveProduct }) => (
     <tr>
         <td className="w-auto"></td>
         <td className="w-[7%] h-[128px]">
@@ -97,39 +97,12 @@ const CartItem = ({ productId, image, name, quantity, price, onQuantityChange, a
             </div>
         </td>
         <td className="w-[160px]">
-            {/* <button className="w-full bg-red-500 text-black border border-black rounded-full px-4 py-2 hover:bg-red-600">
-                Remove
-            </button> */}
-
-            {/* nghia thay doi*/}
             <button
                 className="w-full bg-red-500 text-black border border-black rounded-full px-4 py-2 hover:bg-red-600"
-                onClick={async () => {
-                    try {
-                        const response = await fetch(`${host}/products/delete/${productsIDs}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Authorization': authToken,
-                                'Content-Type': 'application/json',
-                            }
-                        });
-
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            alert(`Failed to delete product: ${errorData.message || 'Unknown error'}`);
-                            return;
-                        }
-
-                        alert('Product deleted successfully.');
-                        onQuantityChange(productId, 0);
-                    } catch (error) {
-                        alert(`An error has occurred: ${error.message}`);
-                    }
-                }}
+                onClick={(event) => onRemoveProduct(productId)} // Sửa ở đây để truyền productId
             >
                 Remove
             </button>
-
         </td>
         <td className="w-auto"></td>
     </tr>
@@ -141,6 +114,37 @@ const Cart = () => {
     const [authToken, setAuthToken] = useState('');
     const [items, setItems] = useState([]);
 
+    // Nghia remove
+    const handleRemoveProduct = async (productId) => {
+        event.preventDefault(); // Ngăn không cho trang tải lại
+    
+        try {
+            const response = await fetch(`${host}/user/removeAllFromCart`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': authToken,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId }),
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.log(`Failed to delete product: ${errorData.message || 'Unknown error'}`);
+                return;
+            }
+    
+            // Cập nhật lại danh sách sản phẩm sau khi xóa
+            setProducts((prevProducts) => prevProducts.filter(product => product.productId !== productId));
+    
+            console.log('Product deleted successfully.');
+    
+        } catch (error) {
+            console.log(`An error has occurred: ${error.message}`);
+        }
+    };
+    
+
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (!token) {
@@ -149,10 +153,6 @@ const Cart = () => {
             setAuthToken(token);
         }
     }, []);
-
-    useEffect(() => {
-        console.log("Items updated:", items);
-    }, [items]);
 
     useEffect(() => {
         if (!authToken) return;
@@ -201,41 +201,22 @@ const Cart = () => {
 
                 Promise.all(fetchProductDetails)
                     .then(fetchedProducts => {
-                        setProducts(prevProducts => [
-                            ...prevProducts,
-                            ...fetchedProducts.filter(Boolean),
-                        ]);
+                        setProducts(fetchedProducts.filter(Boolean));
                     })
                     .catch(error => console.error('Error fetching product details:', error));
             })
             .catch(error => console.error('Error fetching cart items:', error));
     }, [authToken]);
 
-    // const onQuantityChange = (productId, newQuantity) => {
-    //     setProducts(prevProducts =>
-    //         prevProducts.map(product =>
-    //             product.productId === productId
-    //                 ? { ...product, quantity: newQuantity }
-    //                 : product
-    //         )
-    //     );
-    // };
-
-    // Nghia thay doi
     const onQuantityChange = (productId, newQuantity) => {
         setProducts(prevProducts =>
-            prevProducts.filter(product =>
-                product.productId === productId && newQuantity === 0
-                    ? false
-                    : true
-            ).map(product =>
+            prevProducts.map(product =>
                 product.productId === productId
                     ? { ...product, quantity: newQuantity }
                     : product
             )
         );
     };
-    
 
     const onCheckboxChange = (productId, quantity) => {
         setItems(prevItems => {
@@ -282,6 +263,7 @@ const Cart = () => {
                                 {...product}
                                 onQuantityChange={onQuantityChange}
                                 onCheckboxChange={onCheckboxChange}
+                                onRemoveProduct={handleRemoveProduct} // Truyền hàm remove vào đây
                             />
                         ))}
                         </tbody>

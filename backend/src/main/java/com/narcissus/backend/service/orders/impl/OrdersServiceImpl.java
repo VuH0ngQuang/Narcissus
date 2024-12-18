@@ -1,5 +1,6 @@
 package com.narcissus.backend.service.orders.impl;
 
+import com.narcissus.backend.dto.orders.CancelPaymentDto;
 import com.narcissus.backend.dto.orders.ConsistOfDto;
 import com.narcissus.backend.dto.orders.OrdersDto;
 import com.narcissus.backend.dto.orders.OrdersResponse;
@@ -19,8 +20,12 @@ import com.narcissus.backend.service.email.EmailService;
 import com.narcissus.backend.service.orders.OrdersService;
 
 import com.narcissus.backend.service.payment.PaymentService;
+import com.narcissus.backend.service.payment.impl.PaymentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import vn.payos.PayOS;
+import vn.payos.type.PaymentLinkData;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -36,9 +41,10 @@ public class OrdersServiceImpl implements OrdersService {
     private final PaymentService paymentService;
     private final EmailService emailService;
     private final UserCartRepository userCartRepository;
+    private final PaymentServiceImpl paymentServiceImpl;
 
     @Autowired
-    public OrdersServiceImpl(EmailService emailService, OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService, UserCartRepository userCartRepository) {
+    public OrdersServiceImpl(EmailService emailService, OrdersRepository ordersRepository, ProductRepository productRepository, UserRepository userRepository, TokenGenerator tokenGenerator, PaymentService paymentService, UserCartRepository userCartRepository, PaymentServiceImpl paymentServiceImpl) {
         this.ordersRepository = ordersRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
@@ -46,6 +52,7 @@ public class OrdersServiceImpl implements OrdersService {
         this.paymentService = paymentService;
         this.emailService = emailService;
         this.userCartRepository = userCartRepository;
+        this.paymentServiceImpl = paymentServiceImpl;
     }
 
     @Override
@@ -155,6 +162,24 @@ public class OrdersServiceImpl implements OrdersService {
         return orders.parallelStream()
                 .map(order -> toDto(order, new OrdersDto()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Scheduled(fixedRate = 60000)
+    public void checkPendingOrders() {
+        final String CANCELREASON = "SYSTEM: CANCELLED BY SYSTEM, CONTACT ADMIN FOR MORE DETAILS";
+        long sixMinutesAgo = System.currentTimeMillis() - 6 * 60 * 1000;
+        Date cutOffTime = new Date(sixMinutesAgo);
+
+        List<Orders> pendingOrders = ordersRepository.findByStatusAndDateBefore("PENDING", cutOffTime);
+        pendingOrders.parallelStream().forEach(orders -> {
+            CancelPaymentDto cancelPaymentDto = new CancelPaymentDto(orders.getOrdersId(), CANCELREASON);
+            try {
+                paymentServiceImpl.cancelPayment(cancelPaymentDto);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     //    @Override

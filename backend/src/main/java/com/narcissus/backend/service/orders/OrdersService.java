@@ -14,4 +14,5 @@ public interface OrdersService {
     List<OrdersDto> get(String token);
 //    OrdersDto updateOrders (long id, OrdersDto ordersDto);
 //    String deleteOrders (long id);
+    void checkPendingOrders();
 }
