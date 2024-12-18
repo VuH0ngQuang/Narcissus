@@ -43,9 +43,8 @@ const Comment = ({ setShowPay, orderId, setIsCancel }) => {
                     <button type='button'
                             className="mt-[20px] border w-full h-full py-2 px-4 bg-black text-white"
                             onClick={() => {
-                                handleCancel()
                                 setIsCancel(true)
-                                window.location.href = `${FEHost}/orders`
+                                handleCancel()
                             }}
                     >SEND</button>
                     <button type="button"

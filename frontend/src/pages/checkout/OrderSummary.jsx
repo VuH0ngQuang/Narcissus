@@ -2,7 +2,7 @@ import Banner1 from '../../assets/banner2.jpg';
 import { useEffect, useRef, useState } from "react";
 import { host, FEHost } from "../../config.js";
 
-const OrderSummary = ({showQR, setShowQR, setIsPaymentInitiated, isPaymentInitiated} ) => {
+const OrderSummary = ({showQR, setShowQR} ) => {
     const [products, setProducts] = useState([]);
     const productsIDs = useRef(new Set());
     const [authToken] = useState(localStorage.getItem('authToken'));
@@ -107,8 +107,6 @@ const OrderSummary = ({showQR, setShowQR, setIsPaymentInitiated, isPaymentInitia
                 className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-5 w-6/12 bg-blue-500 text-white rounded hover:bg-blue-600"
                 onClick={() => {
                     setShowQR(true)
-                    setIsPaymentInitiated(true)
-                    console.log(isPaymentInitiated)
                 }}
             >Pay</button> : <></>
             }
