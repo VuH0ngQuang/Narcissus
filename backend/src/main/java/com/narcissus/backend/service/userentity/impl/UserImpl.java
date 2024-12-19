@@ -3,7 +3,6 @@ package com.narcissus.backend.service.userentity.impl;
 import com.narcissus.backend.dto.orders.ConsistOfDto;
 import com.narcissus.backend.dto.user.RegisterDto;
 import com.narcissus.backend.exceptions.NotFoundException;
-import com.narcissus.backend.models.orders.ConsistOf;
 import com.narcissus.backend.models.user.UserCart;
 import com.narcissus.backend.models.user.UserCartKey;
 import com.narcissus.backend.models.user.UserEntity;
@@ -11,24 +10,23 @@ import com.narcissus.backend.repository.product.ProductRepository;
 import com.narcissus.backend.repository.user.UserCartRepository;
 import com.narcissus.backend.repository.user.UserRepository;
 import com.narcissus.backend.security.TokenGenerator;
-import com.narcissus.backend.service.userentity.UserCartService;
+import com.narcissus.backend.service.userentity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class  UserCartImpl implements UserCartService {
+public class UserImpl implements UserService {
     private final TokenGenerator tokenGenerator;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final UserCartRepository userCartRepository;
 
     @Autowired
-    public UserCartImpl(UserCartRepository userCartRepository, TokenGenerator tokenGenerator, UserRepository userRepository, ProductRepository productRepository) {
+    public UserImpl(UserCartRepository userCartRepository, TokenGenerator tokenGenerator, UserRepository userRepository, ProductRepository productRepository) {
         this.userCartRepository = userCartRepository;
         this.tokenGenerator = tokenGenerator;
         this.userRepository = userRepository;

@@ -5,7 +5,7 @@ import com.narcissus.backend.dto.user.RegisterDto;
 
 import java.util.List;
 
-public interface UserCartService {
+public interface UserService {
     ConsistOfDto addToCart(ConsistOfDto consistOfDto, String token);
     ConsistOfDto deleteFromCart(ConsistOfDto consistOfDto, String token);
     String deleteAllFromCart(ConsistOfDto consistOfDto, String token);
