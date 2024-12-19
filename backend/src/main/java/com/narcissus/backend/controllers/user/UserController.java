@@ -1,6 +1,7 @@
 package com.narcissus.backend.controllers.user;
 
 import com.narcissus.backend.dto.orders.ConsistOfDto;
+import com.narcissus.backend.dto.user.RegisterDto;
 import com.narcissus.backend.service.userentity.UserCartService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,15 @@ public class UserController {
     @GetMapping("/getCart")
     public ResponseEntity<List<ConsistOfDto>> getCart (@RequestHeader("Authorization") String token) {
         return new ResponseEntity<>(userCartService.getCart(token), HttpStatus.OK);
+    }
+
+    @GetMapping("/getDetails")
+    public ResponseEntity<RegisterDto> getDetails (@RequestHeader("Authorization") String token) {
+        return new ResponseEntity<>(userCartService.getDetails(token), HttpStatus.OK);
+    }
+
+    @PostMapping("/updateDetails")
+    public ResponseEntity<RegisterDto> updateDetails (@RequestBody RegisterDto registerDto, @RequestHeader("Authorization") String token) {
+        return new ResponseEntity<>(userCartService.updateDetails(token, registerDto), HttpStatus.OK);
     }
 }

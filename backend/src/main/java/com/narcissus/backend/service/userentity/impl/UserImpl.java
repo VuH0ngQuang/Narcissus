@@ -1,6 +1,7 @@
 package com.narcissus.backend.service.userentity.impl;
 
 import com.narcissus.backend.dto.orders.ConsistOfDto;
+import com.narcissus.backend.dto.user.RegisterDto;
 import com.narcissus.backend.exceptions.NotFoundException;
 import com.narcissus.backend.models.orders.ConsistOf;
 import com.narcissus.backend.models.user.UserCart;
@@ -24,7 +25,7 @@ public class  UserCartImpl implements UserCartService {
     private final TokenGenerator tokenGenerator;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
-    private UserCartRepository userCartRepository;
+    private final UserCartRepository userCartRepository;
 
     @Autowired
     public UserCartImpl(UserCartRepository userCartRepository, TokenGenerator tokenGenerator, UserRepository userRepository, ProductRepository productRepository) {
@@ -86,6 +87,30 @@ public class  UserCartImpl implements UserCartService {
         }
     }
 
+    @Override
+    public RegisterDto getDetails(String token) {
+        String jwtToken = token.substring(7);
+        String email = tokenGenerator.getEmailFromJWT(jwtToken);
+        UserEntity user =  userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+
+        return accToDto(user, new RegisterDto());
+    }
+
+    @Override
+    public RegisterDto updateDetails(String token, RegisterDto registerDto) {
+        String jwtToken = token.substring(7);
+        String email = tokenGenerator.getEmailFromJWT(jwtToken);
+        UserEntity user =  userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+
+        if (registerDto.getUsername() != null ) user.setUserName(registerDto.getUsername());
+        if (registerDto.getAddress() != null) user.setAddress(registerDto.getAddress());
+        if (registerDto.getPhoneNumber() != null) user.setPhoneNumber(registerDto.getPhoneNumber());
+
+        userRepository.save(user);
+
+        return accToDto(user, registerDto);
+    }
+
     public List<ConsistOfDto> getCart(String token) {
         String jwtToken = token.substring(7);
         String email = tokenGenerator.getEmailFromJWT(jwtToken);
@@ -97,6 +122,15 @@ public class  UserCartImpl implements UserCartService {
                 .map(userCart -> toDto(userCart, new ConsistOfDto())).collect(Collectors.toList());
 
         return consistOfs;
+    }
+
+    public RegisterDto accToDto (UserEntity userEntity, RegisterDto registerDto) {
+        registerDto.setUsername(userEntity.getUserName());
+        registerDto.setEmail(userEntity.getEmail());
+        registerDto.setAddress(userEntity.getAddress());
+        registerDto.setPhoneNumber(userEntity.getPhoneNumber());
+
+        return  registerDto;
     }
 
     public ConsistOfDto toDto (UserCart userCart, ConsistOfDto consistOfDto) {

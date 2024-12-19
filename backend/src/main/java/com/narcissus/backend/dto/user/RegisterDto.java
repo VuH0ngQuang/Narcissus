@@ -10,6 +10,7 @@ public class RegisterDto {
     private String password;
 //    private boolean admin;
     private String username;
+    private String address;
     private String phoneNumber;
     private Date date = new Date();
 }
