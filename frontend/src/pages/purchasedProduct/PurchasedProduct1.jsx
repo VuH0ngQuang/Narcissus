@@ -23,9 +23,12 @@ const PurchasedProduct1 = () => {
                 return response.json();
             })
             .then(data => {
+                // Sort orders by date, newest first
+                data.sort((a, b) => new Date(b.date) - new Date(a.date));
                 const formattedOrders = data.map(order => ({
                     id: order.orderId,
                     date: new Date(order.date).toLocaleDateString(),
+                    status: order.status
                 }));
                 setOrders(formattedOrders);
             })
@@ -45,9 +48,12 @@ const PurchasedProduct1 = () => {
                     {orders.map(order => (
                         <div key={order.id} className="bg-blue-200 shadow-md rounded-lg p-4 mb-4">
                             <div className="flex justify-between items-center">
-                                <div>
+                                <div className="flex-grow mr-16">
                                     <p className="text-lg font-semibold">Order ID: {order.id}</p>
-                                    <p className="text-gray-600">Ordered on: {order.date}</p>
+                                    <div className="flex-grow">
+                                        <p className="text-gray-600">Ordered on: {order.date}</p>
+                                        <p className="text-gray-600">Payment status: {order.status}</p>
+                                    </div>
                                 </div>
                                 <button
                                     className="bg-black text-white px-4 py-2 rounded-md"
