@@ -8,6 +8,7 @@ import ProductDetailPage from './pages/products/ProductDetailPage.jsx';
 import Order from "./pages/account/admin/Order.jsx";
 import Detail from "./pages/account/admin/Detail.jsx";
 import Update from "./pages/account/admin/Update.jsx";
+import UserDetail from "./pages/account/UserDetail.jsx";
 import Add from "./pages/account/admin/Add.jsx";
 import PurchasedProduct1 from "./pages/purchasedProduct/PurchasedProduct1.jsx";
 import PurchasedProduct2 from "./pages/purchasedProduct/PurchasedProduct2.jsx";
@@ -35,6 +36,7 @@ const App = () => {
                     <Route path="/" element={<HomePage />} />             {/*done*/}
                     <Route path="/login" element={<Login />} />             {/*done*/}
                     <Route path="/register" element={<Register />} />             {/*done*/}
+                    <Route path="/userdetail" element={<UserDetail />} />
                     <Route path="/forgottenpassword" element={<ForgottenPassword />} />             {/*done*/}
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/product/:id" element={<ProductDetailPage />} />             {/*done*/}
