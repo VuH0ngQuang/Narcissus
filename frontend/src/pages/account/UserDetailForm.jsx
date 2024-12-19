@@ -74,6 +74,7 @@ const UserDetailForm = () => {
         'Authorization': localStorage.getItem('authToken')
       }
     }).then((response) => {
+      if (response.status === 401) window.location.href = '/login';
       if (response.ok) {
         localStorage.removeItem('authToken');
         localStorage.removeItem('role');
