@@ -20,7 +20,7 @@ const UserDetailForm = () => {
             'Authorization': localStorage.getItem('authToken')
           }
         });
-
+        if (response.status === 401) window.location.href = '/login';
         if (response.ok) {
           const data = await response.json();
           setUserDetails(data);
