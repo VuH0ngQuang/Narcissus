@@ -8,12 +8,14 @@ import com.narcissus.backend.models.email.EmailDetails;
 import com.narcissus.backend.models.user.Role;
 import com.narcissus.backend.models.user.UserEntity;
 import com.narcissus.backend.repository.user.RoleRepository;
+import com.narcissus.backend.repository.user.TokenRepository;
 import com.narcissus.backend.repository.user.UserRepository;
 import com.narcissus.backend.security.TokenGenerator;
 import com.narcissus.backend.service.auth.AuthService;
 import com.narcissus.backend.service.email.EmailService;
 import com.narcissus.backend.service.email.impl.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.Date;
 
 
 @Service
@@ -32,15 +35,17 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenGenerator tokenGenerator;
+    private final TokenRepository tokenRepository;
 
     @Autowired
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator, EmailServiceImpl emailService) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator, EmailServiceImpl emailService, TokenRepository tokenRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
         this.emailService = emailService;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -106,6 +111,29 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             return e.getMessage();
         }
+    }
+
+    @Override
+    public void logout(String token) {
+        String jwtToken = token.substring(7);
+        tokenRepository.removeToken(jwtToken);
+    }
+
+    @Override
+    @Scheduled(fixedRate = 300000)
+    public void removeTimeoutToken() {
+        long fifteenMinutesAge = System.currentTimeMillis() - 300000;
+        Date cutOffTime = new Date(fifteenMinutesAge);
+        tokenRepository.removeByExpireDateBefore(new java.sql.Timestamp(cutOffTime.getTime()));
+    }
+
+    @Override
+    public AuthResponseDto renewToken(String oldToken) {
+        String jwtToken = oldToken.substring(7);
+        String token = tokenGenerator.renewToken(jwtToken);
+        String role = tokenGenerator.getRoleFromJWT(token);
+
+        return new AuthResponseDto(token, role);
     }
 
     public String generateString() {

@@ -9,4 +9,7 @@ public interface AuthService {
     boolean register (RegisterDto registerDto);
     AuthResponseDto login (LoginDto loginDto);
     String forgetPassword(String email);
+    void logout(String token);
+    void removeTimeoutToken();
+    AuthResponseDto renewToken(String oldToken);
 }

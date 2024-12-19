@@ -147,7 +147,6 @@ const LoginForm = () => {
         }
     };
 
-
     return (
         <div className='divide-y-2 divide-black'>
             <div className='h-12'></div>

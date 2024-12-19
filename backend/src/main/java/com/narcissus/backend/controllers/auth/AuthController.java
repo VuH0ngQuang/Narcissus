@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -37,5 +38,17 @@ public class AuthController {
     @PostMapping("/forgetPassword")
     public ResponseEntity<String>  forgetPassword(@RequestBody LoginDto loginDto) {
         return new ResponseEntity<>(authService.forgetPassword(loginDto.getEmail()), HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        authService.logout(token);
+        return new ResponseEntity<>("Fuck off", HttpStatus.OK);
+    }
+
+    @PostMapping("/renew")
+    public ResponseEntity<AuthResponseDto> renewToken(@RequestHeader("Authorization") String oldToken) {
+        AuthResponseDto responseDto = authService.renewToken(oldToken);
+        return responseDto.getAccessToken() != null ? new ResponseEntity<>(responseDto, HttpStatus.OK) : new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
     }
 }

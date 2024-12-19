@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/products/review/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers("/api/auth/renew").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("api/orders/forTesting").permitAll()
                         .requestMatchers("api/orders/getAll").hasRole("ADMIN")
