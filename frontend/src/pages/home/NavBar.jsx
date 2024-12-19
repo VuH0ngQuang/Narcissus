@@ -21,7 +21,7 @@ const NavBar = () => {
             </div>
             <div className='w-1/4 flex flex-row justify-center items-center'>
                 <div>
-                    <Link className='mr-4 ml-4 text-[#FF0099] font-abeezee font-bold' to={'/userD'}>Account</Link>
+                    <Link className='mr-4 ml-4 text-[#FF0099] font-abeezee font-bold' to={'/userdetails'}>Account</Link>
                 </div>
                 <div>
                     <Link className='ml-4 mr-4 text-[#FF0099] font-abeezee font-bold' to={'/orders'}>Orders</Link>

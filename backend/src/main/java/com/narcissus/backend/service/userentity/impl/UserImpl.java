@@ -101,6 +101,7 @@ public class UserImpl implements UserService {
         UserEntity user =  userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
 
         if (registerDto.getUsername() != null ) user.setUserName(registerDto.getUsername());
+//        if (registerDto.getEmail() != null) user.setEmail(registerDto.getEmail());
         if (registerDto.getAddress() != null) user.setAddress(registerDto.getAddress());
         if (registerDto.getPhoneNumber() != null) user.setPhoneNumber(registerDto.getPhoneNumber());
 

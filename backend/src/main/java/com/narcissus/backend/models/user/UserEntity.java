@@ -1,6 +1,5 @@
 package com.narcissus.backend.models.user;
 
-import com.narcissus.backend.models.orders.ConsistOf;
 import com.narcissus.backend.models.orders.Orders;
 import com.narcissus.backend.models.product.Review;
 import jakarta.persistence.*;
