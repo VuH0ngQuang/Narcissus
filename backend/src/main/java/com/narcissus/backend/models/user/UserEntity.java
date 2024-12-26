@@ -1,6 +1,7 @@
 package com.narcissus.backend.models.user;
 
 import com.narcissus.backend.models.orders.Orders;
+import com.narcissus.backend.models.product.Product;
 import com.narcissus.backend.models.product.Review;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -51,6 +52,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", fetch =FetchType.EAGER)
     List<Review> reviews;
+
+    @ManyToMany
+    Set<Product> products;
 
 
 }

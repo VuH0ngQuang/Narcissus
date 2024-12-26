@@ -17,10 +17,12 @@ const ProductDetailPage = () => {
     const [authToken] = useState(localStorage.getItem("authToken"));
 
     const incrementQuantity = () => {
+        if (product.productStockQuantity === 0 ) setQuantity(0);
         setQuantity(prevQuantity => prevQuantity + 1);
     };
 
     const decrementQuantity = () => {
+        if (product.productStockQuantity === 0 ) setQuantity(0);
         setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1));
     };
 
@@ -79,6 +81,26 @@ const ProductDetailPage = () => {
             window.location.href = `${FEHost}/checkout`;
         }
     };
+
+    const addNotify = async () => {
+        if (!isLogin()){
+            window.location.href = `${FEHost}/login`
+        } else {
+            try {
+                fetch(`${host}/products/addNotify/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `${authToken}`
+                    }
+                }).then( (response) => {
+                    if (response.status === 401) window.location.href = `${FEHost}/login`
+                    if (response.ok) alert("Done")
+                })
+            } catch (error) {
+                alert(`An error has occurred: ${error.message}`);
+            }
+        }
+    }
 
     const submitReview = async () => {
         if (!isLogin()) {
@@ -159,7 +181,7 @@ const ProductDetailPage = () => {
                     {product.productImageBase64 ? (
                         <img
                             src={`data:image/jpeg;base64,${product.productImageBase64}`}
-                            alt={product.name}
+                            alt={product.productName}
                             className="rounded-lg w-full h-auto max-h-[80vh] object-cover"
                             style={{ maxWidth: '90vw' }}
                         />
@@ -174,7 +196,7 @@ const ProductDetailPage = () => {
                         {product.productInfo}
                     </p>
                     <p className="text-gray-500 mb-6">
-                        <strong>Units Sold:</strong> {product.sold}
+                        <strong>Stock quantity:</strong> {product.productStockQuantity}
                     </p>
 
                     <div className="flex items-center mb-6">
@@ -197,20 +219,30 @@ const ProductDetailPage = () => {
                     </div>
 
                     <div className="flex justify-start mt-6">
-                        <button onClick={addToCart} className="bg-black text-white px-8 py-3 rounded-lg mr-4">
-                            ADD TO CART
-                        </button>
-                        <button onClick={buyNow} className="bg-[#FF0099] text-white px-8 py-3 rounded-lg">
-                            BUY NOW
-                        </button>
+                        {product.productStockQuantity !== 0 ?
+                            <div>
+                                <button onClick={addToCart} className="bg-black text-white px-8 py-3 rounded-lg mr-4"> ADD TO CART </button>
+                                <button onClick={buyNow} className="bg-[#FF0099] text-white px-8 py-3 rounded-lg"> BUY NOW </button>
+                            </div> :
+                            <button onClick={addNotify} className="bg-red-700 text-white px-8 py-3 rounded-lg"> Email me when restock </button>
+                        }
+                        {/*<button onClick={addToCart} className="bg-black text-white px-8 py-3 rounded-lg mr-4">*/}
+                        {/*    ADD TO CART*/}
+                        {/*</button>*/}
+                        {/*<button onClick={buyNow} className="bg-[#FF0099] text-white px-8 py-3 rounded-lg">*/}
+                        {/*    BUY NOW*/}
+                        {/*</button>*/}
+                        {/*<button onClick={buyNow} className="bg-red-700 text-white px-8 py-3 rounded-lg">*/}
+                        {/*    Email me when restock*/}
+                        {/*</button>*/}
                     </div>
 
-                    
+
                 </div>
             </div>
 
-                    <div className="pt-12 m-10">
-                        {/* Existing product details */}
+            <div className="pt-12 m-10">
+                {/* Existing product details */}
                         
                         {/* Feedback form */}
                         <div className="w-full md:w-1/2 mt-10 md:mt-0 md:ml-10">

@@ -68,6 +68,7 @@ public class OrdersServiceImpl implements OrdersService {
                 .mapToLong(dto -> {
                     Product product = productRepository.findById(dto.getProductId())
                             .orElseThrow(() -> new NotFoundException("Product not found"));
+                    product.setProductStockQuantity(product.getProductStockQuantity() - 1);
                     return product.getProductPrice() * dto.getQuantity();
                 })
                 .sum();
@@ -130,27 +131,93 @@ public class OrdersServiceImpl implements OrdersService {
         return ordersResponse;
     }
 
-
-
-
-    @Override
-    public List<OrdersDto> getAll() {
-        List<Orders> orders = ordersRepository.findAll();
-        return orders.parallelStream()
-                .map(order -> toDto(order, new OrdersDto()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public OrdersDto getDetailsOrders(long id) {
-        return toDto(
-                ordersRepository
-                        .findById(id)
-                        .orElseThrow(
-                                () -> new NotFoundException("Cannot found order with id: "+id)
-                        ), new OrdersDto()
-        );
-    }
+//    @Override
+//    public OrdersResponse createOrders(Set<ConsistOfDto> consistOfDtos, String token) throws Exception {
+//        Orders orders = new Orders();
+//
+//        long timestamp = System.currentTimeMillis() % 1000000000;
+//        long randomNum = ThreadLocalRandom.current().nextLong(1000, 9999);
+//        long orderId = timestamp * 10000 + randomNum;
+//        orders.setOrdersId(orderId);
+//
+//        long totalPrice = consistOfDtos.stream()
+//                .mapToLong(dto -> {
+//                    Product product = productRepository.findById(dto.getProductId())
+//                            .orElseThrow(() -> new NotFoundException("Product not found"));
+//                    product.setProductStockQuantity(product.getProductStockQuantity() - 1);
+//                    return product.getProductPrice() * dto.getQuantity();
+//                })
+//                .sum();
+//        orders.setMoney(totalPrice);
+//        orders.setShipped(false);
+//        orders.setStatus("PENDING");
+//        orders.setDate(new Date());
+//
+//        String jwtToken = token.substring(7);
+//        UserEntity user = userRepository.findByEmail(tokenGenerator.getEmailFromJWT(jwtToken))
+//                .orElseThrow(() -> new NotFoundException("Invalid Token"));
+//        orders.setUserEntity(user);
+//
+//        Set<ConsistOf> consistOfs = consistOfDtos.stream()
+//                .map(dto -> {
+//                    userCartRepository.deleteByUserIdAndProductId(user.getUserId(), dto.getProductId());
+//                    ConsistOf consistOf = new ConsistOf();
+//                    ConsistOfKey id = new ConsistOfKey(orders.getOrdersId(), dto.getProductId());
+//
+//                    consistOf.setId(id);
+//                    consistOf.setQuantity(dto.getQuantity());
+//                    consistOf.setOrders(orders);
+//
+//                    Product product = productRepository.findById(dto.getProductId())
+//                            .orElseThrow(() -> new NotFoundException("Product not found"));
+//                    consistOf.setProduct(product);
+//
+//                    return consistOf;
+//                })
+//                .collect(Collectors.toSet());
+//        orders.setConsistOfs(consistOfs);
+//
+//        ordersRepository.save(orders);
+//
+//        EmailDetails emailDetails = new EmailDetails();
+//        emailDetails.setRecipient(user.getEmail());
+//        emailDetails.setSubject("Thank you for your order! Your flowers are on their way");
+//        emailDetails.setMsgBody(emailService.mailOrder(user.getUserName(), user.getAddress(), totalPrice, consistOfs));
+//
+//        emailService.sendEmail(emailDetails);
+//
+//        String checkoutUrl;
+//        try {
+//            checkoutUrl = paymentService.createPayment(orders);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        OrdersResponse ordersResponse = new OrdersResponse();
+//        ordersResponse.setOrdersId(orders.getOrdersId());
+//        ordersResponse.setCheckoutUrl(checkoutUrl);
+//
+//        return ordersResponse;
+//    }
+//
+//    @Override
+//    public List<OrdersDto> getAll() {
+//        List<Orders> orders = ordersRepository.findAll();
+//        return orders.parallelStream()
+//                .map(order -> toDto(order, new OrdersDto()))
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public OrdersDto getDetailsOrders(long id) {
+//        return toDto(
+//                ordersRepository
+//                        .findById(id)
+//                        .orElseThrow(
+//                                () -> new NotFoundException("Cannot found order with id: "+id)
+//                        ), new OrdersDto()
+//        );
+//    }
 
     @Override
     public List<OrdersDto> get(String token) {

@@ -8,6 +8,7 @@ import com.narcissus.backend.repository.orders.ConsistOfRepository;
 import com.narcissus.backend.repository.product.ProductRepository;
 import com.narcissus.backend.repository.product.ReviewRepository;
 import com.narcissus.backend.repository.user.UserCartRepository;
+import com.narcissus.backend.service.notification.RestockNotificationService;
 import com.narcissus.backend.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,13 +28,16 @@ public class ProductServiceImpl implements ProductService {
     private final ConsistOfRepository consistOfRepository;
     private final UserCartRepository userCartRepository;
     private final ReviewRepository reviewRepository;
+    private final RestockNotificationService restockNotificationService;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ConsistOfRepository consistOfRepository, UserCartRepository userCartRepository, ReviewRepository reviewRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ConsistOfRepository consistOfRepository, UserCartRepository userCartRepository, ReviewRepository reviewRepository, RestockNotificationService restockNotificationService) {
         this.productRepository = productRepository;
         this.consistOfRepository = consistOfRepository;
         this.userCartRepository = userCartRepository;
         this.reviewRepository = reviewRepository;
+        this.restockNotificationService = restockNotificationService;
     }
 
     @Override
@@ -60,6 +66,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(long id, ProductDto productDto, MultipartFile image) throws IOException {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product with ID "+id+" not found"));
+
+        executorService.submit(() -> {
+            if (product.getProductStockQuantity() == 0 && productDto.getProductStockQuantity() != 0) restockNotificationService.notifyRestock(product);
+        });
 
         if (productDto != null) {
             if (productDto.getProductName() != null) product.setProductName(productDto.getProductName());

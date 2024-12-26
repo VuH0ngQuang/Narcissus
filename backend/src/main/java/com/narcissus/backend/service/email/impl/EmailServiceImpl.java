@@ -2,6 +2,7 @@ package com.narcissus.backend.service.email.impl;
 
 import com.narcissus.backend.models.email.EmailDetails;
 import com.narcissus.backend.models.orders.ConsistOf;
+import com.narcissus.backend.models.product.Product;
 import com.narcissus.backend.service.email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -104,4 +105,21 @@ public class EmailServiceImpl implements EmailService {
                 "Warm regards,\n" +
                 "The Narcissus Team";
     }
+
+    @Override
+    public String mailRestock(String userName, Product product) {
+        return "Hi " + userName + ",\n\n" +
+                "We’re excited to let you know that your favorite product, " + product.getProductName() +
+                " (ID: " + product.getProductId() + "), is back in stock at Narcissus! 🎉\n\n" +
+                "Don’t miss out—fresh, beautiful blooms are waiting just for you. Visit our website now " +
+                "and secure yours before they’re gone again!\n\n" +
+                "🌷 Product Name: " + product.getProductName() + "\n" +
+                "👉 Shop Now: [Insert Link to Product Page]\n\n" +
+                "We’re here to help make every moment special with our fresh and stunning floral arrangements. " +
+                "If you have any questions or need assistance, feel free to reach out to us at support@narcissus.com.\n\n" +
+                "Thank you for choosing Narcissus to brighten up your day!\n\n" +
+                "Warm regards,\n" +
+                "The Narcissus Team";
+    }
+
 }

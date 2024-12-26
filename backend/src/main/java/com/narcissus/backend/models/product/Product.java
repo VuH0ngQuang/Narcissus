@@ -2,6 +2,7 @@ package com.narcissus.backend.models.product;
 
 import com.narcissus.backend.models.orders.ConsistOf;
 import com.narcissus.backend.models.user.UserCart;
+import com.narcissus.backend.models.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,9 @@ public class Product {
     private long productPrice;
     private Date productDate;
 
+    @Lob
+    private byte[] productImage;
+
     @OneToMany(mappedBy = "product", fetch =FetchType.EAGER)
     Set<ConsistOf> consistOfs;
 
@@ -37,6 +41,11 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch =FetchType.EAGER)
     List<Review> reviews;
 
-    @Lob
-    private byte[] productImage;
+    @ManyToMany
+    @JoinTable(
+            name = "RestockNotification",
+            joinColumns = @JoinColumn(name = "productId"),
+            inverseJoinColumns = @JoinColumn(name = "userId")
+    )
+    Set<UserEntity> notifyList;
 }

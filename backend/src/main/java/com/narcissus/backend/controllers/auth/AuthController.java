@@ -3,25 +3,25 @@ package com.narcissus.backend.controllers.auth;
 import com.narcissus.backend.dto.auth.AuthResponseDto;
 import com.narcissus.backend.dto.user.LoginDto;
 import com.narcissus.backend.dto.user.RegisterDto;
+import com.narcissus.backend.security.TokenGenerator;
 import com.narcissus.backend.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private final TokenGenerator tokenGenerator;
     private AuthService authService;
 
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, TokenGenerator tokenGenerator) {
         this.authService = authService;
+        this.tokenGenerator = tokenGenerator;
     }
 
     @PostMapping("/register")
@@ -50,5 +50,10 @@ public class AuthController {
     public ResponseEntity<AuthResponseDto> renewToken(@RequestHeader("Authorization") String oldToken) {
         AuthResponseDto responseDto = authService.renewToken(oldToken);
         return responseDto.getAccessToken() != null ? new ResponseEntity<>(responseDto, HttpStatus.OK) : new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/getRole")
+    public ResponseEntity<String> getRole(@RequestHeader("Authorization") String token) {
+        return new ResponseEntity<>(tokenGenerator.getRoleFromJWT(token.substring(7)), HttpStatus.OK);
     }
 }

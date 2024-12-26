@@ -2,6 +2,7 @@ package com.narcissus.backend.controllers.product;
 
 import com.narcissus.backend.dto.product.ProductDto;
 import com.narcissus.backend.dto.product.ReviewDto;
+import com.narcissus.backend.service.notification.RestockNotificationService;
 import com.narcissus.backend.service.product.ProductService;
 import com.narcissus.backend.service.product.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,13 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final ReviewService reviewService;
+    private final RestockNotificationService restockNotificationService;
 
     @Autowired
-    public ProductController(ProductService productService, ReviewService reviewService) {
+    public ProductController(ProductService productService, ReviewService reviewService, RestockNotificationService restockNotificationService) {
         this.productService = productService;
         this.reviewService = reviewService;
+        this.restockNotificationService = restockNotificationService;
     }
 
     //Product
@@ -61,7 +64,6 @@ public class ProductController {
     }
 
     //Review
-
     @GetMapping("/review/getAll/{id}")
     public ResponseEntity<List<ReviewDto>> getReview(@PathVariable long id) {
         return new ResponseEntity<>(reviewService.getReview(id), HttpStatus.OK);
@@ -72,4 +74,10 @@ public class ProductController {
         return new ResponseEntity<>(reviewService.addReview(token, id, reviewDto), HttpStatus.OK);
     }
 
+    //addRestockNotify
+    @PostMapping("/addNotify/{id}")
+    public ResponseEntity<String> addNotification(@RequestHeader("Authorization") String token, @PathVariable long id) {
+        restockNotificationService.addRestockNotification(token, id);
+        return new ResponseEntity<>("Done", HttpStatus.OK);
+    }
 }
