@@ -30,7 +30,7 @@ const App = () => {
     }, []);
 
     return (
-        <BrowserRouter>
+        <BrowserRouter >
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<HomePage />} />             {/*done*/}
