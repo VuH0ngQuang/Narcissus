@@ -66,20 +66,23 @@ const OrderSummary = ({showQR, setShowQR}) => {
                 <br/>
                 <p>ORDER SUMMARY</p>
                 <br/>
-                {products.map(product => (
-                    <div key={product.productId} className='w-full flex items-center border border-solid border-black'>
-                        <div className="w-32 h-32 p-0">
-                            <img src={product.image} alt={product.name} className="w-full h-full object-cover"/>
+                <div className="max-h-[389px] overflow-y-auto scrollbar-hide">
+                    {products.map(product => (
+                        <div key={product.productId} className='w-full flex items-center border border-solid border-black'>
+                            <div className="w-32 h-32 p-0">
+                                <img src={product.image} alt={product.name} className="w-full h-full object-cover"/>
+                            </div>
+                            <div className="flex-1 pl-[24px] text-left font-semibold">
+                                <p>{product.name}</p>
+                                <p>Quantity: {product.quantity}</p>
+                            </div>
+                            <div className="text-right font-semibold">
+                                <p>${product.price.toFixed(2)}</p>
+                            </div>
                         </div>
-                        <div className="flex-1 pl-[24px] text-left font-semibold">
-                            <p>{product.name}</p>
-                            <p>Quantity: {product.quantity}</p>
-                        </div>
-                        <div className="text-right font-semibold">
-                            <p>${product.price.toFixed(2)}</p>
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+
                 <hr className="border-t-[1px] border-gray-300 my-4"/>
 
                 <div className='w-full'>
