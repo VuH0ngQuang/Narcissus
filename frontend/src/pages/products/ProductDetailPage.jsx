@@ -16,9 +16,23 @@ const ProductDetailPage = () => {
     const [reviews, setReviews] = useState([]);
     const [authToken] = useState(localStorage.getItem("authToken"));
 
-    const incrementQuantity = () => {
+    const incrementQuantity = async () => {
+        try {
+            const response = await fetch(`${host}/products/${id}`);
+            if (response.ok) {
+                const productData = await response.json();
+                setProduct(productData);
+            } else {
+                console.error('Failed to fetch product');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+        
         if (product.productStockQuantity === 0 ) setQuantity(0);
-        setQuantity(prevQuantity => prevQuantity + 1);
+        setQuantity(prevQuantity => 
+            prevQuantity < product.productStockQuantity ? prevQuantity + 1 : product.productStockQuantity
+        );    
     };
 
     const decrementQuantity = () => {
