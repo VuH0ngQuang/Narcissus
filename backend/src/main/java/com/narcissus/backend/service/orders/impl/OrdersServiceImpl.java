@@ -200,24 +200,24 @@ public class OrdersServiceImpl implements OrdersService {
 //        return ordersResponse;
 //    }
 //
-//    @Override
-//    public List<OrdersDto> getAll() {
-//        List<Orders> orders = ordersRepository.findAll();
-//        return orders.parallelStream()
-//                .map(order -> toDto(order, new OrdersDto()))
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public OrdersDto getDetailsOrders(long id) {
-//        return toDto(
-//                ordersRepository
-//                        .findById(id)
-//                        .orElseThrow(
-//                                () -> new NotFoundException("Cannot found order with id: "+id)
-//                        ), new OrdersDto()
-//        );
-//    }
+    @Override
+    public List<OrdersDto> getAll() {
+        List<Orders> orders = ordersRepository.findAll();
+        return orders.parallelStream()
+                .map(order -> toDto(order, new OrdersDto()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrdersDto getDetailsOrders(long id) {
+        return toDto(
+                ordersRepository
+                        .findById(id)
+                        .orElseThrow(
+                                () -> new NotFoundException("Cannot found order with id: "+id)
+                        ), new OrdersDto()
+        );
+    }
 
     @Override
     public List<OrdersDto> get(String token) {
