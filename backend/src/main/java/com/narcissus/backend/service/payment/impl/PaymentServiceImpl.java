@@ -7,6 +7,7 @@ import com.narcissus.backend.models.orders.Orders;
 import com.narcissus.backend.models.product.Product;
 import com.narcissus.backend.models.user.UserEntity;
 import com.narcissus.backend.repository.orders.OrdersRepository;
+import com.narcissus.backend.repository.product.ProductRepository;
 import com.narcissus.backend.repository.user.UserRepository;
 import com.narcissus.backend.security.TokenGenerator;
 import com.narcissus.backend.service.SSE.SSEService;
@@ -33,13 +34,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final PayOS payOS = new PayOS(PAYOSID, PAYOSAPI, PAYOSCHECKSUM);
     private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public PaymentServiceImpl(SSEService sseService, OrdersRepository ordersRepository, UserRepository userRepository, TokenGenerator tokenGenerator) {
+    public PaymentServiceImpl(SSEService sseService, OrdersRepository ordersRepository, UserRepository userRepository, TokenGenerator tokenGenerator, ProductRepository productRepository) {
         this.sseService = sseService;
         this.ordersRepository = ordersRepository;
         this.tokenGenerator = tokenGenerator;
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     public String createPayment (Orders order) throws Exception {
@@ -87,6 +90,12 @@ public class PaymentServiceImpl implements PaymentService {
             orders.setCancellationReason(result.getCancellationReason());
 
             ordersRepository.save(orders);
+
+            orders.getConsistOfs().parallelStream().forEach(consistOf -> {
+                Product product = consistOf.getProduct();
+                product.setProductStockQuantity(product.getProductStockQuantity() + consistOf.getQuantity());
+                productRepository.save(product);
+            });
         }
         return "Successfully";
     }

@@ -67,9 +67,9 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto updateProduct(long id, ProductDto productDto, MultipartFile image) throws IOException {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product with ID "+id+" not found"));
 
-        executorService.submit(() -> {
-            if (product.getProductStockQuantity() == 0 && productDto.getProductStockQuantity() != 0) restockNotificationService.notifyRestock(product);
-        });
+        if (product.getProductStockQuantity() == 0 && productDto.getProductStockQuantity() != 0) {
+            restockNotificationService.notifyRestock(product);
+        }
 
         if (productDto != null) {
             if (productDto.getProductName() != null) product.setProductName(productDto.getProductName());

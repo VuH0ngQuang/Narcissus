@@ -68,7 +68,7 @@ public class OrdersServiceImpl implements OrdersService {
                 .mapToLong(dto -> {
                     Product product = productRepository.findById(dto.getProductId())
                             .orElseThrow(() -> new NotFoundException("Product not found"));
-                    product.setProductStockQuantity(product.getProductStockQuantity() - 1);
+                    product.setProductStockQuantity(product.getProductStockQuantity() - dto.getQuantity());
                     return product.getProductPrice() * dto.getQuantity();
                 })
                 .sum();

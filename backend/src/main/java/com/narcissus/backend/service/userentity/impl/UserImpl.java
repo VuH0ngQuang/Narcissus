@@ -51,7 +51,11 @@ public class UserImpl implements UserService {
 
             return toDto(userCarts, new ConsistOfDto());
         }
-        userCarts.setQuantity(userCarts.getQuantity() + consistOfDto.getQuantity());
+        int quantity = userCarts.getQuantity() + consistOfDto.getQuantity();
+        if (quantity > productRepository.findById(consistOfDto.getProductId()).get().getProductStockQuantity()) {
+            quantity = productRepository.findById(consistOfDto.getProductId()).get().getProductStockQuantity();
+        }
+        userCarts.setQuantity(quantity);
         userCartRepository.save(userCarts);
 
         return toDto(userCarts, new ConsistOfDto());
