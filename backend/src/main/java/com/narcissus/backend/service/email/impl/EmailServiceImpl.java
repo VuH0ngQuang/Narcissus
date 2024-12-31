@@ -114,12 +114,11 @@ public class EmailServiceImpl implements EmailService {
                 "Don’t miss out—fresh, beautiful blooms are waiting just for you. Visit our website now " +
                 "and secure yours before they’re gone again!\n\n" +
                 "🌷 Product Name: " + product.getProductName() + "\n" +
-                "👉 Shop Now: <a href=\"http://narcissusflowers.japaneast.cloudapp.azure.com/product/" + product.getProductId() + "\">Click here to shop</a>\n\n" +
+                "👉 Shop Now: http://narcissusflowers.japaneast.cloudapp.azure.com:5173/product/" + product.getProductId() +
                 "We’re here to help make every moment special with our fresh and stunning floral arrangements. " +
                 "If you have any questions or need assistance, feel free to reach out to us at support@narcissus.com.\n\n" +
                 "Thank you for choosing Narcissus to brighten up your day!\n\n" +
                 "Warm regards,\n" +
                 "The Narcissus Team";
     }
-
 }
