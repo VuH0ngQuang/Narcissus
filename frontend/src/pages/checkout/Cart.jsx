@@ -64,6 +64,23 @@ const CartItem = ({ productId, image, name, quantity, price, onQuantityChange, a
                     type="button"
                     className="w-8 h-8 border"
                     onClick={async () => {
+                        let productData = null;
+                        try {
+                            const response = await fetch(`${host}/products/${productId}`);
+                            if (response.ok) {
+                                productData = await response.json();
+                            } else {
+                                console.error('Failed to fetch product');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                        }
+
+                        if (quantity >= productData.productStockQuantity) {
+                            alert('Out of stock');
+                            return;
+                        }
+
                         const addToCartData = { productId, quantity: +1 };
                         onQuantityChange(productId, quantity + 1);
                         try {
