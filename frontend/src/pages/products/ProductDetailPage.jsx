@@ -29,15 +29,15 @@ const ProductDetailPage = () => {
             console.error('Error:', error);
         }
         
-        if (product.productStockQuantity === 0 ) setQuantity(0);
+        if (product.productStockQuantity === 0 ) return;
         setQuantity(prevQuantity => 
             prevQuantity < product.productStockQuantity ? prevQuantity + 1 : product.productStockQuantity
         );    
     };
 
     const decrementQuantity = () => {
-        if (product.productStockQuantity === 0 ) setQuantity(0);
-        setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+        if (product.productStockQuantity === 0 ) return;
+        else setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1));
     };
 
     function isLogin() {

@@ -19,7 +19,7 @@ public class DatabaseConfig {
 //        config.setPassword("Narcissus@123");
         config.setJdbcUrl("jdbc:mysql://localhost:3306/Narcissus");
         config.setUsername("root");
-        config.setPassword("baby0148");
+        config.setPassword("huynhhuunghia");
         config.setMaxLifetime(1800000); // 30 minutes
         config.setKeepaliveTime(30000); // 30 seconds
         config.setConnectionTestQuery("SELECT 1");
