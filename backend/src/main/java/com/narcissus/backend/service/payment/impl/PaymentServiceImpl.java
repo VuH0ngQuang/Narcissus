@@ -116,6 +116,12 @@ public class PaymentServiceImpl implements PaymentService {
 
             ordersRepository.save(orders);
 
+            orders.getConsistOfs().parallelStream().forEach(consistOf -> {
+                Product product = consistOf.getProduct();
+                product.setProductStockQuantity(product.getProductStockQuantity() + consistOf.getQuantity());
+                productRepository.save(product);
+            });
+
             if(!result.getStatus().equals("CANCELLED")) return "Failed";
             return "Successfully";
         }
