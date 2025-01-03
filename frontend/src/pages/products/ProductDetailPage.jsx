@@ -101,6 +101,7 @@ const ProductDetailPage = () => {
                 body: JSON.stringify({ content, stars }),
             });
 
+            if (response.status === 401) window.location.href = `${FEHost}/login`
             if (response.ok) {
                 fetchReviews();
                 setContent("");
