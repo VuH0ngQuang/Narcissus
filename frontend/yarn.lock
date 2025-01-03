@@ -1414,7 +1414,7 @@ fraction.js@^4.3.7:
   dependencies:
     "@microsoft/clarity" "^1.0.0"
     "@payos/payos-checkout" "^1.0.8"
-    frontend "file:../../../../AppData/Local/Yarn/Cache/v6/npm-frontend-0.0.0-5b9e1d38-50b0-46be-89a1-e1ce08cc9121-1735400246753/node_modules/frontend"
+    frontend "file:../../../../AppData/Local/Yarn/Cache/v6/npm-frontend-0.0.0-ac108e6f-b866-459c-a14a-fc5c0ab52985-1735313775575/node_modules/frontend"
     react "^18.3.1"
     react-dom "^18.3.1"
     react-horizontal-scrolling-menu "^8.2.0"

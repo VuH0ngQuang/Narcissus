@@ -28,11 +28,11 @@ const ProductDetailPage = () => {
         } catch (error) {
             console.error('Error:', error);
         }
-        
+
         if (product.productStockQuantity === 0 ) return;
-        setQuantity(prevQuantity => 
+        setQuantity(prevQuantity =>
             prevQuantity < product.productStockQuantity ? prevQuantity + 1 : product.productStockQuantity
-        );    
+        );
     };
 
     const decrementQuantity = () => {
@@ -138,8 +138,7 @@ const ProductDetailPage = () => {
             });
 
             if (response.ok) {
-                const review = await response.json();
-                setReviews(prev => [review, ...prev]); // Add new review to the list
+                fetchReviews();
                 setContent("");
                 setStars(0);
             } else {
@@ -251,70 +250,71 @@ const ProductDetailPage = () => {
                         {/*</button>*/}
                     </div>
 
-
+                    
                 </div>
             </div>
 
-            <div className="pt-12 m-10">
-                {/* Existing product details */}
-                        
-                        {/* Feedback form */}
-                        <div className="w-full md:w-1/2 mt-10 md:mt-0 md:ml-10">
-                            <h2 className="text-xl font-semibold mb-4">Leave a Review</h2>
-                            <div className="mb-4 flex items-center">
-                                <span>Rate:</span>
+            <div className="pt-12 m-10 flex flex-col md:flex-row items-start gap-4">
+                {/* Customer Reviews */}
+                <div className="w-full md:w-3/5 border p-4 rounded-lg h-[calc(100vh-100px)] overflow-y-scroll">
+                    <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
+                    {reviews.length > 0 ? (
+                        reviews.map((review, index) => (
+                            <div key={index} className="border-b border-gray-300 pb-4 mb-4">
+                                <p className="text-lg font-bold">{review.userName}</p>
                                 <div className="flex">
-                                    {[1, 2, 3, 4, 5].map(star => (
-                                        <button
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <span
                                             key={star}
-                                            className={`px-2 ${stars >= star ? 'text-yellow-500' : 'text-gray-300'}`}
-                                            onClick={() => setStars(star)}
+                                            className={`px-1 ${
+                                                review.stars >= star ? 'text-yellow-500' : 'text-gray-300'
+                                            }`}
                                         >
                                             ★
-                                        </button>
+                                        </span>
                                     ))}
                                 </div>
+                                <p className="text-gray-600">{review.content}</p>
                             </div>
-                            <textarea
-                                className="w-full border rounded-md p-2 resize-none"
-                                rows="4"
-                                placeholder="Write your review..."
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                            ></textarea>
-                            <button
-                                className="bg-black text-white px-8 py-2 rounded-lg mt-4"
-                                onClick={submitReview}
-                            >
-                                Submit Review
-                            </button>
+                        ))
+                    ) : (
+                        <p>No reviews yet.</p>
+                    )}
+                </div>
 
-                            {/* Display reviews */}
-                            <div className="mt-8">
-                                <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
-                                {reviews.length > 0 ? (
-                                    reviews.map((review, index) => (
-                                        <div key={index} className="border-b border-gray-300 pb-4 mb-4">
-                                            <p className="text-lg font-bold">{review.userName}</p>
-                                            <div className="flex">
-                                                {[1, 2, 3, 4, 5].map(star => (
-                                                    <span
-                                                        key={star}
-                                                        className={`px-1 ${review.stars >= star ? 'text-yellow-500' : 'text-gray-300'}`}
-                                                    >
-                                                        ★
-                                                    </span>
-                                                ))}
-                                            </div>
-                                            <p className="text-gray-600">{review.content}</p>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p>No reviews yet.</p>
-                                )}
-                            </div>
+                {/* Leave a Review */}
+                <div className="w-full md:w-2/5 border p-4 rounded-lg md:h-[calc(100vh-100px)]">
+                    <h2 className="text-xl font-semibold mb-4">Leave a Review</h2>
+                    <div className="mb-4 flex items-center">
+                        <span>Rate:</span>
+                        <div className="flex ml-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <button
+                                    key={star}
+                                    className={`px-2 ${stars >= star ? 'text-yellow-500' : 'text-gray-300'}`}
+                                    onClick={() => setStars(star)}
+                                >
+                                    ★
+                                </button>
+                            ))}
                         </div>
                     </div>
+                    <textarea
+                        className="w-full border rounded-md p-2 resize-none"
+                        rows="4"
+                        placeholder="Write your review..."
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                    ></textarea>
+                    <button
+                        className="bg-black text-white px-8 py-2 rounded-lg mt-4"
+                        onClick={submitReview}
+                    >
+                        Submit Review
+                    </button>
+                </div>
+            </div>
+
         </>
     );
 };
