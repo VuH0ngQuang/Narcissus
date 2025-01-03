@@ -103,7 +103,8 @@
 import React, { useState } from 'react';
 import LoginBanner from '../../assets/loginbanner.jpg';
 import { Link } from "react-router-dom";
-import {FEHost, host} from "../../config.js";
+import { FEHost, host } from "../../config.js";
+import { renewToken } from "../../auth.js"; // Import the renewToken function
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -126,18 +127,21 @@ const LoginForm = () => {
             if (response.ok) {
                 const data = await response.json();
 
-                const { accessToken, tokenType,role } = data;
+                const { accessToken, tokenType, role } = data;
                 const fullToken = `${tokenType.trim()} ${accessToken.trim()}`;
-                console.log("Login successful, token:", fullToken,"role",role);
+                console.log("Login successful, token:", fullToken, "role", role);
 
                 localStorage.setItem('authToken', fullToken);
-                localStorage.setItem('role',role);
+                localStorage.setItem('role', role);
 
                 if (role === 'ROLE_ADMIN') {
                     window.location.href = `${FEHost}/admin/dashboard`;
-                }else {
+                } else {
                     window.location.href = `${FEHost}`;
                 }
+
+                // Set a timeout to run renewToken after 4 minutes
+                setTimeout(renewToken, 240000); // 4 minutes in milliseconds
             } else {
                 const errorData = await response.json();
                 alert(`Login failed: ${errorData.message || 'Unknown error'}`);

@@ -21,40 +21,13 @@ import { PayFailed, PaySuccessful } from "./pages/checkout/PayInfo.jsx";
 import clarity from '@microsoft/clarity';
 import { useEffect } from "react";
 import { host } from "./config.js";
+import {renewToken} from "./auth.js";
 
 const App = () => {
 
     useEffect(() => {
         const projectId = "p1uwyhlg5q";
         clarity.init(projectId);
-
-        const renewToken = async () => {
-            const authToken = localStorage.getItem('authToken');
-            if (authToken) {
-                try {
-                    const response = await fetch(`${host}/auth/renew`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': authToken
-                        }
-                    });
-
-                    if (response.ok) {
-                        console.log('Token renewed');
-                        const data = await response.json();
-                        const { accessToken, tokenType, role } = data;
-                        const fullToken = `${tokenType.trim()} ${accessToken.trim()}`;
-                        localStorage.setItem('authToken', fullToken);
-                        localStorage.setItem('role', role);
-                    } else {
-                        console.error('Failed to renew token');
-                    }
-                } catch (error) {
-                    console.error('An error occurred while renewing token:', error);
-                }
-            }
-        };
 
         const intervalId = setInterval(renewToken, 240000); // 4 minutes in milliseconds
 
@@ -63,28 +36,28 @@ const App = () => {
 
     return (
         <BrowserRouter >
-                <NavBar />
-                <Routes>
-                    <Route path="/" element={<HomePage />} />             {/*done*/}
-                    <Route path="/login" element={<Login />} />             {/*done*/}
-                    <Route path="/register" element={<Register />} />             {/*done*/}
-                    <Route path="/userdetails" element={<UserDetails />} />
-                    <Route path="/forgottenpassword" element={<ForgottenPassword />} />             {/*done*/}
-                    <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                    <Route path="/product/:id" element={<ProductDetailPage />} />             {/*done*/}
-                    <Route path="/admin/updateproduct/:productID" element={<Update/>} />
-                    <Route path="/admin/addproduct" element={<Add/>} />
-                    <Route path="/admin/order" element={<Order />} />
-                    <Route path="/admin/vieworder/:orderID" element={<Detail />} />
-                    <Route path="/orders" element={<PurchasedProduct1 />} />             {/*done*/}
-                    <Route path="/orders/:orderId" element={<PurchasedProduct2 />} />             {/*done*/}
-                    <Route path="/editproduct" element={<EditProduct />} />
-                    <Route path="/sellerdashboard" element={<SellerDashboard />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />             {/*done*/}
-                    <Route path="/cart" element={<Cart />} />             {/*done*/}
-                    <Route path="/successful" element={<PaySuccessful />} />             {/*done*/}
-                    <Route path="/failed" element={<PayFailed />} />             {/*done*/}
-                </Routes>
+            <NavBar />
+            <Routes>
+                <Route path="/" element={<HomePage />} />             {/*done*/}
+                <Route path="/login" element={<Login />} />             {/*done*/}
+                <Route path="/register" element={<Register />} />             {/*done*/}
+                <Route path="/userdetails" element={<UserDetails />} />
+                <Route path="/forgottenpassword" element={<ForgottenPassword />} />             {/*done*/}
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/product/:id" element={<ProductDetailPage />} />             {/*done*/}
+                <Route path="/admin/updateproduct/:productID" element={<Update/>} />
+                <Route path="/admin/addproduct" element={<Add/>} />
+                <Route path="/admin/order" element={<Order />} />
+                <Route path="/admin/vieworder/:orderID" element={<Detail />} />
+                <Route path="/orders" element={<PurchasedProduct1 />} />             {/*done*/}
+                <Route path="/orders/:orderId" element={<PurchasedProduct2 />} />             {/*done*/}
+                <Route path="/editproduct" element={<EditProduct />} />
+                <Route path="/sellerdashboard" element={<SellerDashboard />} />
+                <Route path="/checkout" element={<CheckoutPage />} />             {/*done*/}
+                <Route path="/cart" element={<Cart />} />             {/*done*/}
+                <Route path="/successful" element={<PaySuccessful />} />             {/*done*/}
+                <Route path="/failed" element={<PayFailed />} />             {/*done*/}
+            </Routes>
         </BrowserRouter>
     );
 }
