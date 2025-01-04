@@ -27,7 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final String PAYOSID = "f83ace68-bc25-4af4-b557-d842b7fbe511"; //this is for testing only, this will be invalid after this repo public
     private final String PAYOSAPI = "80dbd91f-fd92-424d-88e6-4369e6682bf8"; //this is for testing only, this will be invalid after this repo public
     private final String PAYOSCHECKSUM = "3738cedd62709316a25ad065a9e3f68ee111db2f3cb76e81ab239255c91b97bc"; //this is for testing only, this will be invalid after this repo public
-    private final String HOSTIP = "http://narcissusflowers.japaneast.cloudapp.azure.com:5173/";
+    private final String HOSTIP = "http://narcissusflowers.japaneast.cloudapp.azure.com:5173";
 //    private final String HOSTIP = "http://localhost:5173";
     private final OrdersRepository ordersRepository;
     private final SSEService sseService;
